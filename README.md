@@ -16,7 +16,7 @@ npm run preview # 本地预览构建产物
 
 ## 如何写文章
 
-在 `src/posts/` 下新建一个 `.md` 文件即可,文件名就是文章链接里的 slug(如 `my-first-post.md` → `/post/my-first-post`)。
+在 `src/posts/` 下新建一个 `.md` 文件即可,可以直接放进子目录。链接 slug 是相对 `src/posts/` 的路径(如 `notes/my-first-post.md` → `/post/notes/my-first-post`)。
 
 ```markdown
 ---

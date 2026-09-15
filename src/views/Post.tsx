@@ -9,7 +9,7 @@ function formatDate(date: string): string {
 }
 
 export default function Post() {
-  const { slug } = useParams()
+  const slug = useParams()['*']
   const post = getPostBySlug(slug ?? '')
   const { prev, next } = adjacentPosts(slug ?? '')
 

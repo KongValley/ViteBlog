@@ -1,4 +1,4 @@
-// 文章数据源:自动扫描 src/posts/ 下的所有 .md 文件
+// 文章数据源:自动扫描 src/posts/ 及其子目录下的所有 .md 文件
 // 新建一篇文章 = 在 src/posts/ 里新建一个 .md 文件,无需改任何代码
 import postTimes from 'virtual:post-times'
 
@@ -20,7 +20,7 @@ interface PostMeta {
   excerpt?: string
 }
 
-const modules = import.meta.glob('../posts/*.md', {
+const modules = import.meta.glob('../posts/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -55,7 +55,7 @@ function parseFrontmatter(raw: string): { meta: PostMeta; content: string } {
 export const posts: Post[] = Object.entries(modules)
   .map(([path, raw]) => {
     const { meta, content } = parseFrontmatter(raw)
-    const slug = path.split('/').pop()!.replace(/\.md$/, '')
+    const slug = path.replace(/^\.\.\/posts\//, '').replace(/\.md$/, '')
     return {
       slug,
       title: meta.title ?? '未命名文章',

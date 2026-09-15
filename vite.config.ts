@@ -44,8 +44,19 @@ function postTimes(): Plugin {
     load(id) {
       if (id !== '\0post-times') return
       const times: Record<string, number> = {}
-      for (const f of readdirSync(dir)) {
-        if (!f.endsWith('.md')) continue
+      const files: string[] = []
+      const collectMarkdownFiles = (directory: string, prefix = ''): void => {
+        for (const entry of readdirSync(directory, { withFileTypes: true })) {
+          if (entry.isDirectory()) {
+            collectMarkdownFiles(resolve(directory, entry.name), `${prefix}${entry.name}/`)
+          } else if (entry.isFile() && entry.name.endsWith('.md')) {
+            files.push(`${prefix}${entry.name}`)
+          }
+        }
+      }
+      collectMarkdownFiles(dir)
+
+      for (const f of files) {
         let ts = 0
         try {
           const out = execSync(`git log --diff-filter=A --format=%at -- src/posts/${f}`, {

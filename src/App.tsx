@@ -62,7 +62,7 @@ export default function App() {
         <div className="container">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/post/:slug" element={<Post />} />
+            <Route path="/post/*" element={<Post />} />
             <Route path="/about" element={<About />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
