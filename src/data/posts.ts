@@ -6,6 +6,7 @@ export interface Post {
   title: string
   date: string
   tags: string[]
+  categories: string[]
   excerpt: string
   content: string
 }
@@ -14,6 +15,7 @@ interface PostMeta {
   title?: string
   date?: string
   tags?: string[]
+  categories?: string[]
   excerpt?: string
 }
 
@@ -29,13 +31,27 @@ function parseFrontmatter(raw: string): { meta: PostMeta; content: string } {
   const meta: PostMeta = {}
   let content = raw
   if (match) {
+    type ListKey = 'tags' | 'categories'
+    let currentList: ListKey | null = null
     for (const line of match[1].split(/\r?\n/)) {
+      const listItem = line.match(/^\s*-\s+(.+)$/)
+      if (listItem) {
+        if (currentList === 'tags') meta.tags?.push(listItem[1].trim())
+        if (currentList === 'categories') meta.categories?.push(listItem[1].trim())
+        continue
+      }
+
       const idx = line.indexOf(':')
       if (idx === -1) continue
+      currentList = null
       const key = line.slice(0, idx).trim()
       const value = line.slice(idx + 1).trim()
-      if (key === 'tags') {
-        meta.tags = value.split(/[,，]/).map((t) => t.trim()).filter(Boolean)
+      if (key === 'tags' || key === 'categories') {
+        const values = value
+          ? value.split(/[,，]/).map((item) => item.trim()).filter(Boolean)
+          : []
+        meta[key] = values
+        currentList = key
       } else if (key === 'title') {
         meta.title = value
       } else if (key === 'date') {
@@ -58,6 +74,7 @@ export const posts: Post[] = Object.entries(modules)
       title: meta.title ?? '未命名文章',
       date: meta.date ?? '',
       tags: meta.tags ?? [],
+      categories: meta.categories ?? [],
       excerpt: meta.excerpt ?? '',
       content,
     }

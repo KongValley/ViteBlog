@@ -1,7 +1,10 @@
 ---
 title: Vue 3 组合式 API 入门笔记
 date: 2026-09-14
-tags: Vue
+tags:
+  - Vue
+categories:
+  - Vue
 excerpt: ref、computed、watch 三件套的使用心得,以及组合式 API 相比选项式 API 到底解决了什么问题。
 ---
 

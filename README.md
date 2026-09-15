@@ -22,7 +22,11 @@ npm run preview # 本地预览构建产物
 ---
 title: 文章标题
 date: 2026-09-15        # YYYY-MM-DD,卡片上显示的发布日期
-tags: Vue, 随笔          # 逗号分隔,可中文
+tags:
+  - Vue
+  - 随笔
+categories:
+  - Build Blog
 excerpt: 一两句话摘要,显示在首页卡片上。
 ---
 

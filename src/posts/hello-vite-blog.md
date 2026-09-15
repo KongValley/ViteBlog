@@ -1,7 +1,11 @@
 ---
 title: 博客开张:为什么我选择 Vue 3 + Vite 搭博客
 date: 2026-09-15
-tags: 随笔, Vite
+tags:
+  - 随笔
+  - Vite
+categories:
+  - Build Blog
 excerpt: 博客正式开张!聊聊为什么在众多方案里选了 Vue 3 + Vite 这条路线,以及这个博客是怎么组织代码的。
 ---
 
