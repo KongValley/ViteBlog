@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { marked } from 'marked'
 import { useRoute } from 'vue-router'
+import { marked } from '../data/markdown'
 import { adjacentPosts, getPostBySlug } from '../data/posts'
 
 const route = useRoute()

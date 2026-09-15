@@ -25,6 +25,7 @@
   --font-body: 'Fusion Pixel 12px Proportional SC', 'Press Start 2P',
     system-ui, sans-serif;
   --font-mono: ui-monospace, Consolas, 'Cascadia Code', monospace;
+  --font-code: 'Fira Code', ui-monospace, Consolas, 'Cascadia Code', monospace;
 }
 
 [data-theme='dark'] {
@@ -556,7 +557,7 @@ button.tag:hover,
 }
 
 .markdown-body code {
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
   font-size: 0.85em;
   background: var(--code-bg);
   color: var(--code-ink);
@@ -629,6 +630,67 @@ button.tag:hover,
   color: var(--ink-strong);
 }
 
+/* ---------- 代码语法高亮(自配复古终端配色,配深色代码窗) ---------- */
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote {
+  color: #767d9c;
+  font-style: italic;
+}
+
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-selector-tag,
+.markdown-body .hljs-doctag {
+  color: #ff79a8;
+}
+
+.markdown-body .hljs-string,
+.markdown-body .hljs-regexp,
+.markdown-body .hljs-addition {
+  color: #9be86b;
+}
+
+.markdown-body .hljs-number,
+.markdown-body .hljs-literal,
+.markdown-body .hljs-symbol,
+.markdown-body .hljs-bullet,
+.markdown-body .hljs-meta {
+  color: #ffb347;
+}
+
+.markdown-body .hljs-title,
+.markdown-body .hljs-section,
+.markdown-body .hljs-name,
+.markdown-body .hljs-selector-id,
+.markdown-body .hljs-selector-class {
+  color: #ffd75e;
+}
+
+.markdown-body .hljs-attr,
+.markdown-body .hljs-attribute,
+.markdown-body .hljs-variable,
+.markdown-body .hljs-template-variable,
+.markdown-body .hljs-type {
+  color: #6fd7ff;
+}
+
+.markdown-body .hljs-built_in,
+.markdown-body .hljs-title.class_,
+.markdown-body .hljs-class {
+  color: #c7a5ff;
+}
+
+.markdown-body .hljs-emphasis {
+  font-style: italic;
+}
+
+.markdown-body .hljs-strong {
+  font-weight: 700;
+}
+
+.markdown-body .hljs-deletion {
+  color: #ff5c5c;
+}
+
 /* ---------- 关于页 ---------- */
 .section-title {
   margin: 0 0 22px;
@@ -647,8 +709,8 @@ button.tag:hover,
 }
 
 .about-body code {
-  font-family: var(--font-mono);
-  font-size: 0.85em;
+  font-family: var(--font-code);
+  font-size: 0.875em;
   background: var(--code-bg);
   color: var(--code-ink);
   padding: 2px 7px;
