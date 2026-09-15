@@ -708,60 +708,80 @@ button.tag:hover,
   top: 84px;
 }
 
-/* ---------- 游戏机名片(掌机造型,机身配色固定不随主题) ---------- */
+/* ---------- 游戏机名片:初代 Game Boy(DMG-01)造型,机身配色固定不随主题 ---------- */
 .gb-shell {
-  background: #cdc9bd;
-  border: 4px solid #1a1a1e;
+  position: relative;
+  background: #c8c4b8;
+  border: 3px solid #1a1a1e;
+  border-radius: 12px 12px 48px 12px !important; /* GB 标志性的右下大圆角 */
   box-shadow: 6px 6px 0 var(--shadow);
-  padding: 14px 14px 16px;
+  padding: 10px 12px 92px;
   color: #1a1a1e;
 }
 
-.gb-top {
+/* 机身顶部凹槽线 */
+.gb-grooves {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 3px solid #1a1a1e;
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+  justify-content: center;
+  gap: 56px;
+  margin-bottom: 8px;
 }
 
-.gb-brand {
-  font-size: 10px;
-  letter-spacing: 1px;
+.gb-grooves i {
+  display: block;
+  width: 58px;
+  height: 3px;
+  background: #a9a599;
+  border-radius: 999px !important;
 }
 
-/* 电源灯,慢慢闪 */
-.gb-led {
-  width: 10px;
-  height: 10px;
-  background: #e43b44;
-  border: 2px solid #1a1a1e;
-  animation: blink 2s steps(1) infinite;
+/* 深色条纹(屏幕座),电源灯在左侧 */
+.gb-stripe {
+  position: relative;
+  background: #454951;
+  border-radius: 8px 8px 6px 6px !important;
+  padding: 8px 36px 12px;
 }
 
-.gb-bezel {
-  background: #55565c;
-  border: 3px solid #1a1a1e;
-  box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.35);
-  padding: 8px 8px 10px;
-}
-
-.gb-bezel-label {
+.gb-stripe-text {
   display: block;
   text-align: center;
-  font-size: 7px;
-  letter-spacing: 2px;
-  color: #d8d3c0;
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: #b9bdc4;
   margin-bottom: 8px;
+  white-space: nowrap;
+}
+
+.gb-led {
+  position: absolute;
+  left: 13px;
+  top: 42px;
+  width: 9px;
+  height: 9px;
+  background: #e43b44;
+  border-radius: 50% !important;
+  border: 2px solid #26262a;
+}
+
+.gb-led-label {
+  position: absolute;
+  left: 7px;
+  top: 56px;
+  font-size: 5px;
+  color: #b9bdc4;
+  letter-spacing: 1px;
 }
 
 .gb-screen {
   position: relative;
   display: block;
-  background: #8bac0f;
-  border: 3px solid #0f380f;
-  padding: 14px 0 24px;
+  width: fit-content;
+  margin: 0 auto;
+  background: #9bbc0f;
+  border: 3px solid #26262a;
+  border-radius: 4px !important;
+  padding: 12px 14px 24px;
   text-align: center;
 }
 
@@ -795,136 +815,196 @@ button.tag:hover,
 
 .gb-cursor {
   position: absolute;
-  left: 8px;
-  bottom: 2px;
+  left: 6px;
+  bottom: 3px;
   font-size: 9px;
   color: #0f380f;
 }
 
-.gb-info {
-  padding: 12px 2px 4px;
+/* 仿机身印刷 logo */
+.gb-logo {
+  margin: 12px 2px 6px;
+  text-align: center;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #2d2a55;
 }
 
-.gb-name {
-  margin: 0;
-  font-size: 19px;
-  font-weight: 700;
+.gb-logo b {
+  font-weight: 800;
 }
 
-.gb-handle {
-  margin: 2px 0 0;
+.gb-logo sup {
   font-size: 8px;
-  letter-spacing: 1px;
-  color: #6b675c;
+  font-style: normal;
 }
 
-.gb-motto {
-  margin: 8px 0 0;
-  font-size: 13px;
-  color: #55524a;
-}
-
+/* 按键区:D-pad 左,B/A 右 */
 .gb-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 2px 14px;
+  padding: 8px 4px 0;
 }
 
-/* D-pad 十字键 */
+/* D-pad 十字键(圆角端头) */
 .gb-dpad {
   position: relative;
-  width: 72px;
-  height: 72px;
+  width: 84px;
+  height: 84px;
 }
 
 .gb-dpad i::before,
 .gb-dpad i::after {
   content: '';
   position: absolute;
-  background: #2a2a2e;
-  border: 3px solid #1a1a1e;
-  box-shadow: 3px 3px 0 rgba(26, 26, 30, 0.3);
+  background: #26262a;
+  border-radius: 7px !important;
+  box-shadow: 2px 3px 0 rgba(26, 26, 30, 0.35);
 }
 
 .gb-dpad i::before {
-  left: 23px;
+  left: 26px;
   top: 0;
-  width: 26px;
-  height: 72px;
+  width: 32px;
+  height: 84px;
 }
 
 .gb-dpad i::after {
   left: 0;
-  top: 23px;
-  width: 72px;
-  height: 26px;
+  top: 26px;
+  width: 84px;
+  height: 32px;
 }
 
-/* A / B 键 */
+/* 圆形 B / A 键,B 低 A 高斜向排列,字母印在按钮下方 */
 .gb-ab {
   display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.gb-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  background: #8f2e4e;
-  color: #ffd7e0;
-  border: 3px solid #1a1a1e;
-  font-size: 10px;
-  box-shadow: 3px 3px 0 rgba(26, 26, 30, 0.3),
-    inset 2px 2px 0 rgba(255, 255, 255, 0.18);
-}
-
-.gb-bottom {
-  display: flex;
+  gap: 16px;
   align-items: flex-end;
-  justify-content: space-between;
-  border-top: 3px solid #1a1a1e;
-  padding-top: 12px;
 }
 
-.gb-start {
-  display: inline-block;
-  padding: 5px 12px;
-  background: #8a857a;
-  color: #1a1a1e;
-  border: 3px solid #1a1a1e;
-  box-shadow: 3px 3px 0 rgba(26, 26, 30, 0.3);
+.gb-key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.gb-key-a {
+  transform: translateY(-16px);
+}
+
+.gb-btn-round {
+  display: block;
+  width: 38px;
+  height: 38px;
+  background: #9c2b54;
+  border-radius: 50% !important;
+  border: 2px solid #26262a;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25), 2px 3px 0 rgba(26, 26, 30, 0.3);
+}
+
+.gb-key-label {
   font-size: 8px;
-  letter-spacing: 1px;
-  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2),
-    background 0.05s steps(2);
+  color: #2d2a55;
 }
 
-.gb-start:hover {
+/* SELECT / START 斜置胶囊键 */
+.gb-mid {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  margin: 20px 0 0;
+}
+
+.gb-pill-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
   text-decoration: none;
-  background: var(--gold);
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 rgba(26, 26, 30, 0.3);
 }
 
-.gb-start:active {
-  transform: translate(3px, 3px);
-  box-shadow: none;
+.gb-pill {
+  display: block;
+  width: 48px;
+  height: 14px;
+  background: #8a867c;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.18) 0 2px,
+    transparent 2px 6px
+  );
+  border-radius: 999px !important;
+  transform: rotate(-25deg);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+  transition: background-color 0.05s steps(2);
 }
 
+.gb-pill-label {
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: #55524a;
+}
+
+.gb-pill-link:hover {
+  text-decoration: none;
+}
+
+.gb-pill-link:hover .gb-pill {
+  background-color: var(--gold);
+}
+
+.gb-pill-link:hover .gb-pill-label {
+  color: var(--red);
+}
+
+/* 右下角斜排喇叭格栅 */
 .gb-speaker {
+  position: absolute;
+  right: 20px;
+  bottom: 22px;
   display: flex;
   gap: 5px;
+  transform: rotate(-25deg);
 }
 
 .gb-speaker i {
-  width: 5px;
-  height: 36px;
-  background: #b5b0a4;
-  border: 2px solid #1a1a1e;
+  display: block;
+  width: 6px;
+  height: 46px;
+  background: #55524a;
+  border-radius: 999px !important;
+}
+
+/* 玩家信息(机身下方) */
+.gb-id {
+  margin-top: 16px;
+  padding: 0 4px;
+}
+
+.gb-name {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.gb-handle {
+  margin: 2px 0 0;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.gb-motto {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 @media (max-width: 980px) {

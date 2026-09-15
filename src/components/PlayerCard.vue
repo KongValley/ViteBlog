@@ -5,15 +5,15 @@ import { site } from '../data/site'
 <template>
   <aside class="player-card" aria-label="站长信息">
     <div class="gb-shell">
-      <!-- 机身顶部:型号 + 电源灯 -->
-      <div class="gb-top">
-        <span class="gb-brand pixel-en">VITEBOY</span>
-        <span class="gb-led" title="POWER"></span>
-      </div>
+      <!-- 机身顶部凹槽线 -->
+      <div class="gb-grooves" aria-hidden="true"><i></i><i></i></div>
 
-      <!-- 屏幕区域:GitHub 头像做旧成像素颗粒 -->
-      <div class="gb-bezel">
-        <span class="gb-bezel-label pixel-en">PLAYER 1</span>
+      <!-- 深色条纹:电源灯 + 屏幕 -->
+      <div class="gb-stripe">
+        <span class="gb-stripe-text pixel-en">DOT MATRIX WITH STEREO SOUND</span>
+        <span class="gb-led" aria-hidden="true"></span>
+        <span class="gb-led-label pixel-en">BATTERY</span>
+
         <a
           class="gb-screen"
           :href="`https://github.com/${site.githubUser}`"
@@ -24,7 +24,7 @@ import { site } from '../data/site'
           <img
             class="gb-avatar"
             :src="site.avatar"
-            :alt="`${site.author} 的 GitHub 头像`"
+            :alt="`${site.author} 的头像`"
             width="120"
             height="120"
             loading="eager"
@@ -33,37 +33,53 @@ import { site } from '../data/site'
         </a>
       </div>
 
-      <!-- 玩家信息 -->
-      <div class="gb-info">
-        <p class="gb-name">{{ site.author }}</p>
-        <p class="gb-handle pixel-en">@{{ site.githubUser }}</p>
-        <p class="gb-motto">{{ site.tagline }}</p>
-      </div>
+      <!-- 仿 GB 机身 logo -->
+      <p class="gb-logo">{{ site.name }} <b>GAME BOY</b><sup>™</sup></p>
 
-      <!-- 按键区(装饰) -->
-      <div class="gb-controls" aria-hidden="true">
-        <div class="gb-dpad"><i></i></div>
+      <!-- 按键:D-pad 左,B/A 右(A 高 B 低) -->
+      <div class="gb-controls">
+        <div class="gb-dpad" aria-hidden="true"><i></i></div>
         <div class="gb-ab">
-          <span class="gb-btn pixel-en">B</span>
-          <span class="gb-btn pixel-en">A</span>
+          <span class="gb-key">
+            <span class="gb-btn-round" aria-hidden="true"></span>
+            <b class="gb-key-label pixel-en">B</b>
+          </span>
+          <span class="gb-key gb-key-a">
+            <span class="gb-btn-round" aria-hidden="true"></span>
+            <b class="gb-key-label pixel-en">A</b>
+          </span>
         </div>
       </div>
 
-      <!-- START 键(真链接)+ 喇叭格栅 -->
-      <div class="gb-bottom">
+      <!-- SELECT / START 胶囊键(START 是真链接) -->
+      <div class="gb-mid">
+        <span class="gb-pill-wrap" aria-hidden="true">
+          <span class="gb-pill"></span>
+          <b class="gb-pill-label pixel-en">SELECT</b>
+        </span>
         <a
-          class="gb-start pixel-en"
+          class="gb-pill-wrap gb-pill-link"
           :href="`https://github.com/${site.githubUser}`"
           target="_blank"
           rel="noopener"
           title="GitHub 主页"
         >
-          ▶ START
+          <span class="gb-pill"></span>
+          <b class="gb-pill-label pixel-en">START</b>
         </a>
-        <div class="gb-speaker" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><i></i>
-        </div>
       </div>
+
+      <!-- 右下角喇叭格栅 -->
+      <div class="gb-speaker" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </div>
+
+    <!-- 玩家信息放在机身下方 -->
+    <div class="gb-id">
+      <p class="gb-name">{{ site.author }}</p>
+      <p class="gb-handle pixel-en">@{{ site.githubUser }}</p>
+      <p class="gb-motto">{{ site.tagline }}</p>
     </div>
   </aside>
 </template>
