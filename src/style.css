@@ -825,12 +825,11 @@ button.tag:hover,
   border: 2px solid #26262a;
 }
 
-.gb-led-label {
+.gb-power-icon {
   position: absolute;
-  left: 6px;
-  top: 56px;
-  font-size: 6px;
-  color: #b9bdc4;
+  left: 12px;
+  top: 55px;
+  opacity: 0.9;
 }
 
 .gb-screen {

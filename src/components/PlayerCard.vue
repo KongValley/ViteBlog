@@ -12,7 +12,29 @@ import { site } from '../data/site'
       <div class="gb-stripe">
         <span class="gb-stripe-text pixel-en">DOT MATRIX WITH STEREO SOUND</span>
         <span class="gb-led" aria-hidden="true"></span>
-        <span class="gb-led-label pixel-en">BATTERY</span>
+        <!-- 电源图标(替代 BATTERY 文字,小字号点阵字会缺字) -->
+        <svg
+          class="gb-power-icon"
+          viewBox="0 0 12 12"
+          width="11"
+          height="11"
+          aria-hidden="true"
+        >
+          <path
+            d="M6 1v5"
+            stroke="#b9bdc4"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            fill="none"
+          />
+          <path
+            d="M3.2 2.8a4.4 4.4 0 1 0 5.6 0"
+            stroke="#b9bdc4"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            fill="none"
+          />
+        </svg>
 
         <a
           class="gb-screen"
