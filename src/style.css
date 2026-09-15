@@ -725,6 +725,83 @@ button.tag:hover,
   color: var(--muted);
 }
 
+/* ---------- 终端风格小卡片(始终深色,像一块真终端) ---------- */
+.terminal-card {
+  max-width: 560px;
+  margin: 0 auto 36px;
+  padding: 20px 24px;
+  background: #0d1117;
+  border: 3px solid #1a1a1e;
+  border-radius: 10px !important; /* 参考图自带圆角,特批 */
+  box-shadow: 6px 6px 0 var(--shadow);
+  color: #e6edf3;
+  font-family: var(--font-code);
+}
+
+.term-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.term-cat {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: #f85149;
+}
+
+.term-lines p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #f85149;
+}
+
+.term-sub {
+  margin: 14px 0 0;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #e6edf3;
+}
+
+.term-title {
+  margin: 12px 0 18px;
+  font-size: 21px;
+  font-weight: 700;
+  color: #f0f6fc;
+  overflow-wrap: anywhere;
+}
+
+.term-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.term-btn {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid #30363d;
+  border-radius: 6px !important;
+  background: #0d1117;
+  color: #e6edf3;
+  font-size: 13px;
+  transition: border-color 0.1s steps(2), color 0.1s steps(2),
+    transform 0.05s steps(2);
+}
+
+.term-btn:hover {
+  text-decoration: none;
+  border-color: #f85149;
+  color: #ff7b72;
+  transform: translate(-1px, -1px);
+}
+
+.term-btn:active {
+  transform: translate(1px, 1px);
+}
+
 /* ---------- 页脚 ---------- */
 .footer {
   border-top: 4px solid var(--line);
