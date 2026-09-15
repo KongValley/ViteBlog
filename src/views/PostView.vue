@@ -1,15 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { marked } from '../data/markdown'
+import { renderMarkdown } from '../data/markdown'
 import { adjacentPosts, getPostBySlug } from '../data/posts'
 
 const route = useRoute()
-const post = computed(() => getPostBySlug(route.params.slug))
-const html = computed(() => (post.value ? marked.parse(post.value.content) : ''))
-const { prev, next } = adjacentPosts(route.params.slug)
+const slug = route.params.slug as string
+const post = computed(() => getPostBySlug(slug))
+const html = computed(() => (post.value ? renderMarkdown(post.value.content) : ''))
+const { prev, next } = adjacentPosts(slug)
 
-function formatDate(date) {
+function formatDate(date: string): string {
   if (!date) return ''
   const [y, m, d] = date.split('-')
   return `${y} 年 ${Number(m)} 月 ${Number(d)} 日`

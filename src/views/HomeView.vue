@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue'
 import { posts } from '../data/posts'
 import { site } from '../data/site'
@@ -11,7 +11,7 @@ const filteredPosts = computed(() =>
   activeTag.value ? posts.filter((p) => p.tags.includes(activeTag.value)) : posts,
 )
 
-function formatDate(date) {
+function formatDate(date: string): string {
   if (!date) return ''
   const [y, m, d] = date.split('-')
   return `${y} 年 ${Number(m)} 月 ${Number(d)} 日`

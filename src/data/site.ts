@@ -1,8 +1,18 @@
-// 站点配置统一来自项目根目录的 site.yml(由 vite.config.js 注入)
+// 站点配置统一来自项目根目录的 site.yml(由 vite.config.ts 注入)
 // 这里只做默认值兜底:yml 里省略的字段会自动补全,配置文件可以写得很精简
 import config from 'virtual:site-config'
 
-export const site = {
+export interface Site {
+  name: string
+  tagline: string
+  author: string
+  since: number
+  github: string
+  githubUser: string
+  avatar: string
+}
+
+const defaults: Site = {
   name: 'ViteBlog',
   tagline: '记录学习与生活',
   author: 'Blogger',
@@ -10,8 +20,9 @@ export const site = {
   github: '',
   githubUser: '',
   avatar: '',
-  ...config,
 }
+
+export const site: Site = { ...defaults, ...config }
 
 // 未配置仓库地址时,用 GitHub 用户名拼一个
 if (!site.github && site.githubUser) {

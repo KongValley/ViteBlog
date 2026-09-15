@@ -36,3 +36,7 @@ export const marked = new Marked(
     },
   }),
 )
+
+export function renderMarkdown(source: string): string {
+  return marked.parse(source) as string
+}

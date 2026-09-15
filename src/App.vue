@@ -1,16 +1,22 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { site } from './data/site'
 
+type Theme = 'light' | 'dark'
+
 // 主题:初始取本地保存的偏好,否则跟随系统
-const initial =
-  localStorage.getItem('theme') ??
-  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-const theme = ref(initial)
+const stored = localStorage.getItem('theme')
+const initial: Theme =
+  stored === 'light' || stored === 'dark'
+    ? stored
+    : window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light'
+const theme = ref<Theme>(initial)
 document.documentElement.dataset.theme = theme.value
 
-function toggleTheme() {
+function toggleTheme(): void {
   theme.value = theme.value === 'dark' ? 'light' : 'dark'
   document.documentElement.dataset.theme = theme.value
   localStorage.setItem('theme', theme.value)

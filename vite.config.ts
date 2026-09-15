@@ -3,13 +3,13 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { parse } from 'yaml'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 
 const root = dirname(fileURLToPath(import.meta.url))
 
 // 把根目录的 site.yml 注入为虚拟模块 import 'virtual:site-config'
 // 这样站点配置只需要改 yml 文件,不用碰代码
-function siteConfig() {
+function siteConfig(): Plugin {
   const file = resolve(root, 'site.yml')
   return {
     name: 'site-config-yml',
@@ -23,7 +23,9 @@ function siteConfig() {
         const parsed = parse(readFileSync(file, 'utf8')) ?? {}
         return `export default ${JSON.stringify(parsed)}`
       } catch (err) {
-        throw new Error(`site.yml 配置文件解析失败,请检查格式(注意冒号后要有空格):${err.message}`)
+        throw new Error(
+          `site.yml 配置文件解析失败,请检查格式(注意冒号后要有空格):${(err as Error).message}`,
+        )
       }
     },
   }

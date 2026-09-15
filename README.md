@@ -7,9 +7,12 @@
 ```bash
 npm install     # 安装依赖
 npm run dev     # 启动开发服务器
-npm run build   # 构建生产版本到 dist/
+npm run build   # 类型检查(vue-tsc)+ 构建生产版本到 dist/
 npm run preview # 本地预览构建产物
 ```
+
+项目使用 **TypeScript**:所有数据层(`src/data/*.ts`)有完整类型定义,
+构建前会先跑 `vue-tsc` 类型检查,CI 上有类型错误会直接部署失败。
 
 ## 如何写文章
 
