@@ -1,10 +1,24 @@
-// 站点信息,在这里统一修改你的博客名称、简介、社交链接
+// 站点配置统一来自项目根目录的 site.yml(由 vite.config.js 注入)
+// 这里只做默认值兜底:yml 里省略的字段会自动补全,配置文件可以写得很精简
+import config from 'virtual:site-config'
+
 export const site = {
   name: 'ViteBlog',
   tagline: '记录学习与生活',
-  author: 'KongZhipeng',
-  since: 2026,
-  github: 'https://github.com/KongValley/ViteBlog', // 换成你自己的仓库地址
-  githubUser: 'KongValley', // 你的 GitHub 用户名(游戏机名片和头像用)
-  avatar: 'https://github.com/KongValley.png?size=60', // GitHub 头像(取 60px 源图,展示时 2 倍放大出像素颗粒感)
+  author: 'Blogger',
+  since: new Date().getFullYear(),
+  github: '',
+  githubUser: '',
+  avatar: '',
+  ...config,
+}
+
+// 未配置仓库地址时,用 GitHub 用户名拼一个
+if (!site.github && site.githubUser) {
+  site.github = `https://github.com/${site.githubUser}`
+}
+
+// 未配置头像时,自动使用 GitHub 头像(60px 小图放大呈现像素颗粒感)
+if (!site.avatar && site.githubUser) {
+  site.avatar = `https://github.com/${site.githubUser}.png?size=60`
 }

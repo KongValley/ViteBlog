@@ -1,0 +1,27 @@
+# ============================================================
+#  ViteBlog 站点配置文件
+#  改完保存即可:本地开发自动热更新;push 到 GitHub 后自动重新部署
+#  注意:YAML 里冒号后面要有一个空格,值里有冒号时给整个值加引号
+# ============================================================
+
+# 博客名称(顶部 logo、首页大标题)
+name: ViteBlog
+
+# 一句话简介(首页标题下方 + 页脚显示)
+tagline: 记录学习与生活
+
+# 你的名字(游戏机名片、页脚版权)
+author: KongZhipeng
+
+# 建站年份(页脚版权 © 后面的数字)
+since: 2026
+
+# 你的 GitHub 用户名(游戏机名片、头像、主页链接都用它)
+githubUser: KongValley
+
+# GitHub 仓库地址(页脚链接);不填则默认用 githubUser 拼接
+github: https://github.com/KongValley/ViteBlog
+
+# 头像图片地址;不填则默认用 GitHub 头像
+# size=60 是取小图再放大,配合像素主题呈现复古颗粒感
+avatar: https://github.com/KongValley.png?size=60

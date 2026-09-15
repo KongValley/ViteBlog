@@ -28,9 +28,22 @@ excerpt: 一两句话摘要,显示在首页卡片上。
 
 保存后无需改任何代码,首页自动出现新文章。
 
-## 站点信息
+## 站点配置
 
-博客名称、作者、GitHub 链接等在 `src/data/site.js` 里统一修改。
+所有站点信息统一在根目录的 **`site.yml`** 里修改,不用碰任何代码:
+
+```yaml
+name: ViteBlog            # 博客名称
+tagline: 记录学习与生活     # 一句话简介
+author: KongZhipeng       # 你的名字
+since: 2026               # 建站年份
+githubUser: KongValley    # GitHub 用户名(名片/头像/链接)
+github: https://github.com/KongValley/ViteBlog   # 仓库地址(可省略,自动用用户名拼)
+avatar: https://github.com/KongValley.png?size=60 # 头像(可省略,默认 GitHub 头像)
+```
+
+本地 `npm run dev` 时改 yml 会自动热更新;push 到 GitHub 后自动重新部署。
+省略 `github` / `avatar` 字段时会根据 `githubUser` 自动生成,所以最小配置只需 5 行。
 
 ## 部署说明
 
