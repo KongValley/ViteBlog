@@ -1,8 +1,5 @@
 <script setup>
 import { site } from '../data/site'
-
-// 从 github 仓库链接里取出用户名,如 .../KongValley/ViteBlog → KongValley
-const handle = site.github.split('/').filter(Boolean).pop()
 </script>
 
 <template>
@@ -19,7 +16,7 @@ const handle = site.github.split('/').filter(Boolean).pop()
         <span class="gb-bezel-label pixel-en">PLAYER 1</span>
         <a
           class="gb-screen"
-          :href="`https://github.com/${handle}`"
+          :href="`https://github.com/${site.githubUser}`"
           target="_blank"
           rel="noopener"
           title="点击访问我的 GitHub 主页"
@@ -39,7 +36,7 @@ const handle = site.github.split('/').filter(Boolean).pop()
       <!-- 玩家信息 -->
       <div class="gb-info">
         <p class="gb-name">{{ site.author }}</p>
-        <p class="gb-handle pixel-en">@{{ handle }}</p>
+        <p class="gb-handle pixel-en">@{{ site.githubUser }}</p>
         <p class="gb-motto">{{ site.tagline }}</p>
       </div>
 
@@ -56,7 +53,7 @@ const handle = site.github.split('/').filter(Boolean).pop()
       <div class="gb-bottom">
         <a
           class="gb-start pixel-en"
-          :href="`https://github.com/${handle}`"
+          :href="`https://github.com/${site.githubUser}`"
           target="_blank"
           rel="noopener"
           title="GitHub 主页"
