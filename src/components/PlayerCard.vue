@@ -55,7 +55,7 @@ import { site } from '../data/site'
       <div class="gb-mid">
         <span class="gb-pill-wrap" aria-hidden="true">
           <span class="gb-pill"></span>
-          <b class="gb-pill-label pixel-en">SELECT</b>
+          <b class="gb-pill-label">SELECT</b>
         </span>
         <a
           class="gb-pill-wrap gb-pill-link"
@@ -65,7 +65,7 @@ import { site } from '../data/site'
           title="GitHub 主页"
         >
           <span class="gb-pill"></span>
-          <b class="gb-pill-label pixel-en">START</b>
+          <b class="gb-pill-label">START</b>
         </a>
       </div>
 
