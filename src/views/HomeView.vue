@@ -21,6 +21,7 @@ function formatDate(date) {
   <section class="hero">
     <h1 class="hero-title">{{ site.name }}</h1>
     <p class="hero-tagline">{{ site.tagline }} — 基于 Vue 3 + Vite 构建</p>
+    <p class="hero-press pixel-en blink">★ PRESS START TO READ ★</p>
   </section>
 
   <div v-if="allTags.length" class="tag-filter">

@@ -45,6 +45,7 @@ function formatDate(date) {
   </article>
 
   <section v-else class="empty-block">
+    <p class="game-over pixel-en blink">GAME OVER</p>
     <p class="empty">文章不存在,可能已被删除或链接有误。</p>
     <RouterLink to="/" class="back-home">← 返回首页</RouterLink>
   </section>

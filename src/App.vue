@@ -29,10 +29,10 @@ function toggleTheme() {
           <RouterLink to="/about" class="nav-link">关于</RouterLink>
           <button
             class="theme-toggle"
-            :title="theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'"
+            :title="theme === 'dark' ? '切换到白天模式' : '切换到夜晚模式'"
             @click="toggleTheme"
           >
-            {{ theme === 'dark' ? '☀️' : '🌙' }}
+            {{ theme === 'dark' ? '昼' : '夜' }}
           </button>
         </nav>
       </div>
@@ -46,10 +46,13 @@ function toggleTheme() {
 
     <footer class="footer">
       <div class="container">
-        <p>© {{ site.since }} {{ site.author }} · {{ site.tagline }}</p>
+        <p class="footer-en pixel-en">
+          © {{ site.since }} {{ site.author }} · POWERED BY VUE × VITE ·
+          HOSTED ON GITHUB PAGES <span class="heart">♥</span>
+        </p>
         <p class="footer-meta">
           由 <a :href="site.github" target="_blank" rel="noopener">GitHub</a> Pages
-          强力驱动 · Vue 3 + Vite
+          强力驱动 · {{ site.tagline }}
         </p>
       </div>
     </footer>
