@@ -787,6 +787,7 @@ button.tag:hover,
   width: 120px;
   height: 120px;
   margin: 0 auto;
+  object-fit: cover; /* 任意比例的图片都裁成方形,不变形 */
   image-rendering: pixelated; /* 头像做大颗粒像素化处理 */
   border: 3px solid #0f380f;
   background: #9bbc0f;

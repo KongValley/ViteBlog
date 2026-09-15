@@ -22,3 +22,8 @@ if (!site.github && site.githubUser) {
 if (!site.avatar && site.githubUser) {
   site.avatar = `https://github.com/${site.githubUser}.png?size=60`
 }
+
+// 以 / 开头的本地头像路径(public/ 目录下的文件)自动补全站点子路径(base)
+if (site.avatar.startsWith('/')) {
+  site.avatar = import.meta.env.BASE_URL.replace(/\/$/, '') + site.avatar
+}

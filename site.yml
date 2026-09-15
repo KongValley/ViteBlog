@@ -23,5 +23,5 @@ githubUser: KongValley
 github: https://github.com/KongValley/ViteBlog
 
 # 头像图片地址;不填则默认用 GitHub 头像
-# size=60 是取小图再放大,配合像素主题呈现复古颗粒感
-avatar: https://github.com/KongValley.png?size=60
+# 用本地图片:把文件放进 public/ 目录,这里填 "/文件名"(开头的 / 会自动补全站点子路径)
+avatar: /avatar.jpeg
