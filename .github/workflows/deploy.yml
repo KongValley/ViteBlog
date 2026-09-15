@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # 完整历史:文章排序依赖每个文件的首次提交时间
 
       - name: Setup Node
         uses: actions/setup-node@v7

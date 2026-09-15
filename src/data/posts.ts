@@ -1,5 +1,6 @@
 // 文章数据源:自动扫描 src/posts/ 下的所有 .md 文件
 // 新建一篇文章 = 在 src/posts/ 里新建一个 .md 文件,无需改任何代码
+import postTimes from 'virtual:post-times'
 
 export interface Post {
   slug: string
@@ -8,6 +9,8 @@ export interface Post {
   tags: string[]
   excerpt: string
   content: string
+  /** md 文件的创建时间(首次提交进仓库的时间,毫秒时间戳),用于列表排序 */
+  createdAt: number
 }
 
 interface PostMeta {
@@ -60,10 +63,17 @@ export const posts: Post[] = Object.entries(modules)
       tags: meta.tags ?? [],
       excerpt: meta.excerpt ?? '',
       content,
+      createdAt: postTimes[`${slug}.md`] ?? 0,
     }
   })
-  // 按日期倒序,最新的在最前面(日期用 YYYY-MM-DD 格式即可正确排序)
-  .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
+  // 按文章文件的创建时间倒序(最新写的在最前);
+  // 同一时刻创建时,再按 frontmatter 的 date、slug 依次兜底
+  .sort(
+    (a, b) =>
+      b.createdAt - a.createdAt ||
+      (a.date < b.date ? 1 : a.date > b.date ? -1 : 0) ||
+      (a.slug < b.slug ? -1 : 1),
+  )
 
 export function getPostBySlug(slug: string): Post | undefined {
   return posts.find((p) => p.slug === slug)
