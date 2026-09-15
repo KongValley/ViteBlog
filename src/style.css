@@ -841,7 +841,7 @@ button.tag:hover,
   background: #9bbc0f;
   border: 3px solid #26262a;
   border-radius: 4px !important;
-  padding: 12px 14px 24px;
+  padding: 12px 14px 10px;
   text-align: center;
 }
 
@@ -873,12 +873,18 @@ button.tag:hover,
   background: #9bbc0f;
 }
 
-.gb-cursor {
-  position: absolute;
-  left: 6px;
-  bottom: 3px;
-  font-size: 9px;
+/* 屏幕内的角色名,像游戏选角色界面 */
+.gb-screen-name {
+  display: block;
+  margin-top: 10px;
+  font-family: 'Press Start 2P', 'Fusion Pixel 12px Proportional SC', monospace;
+  font-size: 8px;
   color: #0f380f;
+  white-space: nowrap;
+}
+
+.gb-screen-name .blink {
+  margin-right: 4px;
 }
 
 /* 仿机身印刷 logo */

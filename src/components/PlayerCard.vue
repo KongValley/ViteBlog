@@ -29,7 +29,10 @@ import { site } from '../data/site'
             height="120"
             loading="eager"
           />
-          <span class="gb-cursor pixel-en blink" aria-hidden="true">▶</span>
+          <span class="gb-screen-name">
+            <span class="blink" aria-hidden="true">▶</span>
+            {{ site.author }}
+          </span>
         </a>
       </div>
 
