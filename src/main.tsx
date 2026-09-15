@@ -13,7 +13,8 @@ const container = document.getElementById('app')!
 
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* basename 取 Vite 的 base(/ViteBlog/),路由才能匹配 GitHub Pages 子路径 */}
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>
   </StrictMode>,
