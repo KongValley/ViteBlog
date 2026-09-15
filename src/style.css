@@ -124,9 +124,18 @@ a:hover {
 
 .container {
   width: 100%;
-  max-width: 760px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+/* 文章页、关于页保持窄版心,阅读宽度不变 */
+.post,
+.about,
+.empty-block {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* 拉丁像素字体专用类(标题、口号、页脚标语) */
@@ -683,6 +692,249 @@ button.tag:hover,
 
 .footer-meta {
   font-size: 14px;
+}
+
+/* ---------- 首页双栏:左游戏机名片 + 右内容 ---------- */
+.home-layout {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.player-card {
+  position: sticky;
+  top: 84px;
+}
+
+/* ---------- 游戏机名片(掌机造型,机身配色固定不随主题) ---------- */
+.gb-shell {
+  background: #cdc9bd;
+  border: 4px solid #1a1a1e;
+  box-shadow: 6px 6px 0 var(--shadow);
+  padding: 14px 14px 16px;
+  color: #1a1a1e;
+}
+
+.gb-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid #1a1a1e;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.gb-brand {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+/* 电源灯,慢慢闪 */
+.gb-led {
+  width: 10px;
+  height: 10px;
+  background: #e43b44;
+  border: 2px solid #1a1a1e;
+  animation: blink 2s steps(1) infinite;
+}
+
+.gb-bezel {
+  background: #55565c;
+  border: 3px solid #1a1a1e;
+  box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.35);
+  padding: 8px 8px 10px;
+}
+
+.gb-bezel-label {
+  display: block;
+  text-align: center;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: #d8d3c0;
+  margin-bottom: 8px;
+}
+
+.gb-screen {
+  position: relative;
+  display: block;
+  background: #8bac0f;
+  border: 3px solid #0f380f;
+  padding: 14px 0 24px;
+  text-align: center;
+}
+
+.gb-screen:hover {
+  text-decoration: none;
+}
+
+/* 屏幕上的液晶纹理 */
+.gb-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(15, 56, 15, 0.16) 0 2px,
+    transparent 2px 4px
+  );
+}
+
+.gb-avatar {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  image-rendering: pixelated; /* 头像做大颗粒像素化处理 */
+  border: 3px solid #0f380f;
+  background: #9bbc0f;
+}
+
+.gb-cursor {
+  position: absolute;
+  left: 8px;
+  bottom: 2px;
+  font-size: 9px;
+  color: #0f380f;
+}
+
+.gb-info {
+  padding: 12px 2px 4px;
+}
+
+.gb-name {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.gb-handle {
+  margin: 2px 0 0;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #6b675c;
+}
+
+.gb-motto {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #55524a;
+}
+
+.gb-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 2px 14px;
+}
+
+/* D-pad 十字键 */
+.gb-dpad {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+
+.gb-dpad i::before,
+.gb-dpad i::after {
+  content: '';
+  position: absolute;
+  background: #2a2a2e;
+  border: 3px solid #1a1a1e;
+  box-shadow: 3px 3px 0 rgba(26, 26, 30, 0.3);
+}
+
+.gb-dpad i::before {
+  left: 23px;
+  top: 0;
+  width: 26px;
+  height: 72px;
+}
+
+.gb-dpad i::after {
+  left: 0;
+  top: 23px;
+  width: 72px;
+  height: 26px;
+}
+
+/* A / B 键 */
+.gb-ab {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.gb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #8f2e4e;
+  color: #ffd7e0;
+  border: 3px solid #1a1a1e;
+  font-size: 10px;
+  box-shadow: 3px 3px 0 rgba(26, 26, 30, 0.3),
+    inset 2px 2px 0 rgba(255, 255, 255, 0.18);
+}
+
+.gb-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-top: 3px solid #1a1a1e;
+  padding-top: 12px;
+}
+
+.gb-start {
+  display: inline-block;
+  padding: 5px 12px;
+  background: #8a857a;
+  color: #1a1a1e;
+  border: 3px solid #1a1a1e;
+  box-shadow: 3px 3px 0 rgba(26, 26, 30, 0.3);
+  font-size: 8px;
+  letter-spacing: 1px;
+  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2),
+    background 0.05s steps(2);
+}
+
+.gb-start:hover {
+  text-decoration: none;
+  background: var(--gold);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 rgba(26, 26, 30, 0.3);
+}
+
+.gb-start:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+.gb-speaker {
+  display: flex;
+  gap: 5px;
+}
+
+.gb-speaker i {
+  width: 5px;
+  height: 36px;
+  background: #b5b0a4;
+  border: 2px solid #1a1a1e;
+}
+
+@media (max-width: 980px) {
+  .home-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .player-card {
+    position: static;
+    width: 288px;
+    margin: 0 auto 32px;
+  }
 }
 
 /* ---------- 移动端适配 ---------- */

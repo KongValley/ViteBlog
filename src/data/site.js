@@ -4,5 +4,6 @@ export const site = {
   tagline: '记录学习与生活',
   author: 'KongZhipeng',
   since: 2026,
-  github: 'https://github.com/KongValley/ViteBlog',
+  github: 'https://github.com/KongValley/ViteBlog', // 换成你自己的仓库地址
+  avatar: 'https://github.com/KongValley.png?size=60', // GitHub 头像(取 60px 源图,展示时 2 倍放大出像素颗粒感)
 }
