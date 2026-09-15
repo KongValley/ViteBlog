@@ -1,6 +1,6 @@
 # ViteBlog
 
-基于 **Vue 3 + Vite** 的个人博客,托管在 GitHub Pages 上,通过 GitHub Actions 自动构建部署。
+基于 **React + Vite + TypeScript 7** 的个人博客,托管在 GitHub Pages 上,通过 GitHub Actions 自动构建部署。UI 为红白机像素风。
 
 ## 本地开发
 
@@ -11,8 +11,8 @@ npm run build   # 类型检查(vue-tsc)+ 构建生产版本到 dist/
 npm run preview # 本地预览构建产物
 ```
 
-项目使用 **TypeScript**:所有数据层(`src/data/*.ts`)有完整类型定义,
-构建前会先跑 `vue-tsc` 类型检查,CI 上有类型错误会直接部署失败。
+项目使用 **TypeScript 7**(原生 tsc):所有数据层(`src/data/*.ts`)有完整类型定义,
+构建前会先跑 `tsc --noEmit` 类型检查,CI 上有类型错误会直接部署失败。
 
 ## 如何写文章
 

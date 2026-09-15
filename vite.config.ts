@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import vue from '@vitejs/plugin-vue'
+import react from '@vitejs/plugin-react'
 import { parse } from 'yaml'
 import { defineConfig, type Plugin } from 'vite'
 
@@ -35,5 +35,5 @@ function siteConfig(): Plugin {
 // 如果仓库改名,记得同步修改这里
 export default defineConfig({
   base: '/ViteBlog/',
-  plugins: [vue(), siteConfig()],
+  plugins: [react(), siteConfig()],
 })

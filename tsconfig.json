@@ -11,7 +11,7 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
 
     "strict": true,
     "noUnusedLocals": true,
@@ -20,5 +20,5 @@
 
     "types": ["node", "vite/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"]
 }
