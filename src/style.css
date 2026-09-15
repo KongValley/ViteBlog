@@ -747,7 +747,6 @@ button.tag:hover,
   display: block;
   text-align: center;
   font-size: 6px;
-  letter-spacing: 1px;
   color: #b9bdc4;
   margin-bottom: 8px;
   white-space: nowrap;
@@ -766,11 +765,10 @@ button.tag:hover,
 
 .gb-led-label {
   position: absolute;
-  left: 7px;
+  left: 6px;
   top: 56px;
-  font-size: 5px;
+  font-size: 6px;
   color: #b9bdc4;
-  letter-spacing: 1px;
 }
 
 .gb-screen {
@@ -925,7 +923,7 @@ button.tag:hover,
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   text-decoration: none;
 }
 
@@ -946,8 +944,8 @@ button.tag:hover,
 }
 
 .gb-pill-label {
-  font-size: 6px;
-  letter-spacing: 1px;
+  margin-top: 4px; /* 避开斜置按钮的旋转包围盒 */
+  font-size: 8px; /* 点阵字体低于 8px 会糊成斜块 */
   color: #55524a;
 }
 
