@@ -372,9 +372,9 @@ button.tag:hover,
   color: var(--red);
 }
 
-.post-card-title::before {
-  content: '★ ';
+.post-card-icon {
   color: var(--gold);
+  margin-right: 8px;
 }
 
 .post-card-excerpt {

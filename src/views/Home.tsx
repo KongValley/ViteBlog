@@ -10,6 +10,29 @@ function formatDate(date: string): string {
   return `${y} 年 ${Number(m)} 月 ${Number(d)} 日`
 }
 
+const postIcons = [
+  '★',
+  '☆',
+  '✦',
+  '✧',
+  '✪',
+  '✫',
+  '✬',
+  '✭',
+  '✮',
+  '✯',
+]
+
+function getPostIcon(slug: string): string {
+  let hash = 0
+
+  for (let index = 0; index < slug.length; index += 1) {
+    hash = (hash * 31 + slug.charCodeAt(index)) >>> 0
+  }
+
+  return postIcons[hash % postIcons.length]
+}
+
 export default function Home() {
   const [activeTag, setActiveTag] = useState('')
 
@@ -53,7 +76,12 @@ export default function Home() {
           {filtered.map((post) => (
             <article key={post.slug} className="post-card">
               <Link to={`/post/${post.slug}`} className="post-card-link">
-                <h2 className="post-card-title">{post.title}</h2>
+                <h2 className="post-card-title">
+                  <span className="post-card-icon" aria-hidden="true">
+                    {getPostIcon(post.slug)}
+                  </span>
+                  {post.title}
+                </h2>
                 <p className="post-card-excerpt">{post.excerpt}</p>
                 <div className="post-card-meta">
                   <time className="post-card-date">{formatDate(post.date)}</time>
