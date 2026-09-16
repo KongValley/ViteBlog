@@ -22,6 +22,14 @@ const postIcons: PixelIconName[] = [
   'coin',
   'cat',
   'mushroom',
+  'hero',
+  'wizard',
+  'ninja',
+  'knight',
+  'robot',
+  'slime',
+  'invader',
+  'fighter',
 ]
 
 function getPostIcon(slug: string): PixelIconName {
