@@ -373,8 +373,17 @@ button.tag:hover,
 }
 
 .post-card-icon {
-  color: var(--gold);
-  margin-right: 8px;
+  display: inline-grid;
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 0.45em;
+  vertical-align: -0.2em;
+}
+
+.post-card-icon svg {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
 }
 
 .post-card-excerpt {

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { PixelIcon, type PixelIconName } from '../components/PixelIcon'
 import PlayerCard from '../components/PlayerCard'
 import { posts } from '../data/posts'
 import { site } from '../data/site'
@@ -10,20 +11,20 @@ function formatDate(date: string): string {
   return `${y} 年 ${Number(m)} 月 ${Number(d)} 日`
 }
 
-const postIcons = [
-  '★',
-  '☆',
-  '✦',
-  '✧',
-  '✪',
-  '✫',
-  '✬',
-  '✭',
-  '✮',
-  '✯',
+const postIcons: PixelIconName[] = [
+  'star',
+  'rocket',
+  'smile',
+  'heart',
+  'ghost',
+  'gamepad',
+  'lightning',
+  'coin',
+  'cat',
+  'mushroom',
 ]
 
-function getPostIcon(slug: string): string {
+function getPostIcon(slug: string): PixelIconName {
   let hash = 0
 
   for (let index = 0; index < slug.length; index += 1) {
@@ -78,7 +79,7 @@ export default function Home() {
               <Link to={`/post/${post.slug}`} className="post-card-link">
                 <h2 className="post-card-title">
                   <span className="post-card-icon" aria-hidden="true">
-                    {getPostIcon(post.slug)}
+                    <PixelIcon name={getPostIcon(post.slug)} />
                   </span>
                   {post.title}
                 </h2>
