@@ -11,9 +11,9 @@ const sprites = {
     '.yyyyyyyyyy.',
     '..yyyyyyyy..',
     '..yyyyyyyy..',
-    '.yy......yy.',
-    '.yy......yy.',
-    'yy........yy',
+    '....yyyy....',
+    '...yy..yy...',
+    '..yy....yy..',
   ],
   rocket: [
     '.....ww.....',
