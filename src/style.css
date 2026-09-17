@@ -503,6 +503,12 @@ button.tag:hover,
 /* ---------- 文章详情页 ---------- */
 /* 文章目录(像素卷轴):宽屏挂在文章左侧,窄屏隐藏 */
 .toc-wrap {
+  /* 羊皮卷专属配色:固定暖色,不随明暗主题变化,像一件实物 */
+  --scroll-line: #7a4a12;
+  --scroll-line-dark: #5c3408;
+  --scroll-hi: #fce9a0;
+  --scroll-paper: #f7d774;
+  --scroll-paper-dim: #eec95c;
   display: none;
   width: 240px;
 }
@@ -522,27 +528,63 @@ button.tag:hover,
 }
 
 .toc-rod {
-  height: 12px;
-  border: 3px solid var(--line);
-  background: linear-gradient(
-    to right,
-    var(--red) 0 10px,
-    var(--gold) 10px calc(100% - 10px),
-    var(--red) calc(100% - 10px)
-  );
-  box-shadow: 2px 2px 0 var(--shadow);
   position: relative;
-  z-index: 1;
+  height: 14px;
+  border: 3px solid var(--scroll-line);
+  background: linear-gradient(
+    180deg,
+    var(--scroll-hi) 0 4px,
+    var(--scroll-paper) 4px 9px,
+    var(--scroll-paper-dim) 9px 14px
+  );
+  box-shadow: 2px 2px 0 rgba(92, 52, 8, 0.35);
+}
+
+/* 卷轴两端的卷筒,中间一颗深色"螺旋芯" */
+.toc-rod::before,
+.toc-rod::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  width: 12px;
+  height: 24px;
+  border: 3px solid var(--scroll-line);
+  background:
+    linear-gradient(var(--scroll-line-dark), var(--scroll-line-dark)) 50% 50% /
+      4px 4px no-repeat,
+    linear-gradient(
+      180deg,
+      var(--scroll-hi) 0 4px,
+      var(--scroll-paper) 4px 12px,
+      var(--scroll-paper-dim) 12px 18px
+    );
+}
+
+.toc-rod::before {
+  left: -9px;
+}
+
+.toc-rod::after {
+  right: -9px;
 }
 
 .toc-paper {
-  margin: -3px 7px 0;
-  border: 3px solid var(--line);
+  margin: -3px 10px 0;
+  border: 3px solid var(--scroll-line);
   border-top: none;
-  background: var(--surface);
+  background:
+    repeating-conic-gradient(
+      rgba(252, 233, 160, 0.55) 0% 25%,
+      transparent 0% 50%
+    )
+    0 0 / 8px 8px,
+    var(--scroll-paper);
   padding: 12px 8px 14px;
   max-height: calc(100vh - 230px);
   overflow-y: auto;
+  box-shadow:
+    inset 0 0 0 3px rgba(252, 233, 160, 0.6),
+    inset 0 -12px 0 rgba(122, 74, 18, 0.08);
 }
 
 .toc-rod-bottom {
@@ -555,7 +597,7 @@ button.tag:hover,
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 4px;
-  color: var(--ink-strong);
+  color: var(--scroll-line-dark);
 }
 
 .toc-list {
@@ -568,14 +610,14 @@ button.tag:hover,
   display: block;
   padding: 5px 10px;
   border-left: 4px solid transparent;
-  color: var(--ink);
+  color: var(--scroll-line-dark);
   text-decoration: none;
   font-size: 13.5px;
   line-height: 1.55;
 }
 
 .toc-link:hover {
-  background: var(--bg);
+  background: rgba(122, 74, 18, 0.14);
 }
 
 .toc-h3 .toc-link {
@@ -583,18 +625,20 @@ button.tag:hover,
 }
 
 .toc-link.toc-active {
-  border-left-color: var(--red);
-  background: var(--gold);
-  color: var(--ink-strong);
+  border-left-color: #c0391b;
+  background: rgba(122, 74, 18, 0.16);
+  color: var(--scroll-line-dark);
+  font-weight: 700;
 }
 
 .toc-paper::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 .toc-paper::-webkit-scrollbar-thumb {
-  background: var(--line);
-  border: 2px solid var(--surface);
+  background: var(--scroll-line);
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 .markdown-body h2,
