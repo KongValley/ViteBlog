@@ -7,8 +7,10 @@ import { site } from '../data/site'
 
 function formatDate(date: string): string {
   if (!date) return ''
-  const [y, m, d] = date.split('-')
-  return `${y} 年 ${Number(m)} 月 ${Number(d)} 日`
+  const [y, m, d] = date.split(' ')[0].split('-')
+  if (!m) return y
+  const day = d ? ` ${Number(d)} 日` : ''
+  return `${y} 年 ${Number(m)} 月${day}`
 }
 
 const postIcons: PixelIconName[] = [
