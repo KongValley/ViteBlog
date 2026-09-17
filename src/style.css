@@ -597,9 +597,9 @@ button.tag:hover,
 }
 
 .toc-link.toc-active {
-  border-left-color: #c0391b;
-  background: rgba(122, 74, 18, 0.16);
-  color: var(--scroll-line-dark);
+  border-left-color: #7a4a12;
+  background: #c0391b;
+  color: #fff3d6;
   font-weight: 700;
 }
 
