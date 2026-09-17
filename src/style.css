@@ -584,7 +584,7 @@ button.tag:hover,
   border-left: 4px solid transparent;
   color: var(--scroll-line-dark);
   text-decoration: none;
-  font-size: 13.5px;
+  font-size: 15px;
   line-height: 1.55;
 }
 
