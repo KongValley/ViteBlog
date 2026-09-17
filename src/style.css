@@ -540,34 +540,6 @@ button.tag:hover,
   box-shadow: 2px 2px 0 rgba(92, 52, 8, 0.35);
 }
 
-/* 卷轴两端的卷筒,中间一颗深色"螺旋芯" */
-.toc-rod::before,
-.toc-rod::after {
-  content: '';
-  position: absolute;
-  top: -5px;
-  width: 12px;
-  height: 24px;
-  border: 3px solid var(--scroll-line);
-  background:
-    linear-gradient(var(--scroll-line-dark), var(--scroll-line-dark)) 50% 50% /
-      4px 4px no-repeat,
-    linear-gradient(
-      180deg,
-      var(--scroll-hi) 0 4px,
-      var(--scroll-paper) 4px 12px,
-      var(--scroll-paper-dim) 12px 18px
-    );
-}
-
-.toc-rod::before {
-  left: -9px;
-}
-
-.toc-rod::after {
-  right: -9px;
-}
-
 .toc-paper {
   margin: -3px 10px 0;
   border: 3px solid var(--scroll-line);
