@@ -28,6 +28,12 @@ const postIcons: PixelIconName[] = [
   'slime',
   'invader',
   'fighter',
+  'sword',
+  'shield',
+  'potion',
+  'bomb',
+  'skeleton',
+  'bat',
 ]
 
 // 个别文章手动指定图标,覆盖哈希随机分配的结果
@@ -36,6 +42,7 @@ const iconOverrides: Record<string, PixelIconName> = {
   'tool/自用代码提交格式': 'invader',
   'tool/Hexo引入mermaid': 'robot',
   'tool/Hexo外链播放器': 'cat',
+  'typescript/typescript入门': 'wizard',
 }
 
 function getPostIcon(slug: string): PixelIconName {
