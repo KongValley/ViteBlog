@@ -134,7 +134,7 @@ a:hover {
   padding: 0 20px;
 }
 
-/* 文章页、关于页保持窄版心,阅读宽度不变 */
+/* 关于页保持窄版心；文章页在宽屏展示目录时扩展布局 */
 .post,
 .about,
 .empty-block {
@@ -518,14 +518,15 @@ button.tag:hover,
   --scroll-paper: #f7d774;
   --scroll-paper-dim: #eec95c;
   display: none;
-  width: 240px;
+  width: 220px;
 }
 
 @media (min-width: 1100px) {
   .post {
     display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    gap: 36px;
+    max-width: 100%;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 32px;
     align-items: start;
   }
   .toc-wrap {
@@ -533,6 +534,10 @@ button.tag:hover,
     position: sticky;
     top: 92px;
   }
+}
+
+.post-body {
+  min-width: 0;
 }
 
 .toc-rod {
@@ -720,6 +725,7 @@ button.tag:hover,
 .markdown-body {
   font-size: 17px;
   line-height: 2;
+  overflow-wrap: anywhere;
 }
 
 .markdown-body h1,
@@ -785,6 +791,7 @@ button.tag:hover,
   box-shadow: 6px 6px 0 var(--shadow);
   padding: 16px 18px;
   overflow-x: auto;
+  overflow-wrap: normal;
   line-height: 1.7;
   margin: 1.2em 0;
 }
