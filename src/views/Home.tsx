@@ -32,13 +32,11 @@ const postIcons: PixelIconName[] = [
   'shield',
   'potion',
   'bomb',
-  'skeleton',
-  'bat',
 ]
 
 // 个别文章手动指定图标,覆盖哈希随机分配的结果
 const iconOverrides: Record<string, PixelIconName> = {
-  'typescript/typescript-webpack': 'gamepad',
+  'typescript/typescript-webpack': 'shield',
   'tool/自用代码提交格式': 'invader',
   'tool/Hexo引入mermaid': 'robot',
   'tool/Hexo外链播放器': 'cat',
