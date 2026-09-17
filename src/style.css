@@ -20,6 +20,10 @@
   --pixel-purple: #6844fc;
   --code-bg: #1a1c2c;  /* 代码块始终是深色“游戏窗口” */
   --code-ink: #e8e6d8;
+  --table-line: var(--line);
+  --table-head-bg: var(--gold);
+  --table-head-ink: var(--ink-strong);
+  --table-body-bg: transparent;
   --pattern: rgba(26, 26, 26, 0.05);
   --scanline: rgba(0, 0, 0, 0.045);
 
@@ -46,6 +50,10 @@
   --pixel-purple: #aa8cff;
   --code-bg: #12121f;
   --code-ink: #e8e6d8;
+  --table-line: #5c6073;
+  --table-head-bg: #2a2d40;
+  --table-head-ink: #e8e6d8;
+  --table-body-bg: #191a28;
   --pattern: rgba(255, 255, 255, 0.035);
   --scanline: rgba(0, 0, 0, 0.06);
 
@@ -835,20 +843,21 @@ button.tag:hover,
   border-collapse: collapse;
   margin: 1.2em 0;
   font-size: 15px;
-  border: 4px solid var(--line);
+  border: 4px solid var(--table-line);
+  background: var(--table-body-bg);
   box-shadow: 6px 6px 0 var(--shadow);
 }
 
 .markdown-body th,
 .markdown-body td {
-  border: 3px solid var(--line);
+  border: 3px solid var(--table-line);
   padding: 8px 14px;
   text-align: left;
 }
 
 .markdown-body th {
-  background: var(--gold);
-  color: var(--ink-strong);
+  background: var(--table-head-bg);
+  color: var(--table-head-ink);
 }
 
 /* ---------- 代码语法高亮(自配复古终端配色,配深色代码窗) ---------- */
