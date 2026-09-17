@@ -19,7 +19,6 @@ const postIcons: PixelIconName[] = [
   'ghost',
   'gamepad',
   'lightning',
-  'coin',
   'cat',
   'mushroom',
   'hero',
@@ -32,7 +31,17 @@ const postIcons: PixelIconName[] = [
   'fighter',
 ]
 
+// 个别文章手动指定图标,覆盖哈希随机分配的结果
+const iconOverrides: Record<string, PixelIconName> = {
+  'typescript/typescript-webpack': 'gamepad',
+  'tool/自用代码提交格式': 'invader',
+  'tool/Hexo引入mermaid': 'robot',
+}
+
 function getPostIcon(slug: string): PixelIconName {
+  const override = iconOverrides[slug]
+  if (override) return override
+
   let hash = 0
 
   for (let index = 0; index < slug.length; index += 1) {
