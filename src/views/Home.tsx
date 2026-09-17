@@ -18,7 +18,6 @@ const postIcons: PixelIconName[] = [
   'heart',
   'ghost',
   'gamepad',
-  'lightning',
   'cat',
   'mushroom',
   'hero',
@@ -36,6 +35,7 @@ const iconOverrides: Record<string, PixelIconName> = {
   'typescript/typescript-webpack': 'gamepad',
   'tool/自用代码提交格式': 'invader',
   'tool/Hexo引入mermaid': 'robot',
+  'tool/Hexo外链播放器': 'cat',
 }
 
 function getPostIcon(slug: string): PixelIconName {
