@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { site } from './data/site'
+import BackToTop from './components/BackToTop'
 import Home from './views/Home'
 import Post from './views/Post'
 import About from './views/About'
@@ -81,6 +82,8 @@ export default function App() {
           </p>
         </div>
       </footer>
+
+      <BackToTop />
     </div>
   )
 }
