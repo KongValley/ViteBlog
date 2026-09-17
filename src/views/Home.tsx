@@ -4,6 +4,7 @@ import { PixelIcon, type PixelIconName } from '../components/PixelIcon'
 import PlayerCard from '../components/PlayerCard'
 import { posts } from '../data/posts'
 import { site } from '../data/site'
+import { stickerIcons } from '../data/stickerIcons'
 
 function formatDate(date: string): string {
   if (!date) return ''
@@ -17,6 +18,10 @@ const postIcons: PixelIconName[] = [
   'star',
   'rocket',
   'smile',
+  'wink',
+  'laugh',
+  'surprised',
+  'love',
   'heart',
   'ghost',
   'gamepad',
@@ -34,6 +39,13 @@ const postIcons: PixelIconName[] = [
   'shield',
   'potion',
   'bomb',
+  'chest',
+  'key',
+  'gem',
+  'joystick',
+  'portal',
+  'trophy',
+  ...stickerIcons,
 ]
 
 // 个别文章手动指定图标,覆盖哈希随机分配的结果

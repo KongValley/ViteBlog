@@ -16,6 +16,8 @@
   --green: #00a844;    /* 经典 NES 绿 */
   --blue: #0058f8;     /* 经典 NES 蓝 */
   --gold: #f8b800;
+  --pixel-outline: #1a1c2c;
+  --pixel-purple: #6844fc;
   --code-bg: #1a1c2c;  /* 代码块始终是深色“游戏窗口” */
   --code-ink: #e8e6d8;
   --pattern: rgba(26, 26, 26, 0.05);
@@ -40,6 +42,8 @@
   --green: #3ce06a;
   --blue: #6fb7ff;
   --gold: #ffd75e;
+  --pixel-outline: #8996b2;
+  --pixel-purple: #aa8cff;
   --code-bg: #12121f;
   --code-ink: #e8e6d8;
   --pattern: rgba(255, 255, 255, 0.035);
@@ -384,6 +388,10 @@ button.tag:hover,
   width: 100%;
   height: 100%;
   image-rendering: pixelated;
+}
+
+[data-theme='dark'] .post-card-icon .sticker-needs-contrast {
+  background: #fdf6e3;
 }
 
 .post-card-excerpt {

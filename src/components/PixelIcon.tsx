@@ -1,3 +1,5 @@
+import type { StickerIconName } from '../data/stickerIcons'
+
 type PixelSprite = string[]
 
 const sprites = {
@@ -30,20 +32,6 @@ const sprites = {
     '.rr.wyyw.rr.',
     '....rrrr....',
     '.....oo.....',
-  ],
-  smile: [
-    '...yyyyyy...',
-    '..yyyyyyyy..',
-    '.yyyyyyyyyy.',
-    'yyyyyyyyyyyy',
-    'yykkyyyykkyy',
-    'yykkyyyykkyy',
-    'yyyyyyyyyyyy',
-    'yykkkkkkkkyy',
-    'yyykkkkkkyyy',
-    '.yyyyyyyyyy.',
-    '..yyyyyyyy..',
-    '...yyyyyy...',
   ],
   heart: [
     '............',
@@ -89,16 +77,16 @@ const sprites = {
   ],
   cat: [
     'kk........kk',
-    'kkk......kkk',
-    '.kkkkkkkkkk.',
-    'kkkkkkkkkkkk',
-    'kkokkkkkokkk',
-    'kkokkkkkokkk',
-    'kkkkkkkkkkkk',
-    'kkkookoookkk',
-    '.kkkkkkkkkk.',
+    'kook....kook',
+    'koookkkkoook',
+    'kooooooooook',
+    'koowoooowook',
+    'kooxooooxook',
+    'kooooooooook',
+    'koooorrooook',
+    'koowwoowwook',
+    '.kooooooook.',
     '..kkkkkkkk..',
-    '............',
     '............',
   ],
   mushroom: [
@@ -283,9 +271,131 @@ const sprites = {
     '...kkkkkk...',
     '....kkkk....',
   ],
+  chest: [
+    '............',
+    '..kkkkkkkk..',
+    '.koyyyyyyok.',
+    '.kooooooook.',
+    '.kkkkkkkkkk.',
+    '.kyyyyyyyyk.',
+    '.koooddoook.',
+    '.koooddoook.',
+    '.kooooooook.',
+    '..kkkkkkkk..',
+    '............',
+    '............',
+  ],
+  key: [
+    '....yyyy....',
+    '...oy..yy...',
+    '..oy....yy..',
+    '..oy....yy..',
+    '...oy..yy...',
+    '....yyyy....',
+    '.....oy.....',
+    '.....oy.....',
+    '.....oyyy...',
+    '.....oy.....',
+    '.....oyyy...',
+    '............',
+  ],
+  gem: [
+    '............',
+    '....kkkk....',
+    '...kcccck...',
+    '..kccwwcck..',
+    '.kcccwwccck.',
+    '.kcccccccck.',
+    '..kcccccck..',
+    '...kcccck...',
+    '....kcck....',
+    '.....kk.....',
+    '............',
+    '............',
+  ],
+  portal: [
+    '....kkkk....',
+    '..kkmmmmkk..',
+    '.kmccccccmk.',
+    'kmccwwwwccmk',
+    'kmcwwwwwwcmk',
+    'kmcwwwwwwcmk',
+    'kmcwwwwwwcmk',
+    'kmccwwwwccmk',
+    '.kmccccccmk.',
+    '..kkmmmmkk..',
+    '....kkkk....',
+    '............',
+  ],
+  trophy: [
+    '............',
+    '.yy......yy.',
+    '.kyyyyyyyyk.',
+    '.kyyyyyyyyk.',
+    '..kyyyyyyk..',
+    '...kyyyyk...',
+    '....kyyk....',
+    '.....yy.....',
+    '....yyyy....',
+    '....yyyy....',
+    '..yyyyyyyy..',
+    '............',
+  ],
+  joystick: [
+    '............',
+    '.....rr.....',
+    '....rrrr....',
+    '....rrrr....',
+    '.....kk.....',
+    '.....kk.....',
+    '.....kk.....',
+    '...kkkkkk...',
+    '.kkkkkkkkkk.',
+    '.kcccccccck.',
+    '.kccyyyycck.',
+    '.kkkkkkkkkk.',
+  ],
 } satisfies Record<string, PixelSprite>
 
-export type PixelIconName = keyof typeof sprites
+const expressionStickers = {
+  smile: 'sticker-r02-c01',
+  wink: 'sticker-r01-c01',
+  laugh: 'sticker-r01-c09',
+  surprised: 'sticker-r01-c12',
+  love: 'sticker-r03-c03',
+} as const satisfies Record<string, StickerIconName>
+
+const darkContrastStickers = new Set<string>([
+  'sticker-r03-c12',
+  'sticker-r05-c13',
+  'sticker-r05-c14',
+])
+
+export type PixelIconName = keyof typeof sprites | keyof typeof expressionStickers | StickerIconName
+
+const ICON_SIZE = 24
+
+// 旧精灵按最近邻补足到统一网格；新绘制的精灵可直接使用 24×24。
+function to24Sprite(sprite: PixelSprite): PixelSprite {
+  if (sprite.length === ICON_SIZE && sprite.every((row) => row.length === ICON_SIZE)) {
+    return sprite
+  }
+
+  const sourceHeight = sprite.length
+  const sourceWidth = sprite[0].length
+
+  return Array.from({ length: ICON_SIZE }, (_, y) =>
+    Array.from({ length: ICON_SIZE }, (_, x) =>
+      sprite[Math.floor(((y + 0.5) * sourceHeight) / ICON_SIZE)][
+        Math.floor(((x + 0.5) * sourceWidth) / ICON_SIZE)
+      ],
+    ).join(''),
+  )
+}
+
+const sprites24 = Object.fromEntries(
+  Object.entries(sprites).map(([name, sprite]) => [name, to24Sprite(sprite)]),
+) as Record<keyof typeof sprites, PixelSprite>
 
 const palette: Record<string, string> = {
   y: 'var(--gold)',
@@ -293,9 +403,10 @@ const palette: Record<string, string> = {
   b: 'var(--blue)',
   c: '#3cbcfc',
   g: 'var(--green)',
-  k: '#1a1c2c',
+  k: 'var(--pixel-outline)',
+  x: '#1a1c2c',
   n: '#f8b878',
-  m: '#6844fc',
+  m: 'var(--pixel-purple)',
   d: '#b8b8b8',
   w: '#fffbe8',
   o: '#f87858',
@@ -306,21 +417,49 @@ type PixelIconProps = {
 }
 
 export function PixelIcon({ name }: PixelIconProps) {
-  const sprite = sprites[name]
+  const stickerName = name in expressionStickers
+    ? expressionStickers[name as keyof typeof expressionStickers]
+    : name.startsWith('sticker-') ? name : null
+
+  if (stickerName) {
+    return (
+      <svg
+        className={darkContrastStickers.has(stickerName) ? 'sticker-needs-contrast' : undefined}
+        viewBox="0 0 24 24"
+        shapeRendering="crispEdges"
+        aria-hidden="true"
+      >
+        <image
+          href={`${import.meta.env.BASE_URL}icons/stickers/${stickerName}.svg`}
+          x={0}
+          y={0}
+          width={24}
+          height={24}
+        />
+      </svg>
+    )
+  }
+
+  const sprite = sprites24[name as keyof typeof sprites]
 
   return (
     <svg
-      viewBox={`0 0 ${sprite[0].length} ${sprite.length}`}
+      viewBox={`0 0 ${ICON_SIZE} ${ICON_SIZE}`}
       fill="none"
       shapeRendering="crispEdges"
       aria-hidden="true"
     >
       {sprite.flatMap((row, y) =>
-        row.split('').map((pixel, x) =>
-          pixel === '.' ? null : (
-            <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={palette[pixel]} />
-          ),
-        ),
+        Array.from(row.matchAll(/([a-z])\1*/g), (match) => (
+          <rect
+            key={`${match.index}-${y}`}
+            x={match.index}
+            y={y}
+            width={match[0].length}
+            height={1}
+            fill={palette[match[1]]}
+          />
+        )),
       )}
     </svg>
   )
