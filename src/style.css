@@ -420,6 +420,46 @@ button.tag:hover,
   font-size: 18px;
 }
 
+/* ---------- 分页 ---------- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.page-btn {
+  padding: 3px 12px;
+  border: 3px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--shadow);
+  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2),
+    background 0.05s steps(2);
+}
+
+.page-btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--shadow);
+}
+
+.page-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
+.page-current {
+  background: var(--red);
+  color: #fff;
+}
+
 /* ---------- 文章详情页 ---------- */
 .post-header {
   margin-bottom: 30px;

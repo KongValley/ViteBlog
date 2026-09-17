@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { PixelIcon, type PixelIconName } from '../components/PixelIcon'
 import PlayerCard from '../components/PlayerCard'
 import { posts } from '../data/posts'
@@ -56,13 +56,30 @@ function getPostIcon(slug: string): PixelIconName {
   return postIcons[hash % postIcons.length]
 }
 
+const PAGE_SIZE = 10
+
 export default function Home() {
   const [activeTag, setActiveTag] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const allTags = useMemo(() => [...new Set(posts.flatMap((p) => p.tags))], [])
   const filtered = activeTag
     ? posts.filter((p) => p.tags.includes(activeTag))
     : posts
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const page = Math.min(Math.max(1, Number(searchParams.get('page')) || 1), totalPages)
+  const visiblePosts = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  const selectTag = (tag: string) => {
+    setActiveTag(tag)
+    setSearchParams({}, { replace: true })
+  }
+
+  const goToPage = (next: number) => {
+    setSearchParams(next === 1 ? {} : { page: String(next) })
+    window.scrollTo(0, 0)
+  }
 
   return (
     <div className="home-layout">
@@ -79,7 +96,7 @@ export default function Home() {
           <div className="tag-filter">
             <button
               className={activeTag === '' ? 'tag tag-active' : 'tag'}
-              onClick={() => setActiveTag('')}
+              onClick={() => selectTag('')}
             >
               全部 ({posts.length})
             </button>
@@ -87,7 +104,7 @@ export default function Home() {
               <button
                 key={tag}
                 className={activeTag === tag ? 'tag tag-active' : 'tag'}
-                onClick={() => setActiveTag(activeTag === tag ? '' : tag)}
+                onClick={() => selectTag(tag)}
               >
                 {tag}
               </button>
@@ -96,7 +113,7 @@ export default function Home() {
         )}
 
         <section className="post-list">
-          {filtered.map((post) => (
+          {visiblePosts.map((post) => (
             <article key={post.slug} className="post-card">
               <Link to={`/post/${post.slug}`} className="post-card-link">
                 <h2 className="post-card-title">
@@ -120,6 +137,34 @@ export default function Home() {
 
           {filtered.length === 0 && <p className="empty">这个标签下还没有文章~</p>}
         </section>
+
+        {totalPages > 1 && (
+          <nav className="pagination" aria-label="文章分页">
+            <button
+              className="page-btn"
+              disabled={page === 1}
+              onClick={() => goToPage(page - 1)}
+            >
+              ◀ 上一页
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+              <button
+                key={num}
+                className={num === page ? 'page-btn page-current' : 'page-btn'}
+                onClick={() => goToPage(num)}
+              >
+                {num}
+              </button>
+            ))}
+            <button
+              className="page-btn"
+              disabled={page === totalPages}
+              onClick={() => goToPage(page + 1)}
+            >
+              下一页 ▶
+            </button>
+          </nav>
+        )}
       </div>
     </div>
   )
