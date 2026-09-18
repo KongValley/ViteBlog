@@ -212,7 +212,7 @@ myapp/
 
 ## 数据存哪儿？
 
-目前待办存在内存里，进程一重启就清空。真实项目要落库——这正是下一系列要解决的问题，SQLAlchemy 的用法会在[第五篇](/post/python-backend-05-db-auth-deploy)展开。
+目前待办存在内存里，进程一重启就清空。真实项目要落库——这正是后面要解决的问题，SQLAlchemy 的用法会在[第五篇](/post/python-backend-05-db-auth-deploy)展开。
 
 ## 动手练习
 

@@ -194,7 +194,7 @@ docker run -d -p 8000:8000 --env-file .env myapi
 
 ## 系列小结
 
-五篇走完一条完整的路：**HTTP 协议与手写 WSGI**（理解本质）→ **Flask**（最小可用）→ **FastAPI**（类型驱动）→ **Django**（全家桶）→ **数据库、鉴权与部署**（生产化）。接下来值得深入的方向：API 测试（`pytest` + `TestClient`）、缓存（Redis）、任务队列（Celery）、以及把其中某一篇里的待办 API 真正做成一个完整项目。
+六篇走完一条完整的路：**HTTP 协议与手写 WSGI**（理解本质）→ **Flask**（最小可用）→ **FastAPI**（类型驱动）→ **Django**（全家桶）→ **数据库、鉴权与部署**（生产化）→ **[工具链](/post/python-backend-06-toolchain)**（uv、ruff、pytest，把质量管起来）。接下来值得深入的方向：缓存（Redis）、任务队列（Celery）、以及把其中某一篇里的待办 API 真正做成一个完整项目。
 
 ## 动手练习
 
