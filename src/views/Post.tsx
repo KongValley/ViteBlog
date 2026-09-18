@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useEffect, useMemo, useState, type MouseEvent as ReactMouseEvent } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { renderMarkdown } from '../data/markdown'
 import { adjacentPosts, getPostBySlug } from '../data/posts'
 
@@ -42,8 +42,23 @@ function injectHeadingIds(html: string, ids: string[]): string {
 
 export default function Post() {
   const slug = useParams()['*']
+  const navigate = useNavigate()
   const post = getPostBySlug(slug ?? '')
   const { prev, next } = adjacentPosts(slug ?? '')
+
+  // 正文里的站内链接已带上部署 base,拦截下来走 SPA 跳转,免去整页刷新;
+  // 外链、锚点、修饰键点击(新标签打开)一概放行
+  const handleContentClick = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (event.defaultPrevented || event.button !== 0) return
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    const anchor = (event.target as HTMLElement).closest('a')
+    if (!anchor || anchor.target === '_blank') return
+    const href = anchor.getAttribute('href') ?? ''
+    const base = import.meta.env.BASE_URL
+    if (!href.startsWith(base)) return
+    event.preventDefault()
+    navigate(href.slice(base.length - 1))
+  }
 
   if (!post) {
     return (
@@ -135,6 +150,7 @@ export default function Post() {
 
       <div
         className="post-content markdown-body"
+        onClick={handleContentClick}
         dangerouslySetInnerHTML={{ __html: html }}
       />
 

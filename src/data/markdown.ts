@@ -65,5 +65,9 @@ function fixCjkStrong(source: string): string {
 }
 
 export function renderMarkdown(source: string): string {
-  return marked.parse(fixCjkStrong(source)) as string
+  const html = marked.parse(fixCjkStrong(source)) as string
+  // 站内链接(/post/...)补上部署 base,否则在 GitHub Pages 的 /ViteBlog/ 子路径下会 404
+  return html.replace(/href="\/(?!\/)([^"]*)"/g, (_match, path: string) => {
+    return `href="${import.meta.env.BASE_URL}${path}"`
+  })
 }
