@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { PixelIcon, type PixelIconName } from '../components/PixelIcon'
 import PlayerCard from '../components/PlayerCard'
@@ -71,12 +71,34 @@ function getPostIcon(slug: string): PixelIconName {
 }
 
 const PAGE_SIZE = 10
+const MAX_HOME_TAGS = 10
 
 export default function Home() {
-  const [activeTag, setActiveTag] = useState('')
   const [searchParams, setSearchParams] = useSearchParams()
+  // 标签筛选放在 URL 参数里,标签总览页可以带 ?tag= 直达某个筛选结果
+  const activeTag = searchParams.get('tag') ?? ''
 
-  const allTags = useMemo(() => [...new Set(posts.flatMap((p) => p.tags))], [])
+  const tagCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const post of posts) {
+      for (const tag of post.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1)
+    }
+    return counts
+  }, [])
+  // 标签按文章数从多到少排,首页只露出常用的一批,其余进标签总览页
+  const sortedTags = useMemo(
+    () =>
+      [...tagCounts.keys()].sort(
+        (a, b) => (tagCounts.get(b) ?? 0) - (tagCounts.get(a) ?? 0) || (a < b ? -1 : 1),
+      ),
+    [tagCounts],
+  )
+  const visibleTags = useMemo(() => {
+    const top = sortedTags.slice(0, MAX_HOME_TAGS)
+    if (activeTag && !top.includes(activeTag)) top.push(activeTag)
+    return top
+  }, [sortedTags, activeTag])
+
   const filtered = activeTag
     ? posts.filter((p) => p.tags.includes(activeTag))
     : posts
@@ -86,12 +108,15 @@ export default function Home() {
   const visiblePosts = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   const selectTag = (tag: string) => {
-    setActiveTag(tag)
-    setSearchParams({}, { replace: true })
+    // 换标签时重置回第一页
+    setSearchParams(tag ? { tag } : {}, { replace: true })
   }
 
   const goToPage = (next: number) => {
-    setSearchParams(next === 1 ? {} : { page: String(next) })
+    const params: Record<string, string> = {}
+    if (activeTag) params.tag = activeTag
+    if (next !== 1) params.page = String(next)
+    setSearchParams(params)
     window.scrollTo(0, 0)
   }
 
@@ -106,7 +131,7 @@ export default function Home() {
           <p className="hero-press pixel-en blink">★ PRESS START TO READ ★</p>
         </section>
 
-        {allTags.length > 0 && (
+        {sortedTags.length > 0 && (
           <div className="tag-filter">
             <button
               className={activeTag === '' ? 'tag tag-active' : 'tag'}
@@ -114,7 +139,7 @@ export default function Home() {
             >
               全部 ({posts.length})
             </button>
-            {allTags.map((tag) => (
+            {visibleTags.map((tag) => (
               <button
                 key={tag}
                 className={activeTag === tag ? 'tag tag-active' : 'tag'}
@@ -123,6 +148,9 @@ export default function Home() {
                 {tag}
               </button>
             ))}
+            <Link to="/tags" className="tag tag-more" title="查看全部标签">
+              …
+            </Link>
           </div>
         )}
 

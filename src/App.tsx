@@ -4,6 +4,7 @@ import { site } from './data/site'
 import BackToTop from './components/BackToTop'
 import Home from './views/Home'
 import Post from './views/Post'
+import Tags from './views/Tags'
 import About from './views/About'
 
 type Theme = 'light' | 'dark'
@@ -45,6 +46,9 @@ export default function App() {
             <NavLink to="/" end className="nav-link">
               首页
             </NavLink>
+            <NavLink to="/tags" className="nav-link">
+              标签
+            </NavLink>
             <NavLink to="/about" className="nav-link">
               关于
             </NavLink>
@@ -64,6 +68,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/post/*" element={<Post />} />
+            <Route path="/tags" element={<Tags />} />
             <Route path="/about" element={<About />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
