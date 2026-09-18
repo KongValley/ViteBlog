@@ -15,7 +15,7 @@ function initialTheme(): Theme {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-// 路由切换时回到页面顶部(代替 vue-router 的 scrollBehavior)
+// 路由切换时回到页面顶部(react-router 没有内置的滚动复位,手动实现)
 function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => {

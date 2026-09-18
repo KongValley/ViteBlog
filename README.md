@@ -7,7 +7,7 @@
 ```bash
 npm install     # 安装依赖
 npm run dev     # 启动开发服务器
-npm run build   # 类型检查(vue-tsc)+ 构建生产版本到 dist/
+npm run build   # 类型检查(tsc)+ 构建生产版本到 dist/
 npm run preview # 本地预览构建产物
 ```
 
@@ -23,7 +23,7 @@ npm run preview # 本地预览构建产物
 title: 文章标题
 date: 2026-09-15        # YYYY-MM-DD,卡片上显示的发布日期
 tags:
-  - Vue
+  - React
   - 随笔
 categories:
   - Build Blog
