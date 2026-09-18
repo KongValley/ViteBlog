@@ -3,8 +3,6 @@ title: JavaScript 入门（一）：变量、类型与控制流
 date: 2026-09-18 09:30:00
 tags:
   - JavaScript
-  - 入门
-  - 基础语法
 categories:
   - JavaScript
 excerpt: 从 let/const 到数据类型与流程控制,搭好 JavaScript 的地基。这是 JS 从入门到精通系列的第一篇。

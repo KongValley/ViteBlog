@@ -3,8 +3,6 @@ title: JavaScript 进阶（四）：异步编程与事件循环
 date: 2026-09-18 11:45:00
 tags:
   - JavaScript
-  - 进阶
-  - 异步
 categories:
   - JavaScript
 excerpt: setTimeout 和 Promise 谁先执行?事件循环给出了答案。这篇讲透回调、Promise、async/await 的演进,以及宏任务与微任务的执行顺序。

@@ -3,8 +3,6 @@ title: Node.js 入门（一）：运行时、模块系统与 npm
 date: 2026-09-18
 tags:
   - Node.js
-  - 入门
-  - npm
 categories:
   - Node.js
 excerpt: Node 到底是什么、模块系统怎么选、package.json 和 npm 的门道——搭好 Node 开发的地基。这是 Node.js 从入门到精通系列的第一篇。

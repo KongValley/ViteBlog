@@ -3,8 +3,7 @@ title: Python 后端（一）：HTTP、WSGI/ASGI 与框架选型
 date: 2026-09-18
 tags:
   - Python
-  - 后端
-  - Web
+  - Web 后端
 categories:
   - Python
 excerpt: 先看懂 HTTP 请求的生命周期，再手写一个不依赖框架的最小后端，最后对比 Flask、FastAPI、Django 该怎么选。这是 Python 后端系列的第一篇。

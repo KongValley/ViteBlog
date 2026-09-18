@@ -3,8 +3,6 @@ title: Node.js 入门（二）：核心模块与异步编程
 date: 2026-09-18
 tags:
   - Node.js
-  - 入门
-  - 异步
 categories:
   - Node.js
 excerpt: fs、path、http 三大件,事件循环与非阻塞 I/O 的心智模型,再用流处理大文件——Node 内置能力一次讲透。这是 Node.js 从入门到精通系列的第二篇。

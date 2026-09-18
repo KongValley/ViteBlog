@@ -3,8 +3,7 @@ title: Python 后端（二）：Flask 快速上手
 date: 2026-09-18
 tags:
   - Python
-  - 后端
-  - Flask
+  - Web 后端
 categories:
   - Python
 excerpt: 从最小应用开始，把路由、请求解析、错误处理、蓝图组织一次讲清，动手写出一个完整的待办事项 API。这是 Python 后端系列的第二篇。

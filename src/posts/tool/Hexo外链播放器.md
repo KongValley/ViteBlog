@@ -3,7 +3,6 @@ title: 🎵 Hexo 外链播放器
 date: 2020-01-06 22:49:39
 tags:
   - Hexo
-  - Music Player
 categories:
   - Build Blog
 ---

@@ -3,7 +3,7 @@ title: 💛Hexo+GitHub配置保姆版（一）
 date: 2020-01-06 16:39:53
 tags:
   - Hexo
-  - GitHub Page
+  - GitHub Pages
 categories:
   - Build Blog
 cover: https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/Blog-Cover-Image/wallhaven-g7qjr3.jpg

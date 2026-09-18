@@ -3,8 +3,6 @@ title: Python 进阶（四）：用 asyncio 管理并发 I/O
 date: 2026-09-17
 tags:
   - Python
-  - 进阶
-  - asyncio
 categories:
   - Python
 excerpt: 通过可运行的模拟请求，理解协程、TaskGroup、并发上限、超时与取消；分清并发 I/O 和 CPU 计算。

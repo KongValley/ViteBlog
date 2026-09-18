@@ -3,8 +3,6 @@ title: Python 进阶（三）：用 dataclass 和 Protocol 设计清晰的数据
 date: 2026-09-17
 tags:
   - Python
-  - 进阶
-  - 类型提示
 categories:
   - Python
 excerpt: 用不可变数据对象和结构化接口拆开业务逻辑与存储实现，同时认识类型提示在运行时的边界。

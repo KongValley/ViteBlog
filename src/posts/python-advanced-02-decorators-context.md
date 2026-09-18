@@ -3,8 +3,6 @@ title: Python 进阶（二）：装饰器与上下文管理器怎样管理横切
 date: 2026-09-17
 tags:
   - Python
-  - 进阶
-  - 装饰器
 categories:
   - Python
 excerpt: 用计时这个小需求理解函数装饰器、functools.wraps、with 协议和异常发生时的清理规则。

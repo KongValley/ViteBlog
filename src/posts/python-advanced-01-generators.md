@@ -3,8 +3,6 @@ title: Python 进阶（一）：迭代器、生成器与惰性数据管道
 date: 2026-09-17
 tags:
   - Python
-  - 进阶
-  - 生成器
 categories:
   - Python
 excerpt: 从迭代协议出发，用 yield 逐条处理数据；再看生成器的资源生命周期，以及什么时候不该追求惰性。

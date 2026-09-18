@@ -3,8 +3,7 @@ title: JavaScript 精通（五）：ES6+ 特性、模块与工程化
 date: 2026-09-18 12:30:00
 tags:
   - JavaScript
-  - ES6
-  - 工程化
+  - 工具链
 categories:
   - JavaScript
 excerpt: 系列收官:解构、可选链等高频语法糖,Map/Set 数据结构,模块化,内存管理与 GC,以及从"会写 JS"到"精通 JS"的完整路线图。

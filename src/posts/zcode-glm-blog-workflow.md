@@ -2,8 +2,6 @@
 title: 🤖 ZCode + GLM 开发手记（二）：这个博客就是它做的
 date: 2026-09-17 20:30:00
 tags:
-  - ZCode
-  - GLM
   - AI 编程
 categories:
   - AI 编程

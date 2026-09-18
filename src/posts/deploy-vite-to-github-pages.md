@@ -3,7 +3,8 @@ title: 手把手把 Vite 博客部署到 GitHub Pages
 date: 2026-09-15
 tags:
   - Vite
-  - GitHub
+  - GitHub Pages
+  - 部署
 categories:
   - Build Blog
 excerpt: 从创建仓库到自动部署,完整记录 Vite 项目上 GitHub Pages 的关键步骤:base 路径、Actions 工作流、SPA 404 兜底。

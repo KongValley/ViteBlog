@@ -3,9 +3,8 @@ title: Python 后端（六）：工具链——uv、ruff 与 pytest
 date: 2026-09-18
 tags:
   - Python
-  - 后端
+  - Web 后端
   - 工具链
-  - uv
 categories:
   - Python
 excerpt: 用 uv 管依赖和 Python 版本,ruff 一个工具搞定 lint 加格式化,pytest 写测试,pre-commit 把关提交——把 Python 项目的工程质量管起来。这是 Python 后端系列的收官补充篇。

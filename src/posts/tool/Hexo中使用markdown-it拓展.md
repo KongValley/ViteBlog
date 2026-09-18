@@ -2,8 +2,7 @@
 title: 🍟Hexo中使用markdown-it拓展
 date: 2020-01-10 19:27:49
 tags:
-  - hexo
-  - markdown-it
+  - Hexo
 categories:
   - Build Blog
 ---

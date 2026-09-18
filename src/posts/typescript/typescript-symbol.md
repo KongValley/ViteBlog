@@ -2,7 +2,7 @@
 title: 😗Symbol in TypeScript
 date: 2020-02-02 18:06:13
 tags:
-  - TypeScript Basic
+  - TypeScript
 categories:
   - TypeScript
 ---
