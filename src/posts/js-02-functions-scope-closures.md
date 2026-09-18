@@ -3,6 +3,8 @@ title: JavaScript 入门（二）：函数、作用域与闭包
 date: 2026-09-18 10:15:00
 tags:
   - JavaScript
+  - 入门
+  - 闭包
 categories:
   - JavaScript
 excerpt: 函数是 JS 的一等公民。这篇讲清函数的三种写法、词法作用域,以及面试高频的闭包 —— 它不是玄学,是作用域的自然结果。

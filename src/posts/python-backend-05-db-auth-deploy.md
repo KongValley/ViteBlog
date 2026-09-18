@@ -3,7 +3,8 @@ title: Python 后端（五）：数据库、鉴权与部署上线
 date: 2026-09-18
 tags:
   - Python
-  - Web 后端
+  - 后端
+  - SQLAlchemy
   - 部署
 categories:
   - Python

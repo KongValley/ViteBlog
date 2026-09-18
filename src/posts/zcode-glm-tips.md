@@ -2,6 +2,8 @@
 title: 🤖 ZCode + GLM 开发手记（三）：用得顺手的小技巧
 date: 2026-09-17 20:00:00
 tags:
+  - ZCode
+  - GLM
   - AI 编程
 categories:
   - AI 编程

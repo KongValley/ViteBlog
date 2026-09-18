@@ -3,6 +3,7 @@ title: 🤙Hexo引入Mermaid
 date: 2020-01-08 22:22:21
 tags:
   - Hexo
+  - Mermaid
 categories:
   - Build Blog
 ---

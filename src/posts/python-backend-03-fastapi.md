@@ -3,7 +3,8 @@ title: Python 后端（三）：FastAPI 与类型驱动开发
 date: 2026-09-18
 tags:
   - Python
-  - Web 后端
+  - 后端
+  - FastAPI
 categories:
   - Python
 excerpt: 类型注解在这里不只是标注——它们自动变成参数校验、数据转换和交互式文档。用 Pydantic 和依赖注入重写待办 API。这是 Python 后端系列的第三篇。

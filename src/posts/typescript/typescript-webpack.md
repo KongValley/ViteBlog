@@ -2,7 +2,7 @@
 title: 🌈TypeScript + Webpack
 date: 2020-02-07 19:03:08
 tags:
-  - TypeScript
+  - TypeScript Basic
 categories:
   - TypeScript
 ---

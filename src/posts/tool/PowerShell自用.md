@@ -2,7 +2,7 @@
 title: 🚀PowerShell自用
 date: 2020-01-17 15:34:36
 tags:
-  - 工具箱
+  - PowerShell
 categories:
   - Tool
 ---

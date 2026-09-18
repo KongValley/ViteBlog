@@ -3,7 +3,9 @@ title: Node.js 进阶（四）：工程化工具链
 date: 2026-09-18
 tags:
   - Node.js
+  - 进阶
   - 工具链
+  - TypeScript
 categories:
   - Node.js
 excerpt: pnpm、TypeScript、ESLint、Prettier、Vitest、调试与环境变量——Node 项目的现代工具链一套配齐。这是 Node.js 从入门到精通系列的第四篇。

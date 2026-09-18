@@ -2,7 +2,7 @@
 title: 🦄TypeScript入门
 date: 2020-01-09 0:30:20
 tags:
-  - TypeScript
+  - TypeScript Basic
 categories:
   - TypeScript
 ---

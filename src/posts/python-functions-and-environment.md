@@ -3,6 +3,9 @@ title: Python 入门（三）：函数、异常、模块与虚拟环境
 date: 2026-09-16
 tags:
   - Python
+  - 入门
+  - 函数
+  - 虚拟环境
 categories:
   - Python
 excerpt: 把重复逻辑整理成函数，处理运行时错误，使用模块拆分代码，并用虚拟环境隔离每个 Python 项目的依赖。

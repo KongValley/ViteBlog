@@ -3,6 +3,8 @@ title: JavaScript 进阶（三）：对象、原型与 class
 date: 2026-09-18 11:00:00
 tags:
   - JavaScript
+  - 进阶
+  - 原型链
 categories:
   - JavaScript
 excerpt: 对象是 JS 里几乎一切事物的形态。这篇理清原型链的查找规则、this 的绑定,以及现代写法 class —— 看懂它,框架源码里的各种"魔法"就不再神秘。

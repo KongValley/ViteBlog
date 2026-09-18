@@ -3,6 +3,8 @@ title: 2026 年 AI 编程 Coding Plan 价格对比：8 款个人套餐怎么选
 date: 2026-09-17
 tags:
   - AI 编程
+  - Coding Plan
+  - 工具对比
 categories:
   - AI 编程
 excerpt: 对照官方价格比较百炼、MiniMax、Kimi、GLM、GitHub Copilot、Cursor、Claude Code 和 Codex，并按预算与工作流给出选择建议。

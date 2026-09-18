@@ -3,6 +3,8 @@ title: Python 入门（一）：从安装到第一个程序
 date: 2026-09-16
 tags:
   - Python
+  - 入门
+  - 环境配置
 categories:
   - Python
 excerpt: 从下载安装 Python、认识解释器，到创建项目目录并运行第一个脚本，完整走一遍 Python 开发的第一步。

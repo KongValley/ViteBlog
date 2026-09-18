@@ -3,6 +3,8 @@ title: Python 入门（二）：变量、集合与流程控制
 date: 2026-09-16
 tags:
   - Python
+  - 入门
+  - 基础语法
 categories:
   - Python
 excerpt: 用一个成绩统计示例理解变量、数字、字符串、列表、字典、条件判断和循环，打好 Python 基础语法地基。

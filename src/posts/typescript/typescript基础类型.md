@@ -2,7 +2,7 @@
 title: 🌈TypeScript 基础类型
 date: 2020-01-17 16:46:56
 tags:
-  - TypeScript
+  - TypeScript Basic
 categories:
   - TypeScript
 ---

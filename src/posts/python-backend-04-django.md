@@ -3,7 +3,8 @@ title: Python 后端（四）：Django 全家桶入门
 date: 2026-09-18
 tags:
   - Python
-  - Web 后端
+  - 后端
+  - Django
 categories:
   - Python
 excerpt: Django 把 ORM、管理后台、用户认证都装进了一个框架。从创建项目到数据迁移再到 Admin 后台，体验"开箱即用"的开发方式。这是 Python 后端系列的第四篇。
