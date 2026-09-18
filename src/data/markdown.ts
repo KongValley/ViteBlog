@@ -12,6 +12,7 @@ import xml from 'highlight.js/lib/languages/xml'
 import markdown from 'highlight.js/lib/languages/markdown'
 import plaintext from 'highlight.js/lib/languages/plaintext'
 import python from 'highlight.js/lib/languages/python'
+import typescript from 'highlight.js/lib/languages/typescript'
 
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('js', javascript)
@@ -28,6 +29,8 @@ hljs.registerLanguage('md', markdown)
 hljs.registerLanguage('plaintext', plaintext)
 hljs.registerLanguage('python', python)
 hljs.registerLanguage('py', python)
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('ts', typescript)
 
 export const marked = new Marked(
   markedHighlight({
