@@ -26,6 +26,7 @@
   --table-body-bg: transparent;
   --pattern: rgba(26, 26, 26, 0.05);
   --scanline: rgba(0, 0, 0, 0.045);
+  --strong-ink: var(--ink);  /* 浅色模式加粗不换色 */
 
   --font-en: 'Press Start 2P', monospace;
   --font-body: 'Fusion Pixel 12px Proportional SC', 'Press Start 2P',
@@ -56,6 +57,7 @@
   --table-body-bg: #191a28;
   --pattern: rgba(255, 255, 255, 0.035);
   --scanline: rgba(0, 0, 0, 0.06);
+  --strong-ink: var(--gold);  /* 暗夜模式加粗用 NES 金做高亮 */
 
   color-scheme: dark;
 }
@@ -770,6 +772,11 @@ button.tag:hover,
   margin: 0.9em 0;
 }
 
+.markdown-body strong {
+  font-weight: 700;
+  color: var(--strong-ink);
+}
+
 .markdown-body ul,
 .markdown-body ol {
   padding-left: 1.6em;
@@ -915,6 +922,7 @@ button.tag:hover,
 
 .markdown-body .hljs-strong {
   font-weight: 700;
+  color: #ffd75e;  /* 代码窗永远是深色,加粗直接用金黄 */
 }
 
 .markdown-body .hljs-deletion {
