@@ -40,6 +40,30 @@ export const marked = new Marked(
   }),
 )
 
+// CommonMark 的强调规则对中文标点不友好：闭 ** 前面是中文标点、后面紧跟文字时
+// （如「**……首选。**个人版」）会被判定为无法闭合，** 原样输出。
+// 解析前把星号内的句末中文标点移到星号外，渲染结果几乎不变，绕开这条规则。
+// 限定条件避免误伤：开 ** 前不能是字母/数字/星号（排除把闭 ** 当开 ** 的跨段
+// 误配），内容不能以空白开头，且只在闭 ** 后紧跟文字（真正无法闭合）时才改写。
+const CJK_PUNCT = '。，、；：！？」』）】》'
+
+function fixCjkStrong(source: string): string {
+  return source
+    .split(/(```[\s\S]*?(?:```|$)|`[^`\n]*`)/g)
+    .map((part, i) =>
+      i % 2 === 1
+        ? part
+        : part.replace(
+            new RegExp(
+              `(?<![\\p{L}\\p{N}*])\\*\\*(?!\\s)([^*\\n]*?)([${CJK_PUNCT}])\\*\\*(?=[^\\s*${CJK_PUNCT}"'（）【】《》()\\[\\]{}.,!?;:-])`,
+              'gu',
+            ),
+            '**$1**$2',
+          ),
+    )
+    .join('')
+}
+
 export function renderMarkdown(source: string): string {
-  return marked.parse(source) as string
+  return marked.parse(fixCjkStrong(source)) as string
 }
