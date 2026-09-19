@@ -8,7 +8,15 @@ import { parse } from 'yaml';
 const root = dirname(fileURLToPath(import.meta.url));
 
 // 可用主题:与 src/themes/ 下的目录一一对应
-const THEMES = ['pixel', 'swiss', 'editorial'] as const;
+const THEMES = [
+  'pixel',
+  'swiss',
+  'editorial',
+  'brutalist',
+  'bento',
+  'terminal',
+  'glass',
+] as const;
 type Theme = (typeof THEMES)[number];
 
 // 把根目录的 site.yml 注入为虚拟模块:

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>⑤ 新粗野主义 — ViteBlog 主题 Demo</title>
+<link rel="stylesheet" href="../node_modules/@fontsource-variable/archivo/index.css">
+<link rel="stylesheet" href="../node_modules/@fontsource-variable/jetbrains-mono/index.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/500.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/700.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/900.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fdfcf9;
+  --ink:#0a0a0a;
+  --yellow:#ffe14d;
+  --pink:#ff90e8;
+  --blue:#3d5bff;
+  --border:3px solid var(--ink);
+  --shadow:5px 5px 0 var(--ink);
+  --disp:"Archivo Variable","Noto Sans SC",Arial,sans-serif;
+  --mono:"JetBrains Mono Variable",ui-monospace,Menlo,Consolas,monospace;
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--disp);font-size:16px;line-height:1.8;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1150px;margin:0 auto;padding:0 32px}
+
+/* ---------- 顶部跑马灯 ---------- */
+.ticker{background:var(--ink);color:var(--yellow);overflow:hidden;padding:8px 0;border-bottom:var(--border)}
+.ticker-track{display:flex;width:max-content;animation:mar 22s linear infinite}
+.ticker span{font-family:var(--mono);font-size:12px;letter-spacing:.18em;white-space:nowrap;padding:0 22px}
+@keyframes mar{to{transform:translateX(-50%)}}
+
+/* ---------- 页头 ---------- */
+.header{background:var(--bg);border-bottom:var(--border);position:sticky;top:0;z-index:20}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:74px;gap:16px}
+.brand{font-weight:900;font-size:22px;letter-spacing:-.02em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+.brand .hl{background:var(--yellow);border:2px solid var(--ink);padding:1px 7px}
+.nav{display:flex;align-items:center;gap:10px}
+.nav a{font-weight:700;font-size:14px;padding:7px 14px;border:2px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);transition:transform .08s linear,box-shadow .08s linear,background .08s linear}
+.nav a:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink);background:var(--yellow)}
+.nav a.active{background:var(--ink);color:var(--yellow)}
+.theme-btn{font-family:var(--mono);font-size:13px;font-weight:700;padding:7px 12px;border:2px solid var(--ink);background:var(--pink);cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.theme-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+
+/* ---------- 英雄区 ---------- */
+.hero{padding:76px 0 64px}
+.kicker{display:inline-block;font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;background:var(--ink);color:#fff;padding:6px 12px;transform:rotate(-1deg)}
+.hero h1{margin:26px 0 0;font-size:clamp(48px,8vw,108px);font-weight:900;line-height:1.02;letter-spacing:-.03em}
+.hero h1 .mark{background:var(--yellow);border:var(--border);padding:0 .08em;display:inline-block;transform:rotate(-1deg);box-shadow:var(--shadow)}
+.hero-sub{margin:30px 0 0;max-width:620px;font-size:16.5px;line-height:1.9;font-weight:500;color:#2b2b2b}
+.hero-cta{display:flex;gap:18px;margin-top:34px;flex-wrap:wrap}
+.btn{display:inline-block;font-weight:800;font-size:15px;padding:13px 26px;border:var(--border);box-shadow:var(--shadow);cursor:pointer;transition:transform .08s linear,box-shadow .08s linear}
+.btn:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.btn.solid{background:var(--ink);color:var(--yellow)}
+.btn.yellow{background:var(--yellow)}
+
+/* 统计方块 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+.stat{border:var(--border);background:#fff;box-shadow:var(--shadow);padding:18px 20px;transform:rotate(-.6deg)}
+.stat:nth-child(even){transform:rotate(.7deg);background:var(--yellow)}
+.stat b{display:block;font-size:clamp(30px,3.6vw,46px);font-weight:900;line-height:1.05;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em}
+
+/* ---------- 跑马灯大横幅 ---------- */
+.banner{background:var(--ink);color:var(--bg);border-top:var(--border);border-bottom:var(--border);overflow:hidden;padding:16px 0;margin-top:64px}
+.banner-track{display:flex;width:max-content;animation:mar 26s linear infinite}
+.banner span{font-size:26px;font-weight:900;letter-spacing:.02em;white-space:nowrap;padding:0 26px;text-transform:uppercase}
+.banner i{color:var(--yellow);font-style:normal}
+
+/* ---------- 最新文章 ---------- */
+.latest{padding:64px 0 72px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+.sec-head h3{font-size:30px;font-weight:900;letter-spacing:-.02em;display:flex;align-items:center;gap:12px}
+.sec-head h3::before{content:"";width:16px;height:16px;background:var(--pink);border:2px solid var(--ink)}
+.sec-head span{font-family:var(--mono);font-size:12px;letter-spacing:.14em;border:2px solid var(--ink);padding:4px 10px;background:#fff;transform:rotate(1deg)}
+.post{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:22px;border:var(--border);background:#fff;box-shadow:var(--shadow);padding:20px 24px;margin-bottom:18px;transition:transform .1s linear,box-shadow .1s linear,background .1s linear}
+.post:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink);background:var(--yellow)}
+.post .no{font-family:var(--mono);font-weight:700;font-size:15px;background:var(--ink);color:var(--yellow);width:46px;height:46px;display:grid;place-items:center;border:2px solid var(--ink)}
+.post:hover .no{background:#fff;color:var(--ink)}
+.post h4{font-size:21px;font-weight:800;line-height:1.45;letter-spacing:-.01em}
+.post .meta{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.06em;border:2px solid var(--ink);padding:2px 9px;background:var(--bg)}
+.post:hover .chip{background:#fff}
+.post .date{font-family:var(--mono);font-size:12.5px;font-weight:700;white-space:nowrap}
+
+/* ---------- 阅读体验 ---------- */
+.reading{padding:8px 0 84px}
+.reading .paper{border:var(--border);background:#fff;box-shadow:var(--shadow);padding:46px 50px;max-width:860px;margin:0 auto}
+.reading h2{font-size:32px;font-weight:900;letter-spacing:-.02em;display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.reading h2::before{content:"";width:20px;height:20px;background:var(--yellow);border:var(--border)}
+.reading p{font-size:16.5px;line-height:2.05;font-weight:500;margin:0.9em 0}
+.reading p code{font-family:var(--mono);font-size:.84em;border:2px solid var(--ink);background:var(--pink);padding:0 6px}
+.reading pre{margin:26px 0;background:#0a0a0a;color:#f2f0e6;border:var(--border);box-shadow:var(--shadow);padding:22px 24px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.9}
+.tk-k{color:#ff79a8}.tk-t{color:#ffd75e}.tk-s{color:#9be86b}.tk-c{color:#8a8f9e;font-style:italic}
+.reading blockquote{margin:28px 0;border:var(--border);border-left-width:12px;border-left-color:var(--pink);background:var(--yellow);padding:16px 20px;font-size:17px;font-weight:700;line-height:1.8}
+
+/* ---------- 页脚 ---------- */
+.footer{background:var(--ink);color:var(--bg);border-top:var(--border);padding:26px 0}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.1em}
+.footer a:hover{color:var(--yellow)}
+
+/* ---------- 选型浮标 ---------- */
+.demo-chip{position:fixed;right:22px;bottom:22px;z-index:90;font-family:var(--mono);font-size:12px;font-weight:700;padding:10px 16px;background:var(--yellow);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.demo-chip:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+
+@media (max-width:900px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .post{grid-template-columns:54px 1fr;gap:14px}
+  .post .date{display:none}
+  .reading .paper{padding:28px 24px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ticker-track,.banner-track{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>★ 新的文章持续更新中</span><span>★ REACT × VITE</span><span>★ 51 POSTS</span><span>★ EST. 2026</span>
+    <span>★ 新的文章持续更新中</span><span>★ REACT × VITE</span><span>★ 51 POSTS</span><span>★ EST. 2026</span>
+  </div>
+</div>
+
+<header class="header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#"><span class="hl">VITE</span>BLOG</a>
+    <nav class="nav">
+      <a class="active" href="#">首页</a>
+      <a href="#">标签</a>
+      <a href="#">关于</a>
+      <button class="theme-btn" type="button">夜</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <span class="kicker">个人技术博客 — 记录学习与生活</span>
+      <h1>记录学习<span class="mark">与生活</span></h1>
+      <p class="hero-sub">关于前端、后端与一切踩过的坑。文章以 Markdown 编写,托管在 GitHub Pages,每次 push 自动上线。</p>
+      <div class="hero-cta">
+        <a class="btn solid" href="#posts">开始阅读 ↓</a>
+        <a class="btn yellow" href="#">关于本站</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>51</b><span>篇文章</span></div>
+        <div class="stat"><b>66</b><span>个标签</span></div>
+        <div class="stat"><b>10</b><span>个系列</span></div>
+        <div class="stat"><b>2026</b><span>建站年份</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="banner" aria-hidden="true">
+    <div class="banner-track">
+      <span>记录学习与生活 <i>✦</i></span><span>REACT × VITE <i>✦</i></span><span>51 POSTS <i>✦</i></span><span>66 TOPICS <i>✦</i></span>
+      <span>记录学习与生活 <i>✦</i></span><span>REACT × VITE <i>✦</i></span><span>51 POSTS <i>✦</i></span><span>66 TOPICS <i>✦</i></span>
+    </div>
+  </div>
+
+  <section class="latest" id="posts">
+    <div class="wrap">
+      <div class="sec-head">
+        <h3>最新文章</h3>
+        <span>2026 / 09</span>
+      </div>
+      <a class="post" href="#">
+        <span class="no">07</span>
+        <span>
+          <h4>TypeScript 精通(七):工具类型与工程化配置</h4>
+          <span class="meta"><span class="chip">TypeScript</span><span class="chip">精通</span><span class="chip">tsconfig</span></span>
+        </span>
+        <span class="date">2026·09·19</span>
+      </a>
+      <a class="post" href="#">
+        <span class="no">06</span>
+        <span>
+          <h4>TypeScript 精通(六):高级类型与类型收窄</h4>
+          <span class="meta"><span class="chip">TypeScript</span><span class="chip">精通</span></span>
+        </span>
+        <span class="date">2026·09·18</span>
+      </a>
+      <a class="post" href="#">
+        <span class="no">05</span>
+        <span>
+          <h4>Python 后端(一):HTTP、WSGI/ASGI 与框架选型</h4>
+          <span class="meta"><span class="chip">Python</span><span class="chip">后端</span></span>
+        </span>
+        <span class="date">2026·09·18</span>
+      </a>
+      <a class="post" href="#">
+        <span class="no">04</span>
+        <span>
+          <h4>Node.js(五):数据库、鉴权与部署</h4>
+          <span class="meta"><span class="chip">Node.js</span><span class="chip">后端</span></span>
+        </span>
+        <span class="date">2026·09·17</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="reading">
+    <div class="wrap">
+      <div class="paper">
+        <h2>内置工具类型</h2>
+        <p>TS 内置了一批工具类型(Utility Types),它们就是用映射类型、条件类型拼出来的。配合一份靠谱的 <code>tsconfig.json</code> 和声明文件,才算完整的工程化能力。</p>
+<pre><span class="tk-k">type</span> <span class="tk-t">UserPreview</span> = <span class="tk-t">Pick</span>&lt;User, <span class="tk-s">'id' | 'name'</span>&gt;
+
+<span class="tk-c">// 更新字段:排除 id,其余转成可选</span>
+<span class="tk-k">type</span> <span class="tk-t">UserUpdate</span> = <span class="tk-t">Partial</span>&lt;<span class="tk-t">Omit</span>&lt;User, <span class="tk-s">'id'</span>&gt;&gt;</pre>
+        <p>工具类型不是语法糖,而是团队协作里的「协议」——先定义好类型,再让实现去满足它。</p>
+        <blockquote>把 strict 打开,不是为了让编译器高兴,而是让它在重构时替你记住所有假设。</blockquote>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>© 2026 KONGZHIPENG — REACT × VITE</span>
+    <span><a href="#">GitHub</a> / <a href="#">关于</a> / <a href="#">RSS</a></span>
+  </div>
+</footer>
+
+<a class="demo-chip" href="index.html">◂ 返回选型 · ⑤ 新粗野主义</a>
+
+</body>
+</html>

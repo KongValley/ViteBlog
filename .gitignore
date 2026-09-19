@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# design-preview 的本地验证产物(构建拷贝与截图,可随时重新生成)
+design-preview/out
+design-preview/shots
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

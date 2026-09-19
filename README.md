@@ -63,10 +63,10 @@ avatar: https://github.com/KongValley.png?size=60 # 头像(可省略,默认 GitH
 
 ## 主题
 
-站点内置三套**完全独立**的主题,通过根目录 `site.yml` 里的 `theme` 字段指定(本地改完自动热更新,push 后自动重新部署):
+站点内置七套**完全独立**的主题,通过根目录 `site.yml` 里的 `theme` 字段指定(本地改完自动热更新,push 后自动重新部署):
 
 ```yaml
-theme: pixel   # 三选一:pixel / swiss / editorial
+theme: pixel   # 七选一:pixel / swiss / editorial / brutalist / bento / terminal / glass
 ```
 
 | theme | 风格 |
@@ -74,23 +74,40 @@ theme: pixel   # 三选一:pixel / swiss / editorial
 | `pixel`(默认) | 红白机像素风:游戏机名片、像素字体、CRT 扫描线 |
 | `swiss` | 瑞士网格风:强对比黑白、12 栏网格参考线、红色方点、悬浮反色 |
 | `editorial` | 现代编辑排版风:衬线大标题、纸感底色、报刊式排版 |
+| `brutalist` | 新粗野主义:粗黑边框、实心偏移阴影、高饱和撞色、机械按键手感 |
+| `bento` | Bento 便当格:六栏卡片矩阵、特性大卡与数据小格混排 |
+| `terminal` | 终端 CLI:命令提示符、git log 文章列表、neofetch 面板、vim 状态栏 |
+| `glass` | 玻璃拟态:渐变光斑背景、毛玻璃卡片、悬浮胶囊导航 |
 
-三套主题在 `src/themes/<名字>/` 下各自独立(样式 + 字体 + 入口),**构建时只会打包被选中的那一套**,
-互不混装;首页结构也按主题区分(`src/views/home/` 下的三个组件,由 `src/views/Home.tsx` 按 `theme` 调度)。
+七套主题在 `src/themes/<名字>/` 下各自独立(样式 + 字体 + 入口),**构建时只会打包被选中的那一套**,
+互不混装;首页结构也按主题区分(`src/views/home/` 下的七个组件,由 `src/views/Home.tsx` 按 `theme` 调度)。
 每个主题的 `index.ts` 是入口,经 vite 插件以虚拟模块 `virtual:site-theme` 注入到 `src/main.tsx`。
 
 ```
 src/themes/pixel/       style.css(像素字体体积小,直接静态引入)
 src/themes/swiss/       style.css + fonts.ts(中文大字重,异步加载不阻塞首屏)
 src/themes/editorial/   style.css + fonts.ts(同上)
+src/themes/brutalist/   style.css + fonts.ts(同上)
+src/themes/bento/       style.css + fonts.ts(同上)
+src/themes/terminal/    style.css + fonts.ts(同上)
+src/themes/glass/       style.css + fonts.ts(同上)
 ```
 
-明暗模式三套主题都支持,右上角按钮在昼夜之间切换。想换主题时只改 `site.yml` 一行即可。
+明暗模式七套主题都支持,右上角按钮在昼夜之间切换。想换主题时只改 `site.yml` 一行即可。
+
+新增一套主题:在 `src/themes/<名字>/` 放 `index.ts`(引入 `style.css`,字体大就拆到 `fonts.ts` 里异步加载),
+写一个 `src/views/home/<名字>Home.tsx`,再把名字加进 `vite.config.ts` 的 `THEMES` 和 `src/data/site.ts` 的 `THEME_NAMES`。
 
 ## 设计稿
 
-`design-preview/` 里留有选型阶段的设计 Demo(四套风格 + 选型总览页),仅作参考,
+`design-preview/` 里留有选型阶段的设计 Demo(十一套风格 + 选型总览页),仅作参考,
 不参与构建;不需要时可整目录删除。本地预览:`node design-preview/serve.mjs`
+
+同目录下还有三个只用于本地验证的小脚本(同样不参与构建):
+
+- `serve-dist.mjs` — 四套主题的构建产物各占一个端口(4191~4194),按线上子路径 `/ViteBlog/` 提供服务
+- `check-isolation.mjs` — 主题隔离自检:每套构建产物只含自己的样式,不混入其它主题
+- `shoot.mjs` — 无头 Chrome 逐主题逐页面全页截图,并检查控制台有无报错
 
 ## 部署说明
 

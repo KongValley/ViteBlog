@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>⑩ 手帐拼贴风 — ViteBlog 主题 Demo</title>
+<link rel="stylesheet" href="../node_modules/@fontsource-variable/caveat/index.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/zhi-mang-xing/index.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/700.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#fdf8ec;
+  --paper-2:#faf2e0;
+  --kraft:#efe3c8;
+  --ink:#3a3326;
+  --mut:#8a7d64;
+  --line:rgba(58,51,38,.16);
+  --mint:#a8dcc4;
+  --pink:#f5b0c0;
+  --yellow:#ffd98a;
+  --blue:#a9c8f0;
+  --red:#d94f3d;
+  --hand:"Zhi Mang Xing","Caveat Variable",cursive;
+  --latin-hand:"Caveat Variable","Zhi Mang Xing",cursive;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.85;
+  background-image:radial-gradient(rgba(58,51,38,.07) 1px,transparent 1px);
+  background-size:24px 24px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 30px}
+.hand{font-family:var(--hand)}
+.latin{font-family:var(--latin-hand)}
+
+/* 和纸胶带通用样式 */
+.tape{position:relative;display:inline-block;padding:6px 18px;background:rgba(255,217,138,.72);transform:rotate(-2deg);font-size:14px;letter-spacing:.08em;color:#5c5140}
+.tape::before,.tape::after{content:"";position:absolute;top:0;bottom:0;width:8px;background:inherit;-webkit-mask:repeating-linear-gradient(45deg,#000 0 4px,transparent 4px 8px);mask:repeating-linear-gradient(45deg,#000 0 4px,transparent 4px 8px)}
+.tape::before{left:-4px}
+.tape::after{right:-4px}
+
+/* ---------- 页头 ---------- */
+.header{padding:36px 0 10px}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{font-family:var(--latin-hand);font-size:40px;font-weight:700;line-height:1}
+.brand i{font-style:normal;color:var(--red)}
+.brand .cn{font-family:var(--hand);font-size:22px;color:var(--mut);margin-left:10px}
+.nav{display:flex;align-items:center;gap:22px;font-size:15px}
+.nav a{color:var(--mut);padding:2px 2px;position:relative;transition:color .25s}
+.nav a:hover{color:var(--ink)}
+.nav a.active{color:var(--red);font-weight:700}
+.nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--red);border-radius:2px;transform:rotate(-1deg)}
+.theme-btn{font-family:var(--sans);font-size:13.5px;padding:5px 12px;border:1.5px dashed var(--line);border-radius:8px;background:transparent;color:var(--mut);cursor:pointer}
+.theme-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* ---------- 英雄区 ---------- */
+.hero{padding:40px 0 30px;position:relative}
+.hero .kicker{display:inline-block}
+.hero h1{margin:26px 0 0;font-family:var(--hand);font-size:clamp(52px,9vw,112px);font-weight:400;line-height:1.16;letter-spacing:.01em}
+.hero h1 .u{position:relative;display:inline-block;color:var(--red)}
+.hero h1 .u svg{position:absolute;left:0;right:0;bottom:-6px;width:100%;height:12px}
+.hero .sub{margin-top:24px;max-width:600px;font-size:16px;line-height:2;color:#5c5140}
+.hero .actions{display:flex;gap:18px;align-items:center;margin-top:30px;flex-wrap:wrap}
+.btn{display:inline-block;padding:11px 24px;background:var(--paper);border:2px solid var(--ink);border-radius:4px;font-size:15px;font-weight:700;box-shadow:3px 3px 0 var(--line);transform:rotate(-.6deg);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:rotate(.4deg) translateY(-2px);box-shadow:4px 5px 0 var(--line)}
+.btn.solid{background:var(--red);border-color:var(--red);color:#fff;box-shadow:3px 3px 0 rgba(217,79,61,.3)}
+.note-hand{font-family:var(--latin-hand);font-size:20px;color:var(--mut);transform:rotate(-3deg)}
+/* 红色印章 */
+.seal{position:absolute;right:6%;top:46px;width:84px;height:84px;border:3px solid var(--red);border-radius:8px;display:grid;place-items:center;color:var(--red);font-family:var(--hand);font-size:34px;transform:rotate(8deg);opacity:.85;letter-spacing:.05em;line-height:1.05;text-align:center;padding:6px}
+
+/* 和纸胶带分隔条 */
+.tape-divider{height:26px;margin:34px 0;transform:rotate(-.8deg);background:repeating-linear-gradient(90deg,rgba(168,220,196,.7) 0 42px,rgba(245,176,192,.7) 42px 84px,rgba(255,217,138,.7) 84px 126px,rgba(169,200,240,.7) 126px 168px);opacity:.85;-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+
+/* ---------- 数据贴纸 ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;padding:8px 0 6px}
+.stat{position:relative;padding:20px 16px 16px;border-radius:3px;box-shadow:2px 4px 10px rgba(58,51,38,.12);text-align:center;transform:rotate(-1.2deg)}
+.stat:nth-child(2){transform:rotate(1.4deg);background:var(--pink)!important}
+.stat:nth-child(3){transform:rotate(-.8deg);background:var(--blue)!important}
+.stat:nth-child(4){transform:rotate(1deg);background:var(--mint)!important}
+.stat::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%) rotate(-2deg);width:58px;height:18px;background:rgba(255,255,255,.65);border-left:1px dashed rgba(58,51,38,.2);border-right:1px dashed rgba(58,51,38,.2)}
+.stat b{display:block;font-family:var(--latin-hand);font-size:44px;font-weight:700;line-height:1.1}
+.stat span{font-size:12.5px;color:#5c5140}
+
+/* ---------- 最新文章(手帐条目) ---------- */
+.latest{padding:26px 0 10px}
+.sec-title{font-family:var(--hand);font-size:38px;display:flex;align-items:baseline;gap:16px;margin-bottom:6px}
+.sec-title small{font-family:var(--latin-hand);font-size:20px;color:var(--mut)}
+.post{display:flex;align-items:center;gap:20px;padding:18px 20px;margin-bottom:14px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;box-shadow:2px 3px 0 rgba(58,51,38,.08);transform:rotate(-.4deg);transition:transform .25s,box-shadow .25s,background .25s}
+.post:nth-child(even){transform:rotate(.5deg)}
+.post:hover{transform:rotate(0) translateY(-3px);box-shadow:3px 6px 14px rgba(58,51,38,.16);background:#fff}
+.post .no{font-family:var(--latin-hand);font-size:28px;color:var(--red);width:44px;flex:none;text-align:center}
+.post h4{font-size:18px;font-weight:700;line-height:1.5}
+.post .tags{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:11.5px;padding:2px 10px;border-radius:3px;background:rgba(255,217,138,.6);color:#5c5140;transform:rotate(-1deg);display:inline-block}
+.tag:nth-child(even){background:rgba(168,220,196,.6);transform:rotate(1.2deg)}
+.post .date{font-family:var(--latin-hand);font-size:18px;color:var(--mut);flex:none;white-space:nowrap}
+
+/* ---------- 阅读体验 ---------- */
+.reading{padding:40px 0 30px}
+.reading .card{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:44px 48px;max-width:880px;margin:0 auto;box-shadow:3px 5px 0 rgba(58,51,38,.08);background-image:repeating-linear-gradient(0deg,transparent 0 34px,rgba(58,51,38,.05) 34px 35px)}
+.reading .card::before,.reading .card::after{content:"";position:absolute;top:-12px;width:96px;height:26px;background:rgba(245,176,192,.7);border-left:1px dashed rgba(58,51,38,.15);border-right:1px dashed rgba(58,51,38,.15)}
+.reading .card::before{left:36px;transform:rotate(-3deg)}
+.reading .card::after{right:36px;transform:rotate(2.4deg);background:rgba(169,200,240,.7)}
+.reading h2{font-family:var(--hand);font-size:40px;font-weight:400;letter-spacing:.02em;margin-bottom:10px}
+.reading h2 .mark{background:linear-gradient(transparent 58%,rgba(255,217,138,.85) 58%)}
+.reading p{font-size:16px;line-height:2.15;margin:0.9em 0;color:#4a4234}
+.reading p code{font-size:.85em;background:rgba(217,79,61,.08);color:#b03b2a;border:1px dashed rgba(217,79,61,.4);border-radius:4px;padding:.1em .4em;font-family:ui-monospace,Menlo,Consolas,monospace}
+.reading pre{margin:24px 0;background:#3a3326;color:#f4ecdc;border-radius:6px;padding:22px 24px;overflow-x:auto;font-size:13.5px;line-height:1.9;font-family:ui-monospace,Menlo,Consolas,monospace;transform:rotate(-.3deg);box-shadow:3px 4px 0 rgba(58,51,38,.18)}
+.tk-k{color:#ffb3c1}.tk-t{color:#ffd98a}.tk-s{color:#b8e6c8}.tk-c{color:#a99e88;font-style:italic}
+.reading blockquote{margin:26px 0 0;border:none;padding:14px 0 0;border-top:1.5px dashed var(--line);font-size:15px}
+.reading blockquote .note{font-family:var(--hand);font-size:24px;color:var(--red);display:block;margin-bottom:4px;transform:rotate(-1deg)}
+
+/* ---------- 页脚 ---------- */
+.footer{margin-top:30px;background:var(--kraft);border-top:2px dashed var(--line);padding:26px 0}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px;color:#6b5f4a}
+.footer .sign{font-family:var(--latin-hand);font-size:22px;color:var(--ink)}
+.footer a:hover{color:var(--red)}
+
+/* ---------- 选型浮标 ---------- */
+.demo-chip{position:fixed;right:22px;bottom:22px;z-index:90;font-size:12.5px;padding:9px 16px;background:var(--paper);border:2px solid var(--ink);border-radius:4px;box-shadow:3px 3px 0 var(--line);transform:rotate(-1.5deg)}
+.demo-chip:hover{transform:rotate(0);background:var(--yellow)}
+
+@media (max-width:900px){
+  .stats{grid-template-columns:repeat(2,1fr);gap:20px}
+  .seal{display:none}
+  .reading .card{padding:26px 22px}
+  .post .date{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="#">ViteBlog<i>。</i><span class="cn">记录学习与生活</span></a>
+      <nav class="nav">
+        <a class="active" href="#">首页</a>
+        <a href="#">标签</a>
+        <a href="#">关于</a>
+        <button class="theme-btn" type="button">夜</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="tape">个人技术博客 · EST. 2026 · 持续更新中</span>
+      <h1>记录<span class="u">学习<svg viewBox="0 0 120 12" preserveAspectRatio="none"><path d="M2 8 Q 30 2, 58 8 T 118 6" fill="none" stroke="#d94f3d" stroke-width="2.5" stroke-linecap="round"/></svg></span>与生活</h1>
+      <p class="sub">关于前端、后端与一切踩过的坑。文章以 Markdown 编写,托管在 GitHub Pages,每次 push 自动上线。像手帐一样,一页页写下去。</p>
+      <div class="actions">
+        <a class="btn solid" href="#posts">开始阅读 →</a>
+        <a class="btn" href="#">关于本站</a>
+        <span class="note-hand">← 从这里开始翻</span>
+      </div>
+      <div class="seal" aria-hidden="true">记录<br>生活</div>
+    </section>
+
+    <div class="tape-divider" aria-hidden="true"></div>
+
+    <section class="stats">
+      <div class="stat" style="background:var(--yellow)"><b>51</b><span>篇文章</span></div>
+      <div class="stat" style="background:var(--pink)"><b>66</b><span>个标签</span></div>
+      <div class="stat" style="background:var(--blue)"><b>10</b><span>个系列</span></div>
+      <div class="stat" style="background:var(--mint)"><b>2026</b><span>建站年份</span></div>
+    </section>
+
+    <div class="tape-divider" aria-hidden="true" style="transform:rotate(.7deg)"></div>
+
+    <section class="latest" id="posts">
+      <h3 class="sec-title">最新文章 <small>recent notes</small></h3>
+      <a class="post" href="#">
+        <span class="no">七</span>
+        <span style="flex:1">
+          <h4>TypeScript 精通(七):工具类型与工程化配置</h4>
+          <span class="tags"><span class="tag">TypeScript</span><span class="tag">精通</span><span class="tag">tsconfig</span></span>
+        </span>
+        <span class="date">09 / 19</span>
+      </a>
+      <a class="post" href="#">
+        <span class="no">六</span>
+        <span style="flex:1">
+          <h4>TypeScript 精通(六):高级类型与类型收窄</h4>
+          <span class="tags"><span class="tag">TypeScript</span><span class="tag">精通</span></span>
+        </span>
+        <span class="date">09 / 18</span>
+      </a>
+      <a class="post" href="#">
+        <span class="no">五</span>
+        <span style="flex:1">
+          <h4>Python 后端(一):HTTP、WSGI/ASGI 与框架选型</h4>
+          <span class="tags"><span class="tag">Python</span><span class="tag">后端</span></span>
+        </span>
+        <span class="date">09 / 18</span>
+      </a>
+      <a class="post" href="#">
+        <span class="no">四</span>
+        <span style="flex:1">
+          <h4>Node.js(五):数据库、鉴权与部署</h4>
+          <span class="tags"><span class="tag">Node.js</span><span class="tag">后端</span></span>
+        </span>
+        <span class="date">09 / 17</span>
+      </a>
+    </section>
+
+    <section class="reading">
+      <div class="card">
+        <h2><span class="mark">内置工具类型</span></h2>
+        <p>TS 内置了一批工具类型(Utility Types),它们就是用映射类型、条件类型拼出来的。配合一份靠谱的 <code>tsconfig.json</code> 和声明文件,才算完整的工程化能力。</p>
+<pre><span class="tk-k">type</span> <span class="tk-t">UserPreview</span> = <span class="tk-t">Pick</span>&lt;User, <span class="tk-s">'id' | 'name'</span>&gt;
+
+<span class="tk-c">// 更新字段:排除 id,其余转成可选</span>
+<span class="tk-k">type</span> <span class="tk-t">UserUpdate</span> = <span class="tk-t">Partial</span>&lt;<span class="tk-t">Omit</span>&lt;User, <span class="tk-s">'id'</span>&gt;&gt;</pre>
+        <blockquote>
+          <span class="note">✎ 这句要划重点!</span>
+          把 strict 打开,不是为了让编译器高兴,而是让它在重构时替你记住所有假设。
+        </blockquote>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="sign">© 2026 KongZhipeng</span>
+      <span><a href="#">GitHub</a> · <a href="#">关于</a> · <a href="#">RSS</a> · REACT × VITE</span>
+    </div>
+  </footer>
+</div>
+
+<a class="demo-chip" href="index.html">◂ 返回选型 · ⑩ 手帐拼贴</a>
+
+</body>
+</html>

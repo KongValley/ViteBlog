@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ViteBlog · 新主题选型预览</title>
+<title>ViteBlog · 主题选型预览</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -21,11 +21,16 @@ body{
   background-image:radial-gradient(1000px 500px at 50% -10%,rgba(120,120,255,.06),transparent 60%);
 }
 .page{max-width:1260px;margin:0 auto;padding:64px 32px 80px}
-.head{text-align:center;margin-bottom:52px}
+.head{text-align:center;margin-bottom:56px}
 .head .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:#8f96ad}
 .head h1{font-size:34px;font-weight:700;letter-spacing:-.02em;margin-top:16px}
-.head p{margin:16px auto 0;max-width:680px;color:var(--mut);font-size:14.5px;line-height:1.9}
+.head p{margin:16px auto 0;max-width:720px;color:var(--mut);font-size:14.5px;line-height:1.9}
 .head p b{color:var(--txt);font-weight:600}
+
+.section-title{display:flex;align-items:baseline;gap:14px;margin:56px 0 22px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.section-title h2{font-size:19px;font-weight:700;letter-spacing:-.01em}
+.section-title span{font-family:var(--mono);font-size:11.5px;color:#8f96ad}
+.section-title .badge{margin-left:auto;font-family:var(--mono);font-size:11px;color:#9be86b;border:1px solid rgba(155,232,107,.35);border-radius:999px;padding:3px 11px}
 
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
 .card{
@@ -57,6 +62,7 @@ body{
 .card-foot p{flex:1;font-size:13px;color:var(--mut);line-height:1.8}
 .card-foot a{flex:none;margin-top:2px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);font-size:12.5px;color:var(--txt);text-decoration:none;transition:border-color .3s,background .3s}
 .card-foot a:hover{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.05)}
+.tag-done{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:#111;background:#9be86b;border-radius:4px;padding:2px 8px;margin-left:8px}
 
 .note{margin-top:52px;border:1px solid var(--line);border-radius:14px;padding:22px 26px;color:var(--mut);font-size:13.5px;line-height:2;background:rgba(255,255,255,.02)}
 .note b{color:var(--txt);font-weight:600}
@@ -71,19 +77,104 @@ body{
 <div class="page">
   <div class="head">
     <p class="kicker">VITEBLOG · THEME 2026</p>
-    <h1>新主题方向 · 四选一</h1>
-    <p>四套完整演示，内容完全相同，只有设计语言不同。<b>鼠标悬停卡片可预览滚动效果</b>，点击任意卡片打开完整页面（含入场动效与交互）。选定后我会把所选方向实现为与现有像素主题共存的可切换皮肤。</p>
+    <h1>主题预览 · 全部候选</h1>
+    <p>十套完整演示,内容相同,只有设计语言不同。<b>鼠标悬停卡片可预览滚动效果</b>,点击任意卡片打开完整页面。已实现为正式主题的会自动标注,其余选定后即可按同样方式落地。</p>
+  </div>
+
+  <div class="section-title">
+    <h2>新候选 · 六套</h2>
+    <span>2026 趋势方向</span>
+    <span class="badge">新增</span>
   </div>
 
   <div class="grid">
     <div class="card">
-      <div class="card-head"><span class="card-no">①</span><span class="card-name">现代编辑排版风</span><span class="card-en">Editorial</span></div>
-      <a class="preview" href="01-editorial.html" target="_blank" rel="noopener">
-        <iframe src="01-editorial.html" loading="lazy" tabindex="-1" title="现代编辑排版风预览"></iframe>
+      <div class="card-head"><span class="card-no">⑤</span><span class="card-name">新粗野主义</span><span class="card-en">Brutalist</span></div>
+      <a class="preview" href="05-brutalist.html" target="_blank" rel="noopener">
+        <iframe src="05-brutalist.html" loading="lazy" tabindex="-1" title="新粗野主义预览"></iframe>
         <span class="open-hint">打开完整 Demo ↗</span>
       </a>
       <div class="card-foot">
-        <p>衬线大标题 + 无衬线正文，纸感底色与报纸刊头排版。克制、耐读、有书卷气，最适合技术博客的长期使用。</p>
+        <p>4px 黑框 + 实心偏移阴影 + 高饱和撞色,按钮按下还有"机械键"手感。硬派直白但排版严谨,个性最锋利。</p>
+        <a href="05-brutalist.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">⑥</span><span class="card-name">Bento 便当格</span><span class="card-en">Bento Grid</span></div>
+      <a class="preview" href="06-bento.html" target="_blank" rel="noopener">
+        <iframe src="06-bento.html" loading="lazy" tabindex="-1" title="Bento 便当格预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>暗色卡片矩阵一屏铺开:最新文章、标签云、数据、站长信息各占一格。信息密度之王,扫读体验极佳。</p>
+        <a href="06-bento.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">⑦</span><span class="card-name">终端 CLI 风</span><span class="card-en">Terminal</span></div>
+      <a class="preview" href="07-terminal.html" target="_blank" rel="noopener">
+        <iframe src="07-terminal.html" loading="lazy" tabindex="-1" title="终端 CLI 预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>整站是一个终端窗口:命令提示符导航、git log 式文章列表、neofetch 数据面板、底部 vim 状态栏。技术博客的"原生皮肤"。</p>
+        <a href="07-terminal.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">⑧</span><span class="card-name">动态排版</span><span class="card-en">Kinetic Type</span></div>
+      <a class="preview" href="08-kinetic.html" target="_blank" rel="noopener">
+        <iframe src="08-kinetic.html" loading="lazy" tabindex="-1" title="动态排版预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>字体随滚动从 100 变粗到 900(真·可变字体动画),巨型跑马灯与悬停加重。文字就是全部主视觉,零图片。</p>
+        <a href="08-kinetic.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">⑨</span><span class="card-name">玻璃拟态</span><span class="card-en">Glassmorphism</span></div>
+      <a class="preview" href="09-glass.html" target="_blank" rel="noopener">
+        <iframe src="09-glass.html" loading="lazy" tabindex="-1" title="玻璃拟态预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>毛玻璃卡片漂浮在缓慢流动的渐变光斑上,通透明亮。2026 版玻璃拟态讲究克制:只用在导航、卡片与浮层。</p>
+        <a href="09-glass.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">⑩</span><span class="card-name">手帐拼贴</span><span class="card-en">Scrapbook</span></div>
+      <a class="preview" href="10-scrapbook.html" target="_blank" rel="noopener">
+        <iframe src="10-scrapbook.html" loading="lazy" tabindex="-1" title="手帐拼贴预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>和纸胶带、便利贴、红色印章与手写批注(志莽行书 + Caveat),像一本摊开的手帐。反"AI 感"的人情味路线。</p>
+        <a href="10-scrapbook.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <h2>早期选型 Demo</h2>
+    <span>第一轮四套</span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="card-no">①</span><span class="card-name">现代编辑排版</span><span class="card-en">Editorial</span></div>
+      <a class="preview" href="01-editorial.html" target="_blank" rel="noopener">
+        <iframe src="01-editorial.html" loading="lazy" tabindex="-1" title="编辑排版预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>衬线大标题 + 纸感底色 + 报刊刊头。<span class="tag-done">已上线</span></p>
         <a href="01-editorial.html" target="_blank" rel="noopener">打开 ↗</a>
       </div>
     </div>
@@ -91,23 +182,23 @@ body{
     <div class="card">
       <div class="card-head"><span class="card-no">②</span><span class="card-name">暗黑未来科技感</span><span class="card-en">Futuristic</span></div>
       <a class="preview" href="02-futuristic.html" target="_blank" rel="noopener">
-        <iframe src="02-futuristic.html" loading="lazy" tabindex="-1" title="暗黑未来科技感预览"></iframe>
+        <iframe src="02-futuristic.html" loading="lazy" tabindex="-1" title="暗黑科技感预览"></iframe>
         <span class="open-hint">打开完整 Demo ↗</span>
       </a>
       <div class="card-foot">
-        <p>深色玻璃拟态 + 渐变光晕，鼠标跟随光斑与网格背景。视觉冲击力最强，科技气质拉满。</p>
+        <p>深色玻璃拟态 + 渐变光晕 + 鼠标跟随光斑,冲击力最强。</p>
         <a href="02-futuristic.html" target="_blank" rel="noopener">打开 ↗</a>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-head"><span class="card-no">③</span><span class="card-name">极简瑞士网格风</span><span class="card-en">Swiss Grid</span></div>
+      <div class="card-head"><span class="card-no">③</span><span class="card-name">极简瑞士网格</span><span class="card-en">Swiss Grid</span></div>
       <a class="preview" href="03-swiss.html" target="_blank" rel="noopener">
-        <iframe src="03-swiss.html" loading="lazy" tabindex="-1" title="极简瑞士网格风预览"></iframe>
+        <iframe src="03-swiss.html" loading="lazy" tabindex="-1" title="瑞士网格预览"></iframe>
         <span class="open-hint">打开完整 Demo ↗</span>
       </a>
       <div class="card-foot">
-        <p>强对比黑白 + 12 栏可见网格 + 红色点缀，机械感交互（悬停瞬间反色）。个性最锋利，设计感最浓。</p>
+        <p>强对比黑白 + 12 栏网格线 + 红色方点。<span class="tag-done">已上线</span></p>
         <a href="03-swiss.html" target="_blank" rel="noopener">打开 ↗</a>
       </div>
     </div>
@@ -115,20 +206,18 @@ body{
     <div class="card">
       <div class="card-head"><span class="card-no">④</span><span class="card-name">奢华杂志风</span><span class="card-en">Luxury</span></div>
       <a class="preview" href="04-luxury.html" target="_blank" rel="noopener">
-        <iframe src="04-luxury.html" loading="lazy" tabindex="-1" title="奢华杂志风预览"></iframe>
+        <iframe src="04-luxury.html" loading="lazy" tabindex="-1" title="奢华杂志预览"></iframe>
         <span class="open-hint">打开完整 Demo ↗</span>
       </a>
       <div class="card-foot">
-        <p>深色底 + 金色画框点缀，高对比衬线大标题与缓慢优雅的动效。质感最奢华，偏品牌官网气质。</p>
+        <p>金色画框 + 高对比衬线 + 缓慢优雅动效,质感最奢华。</p>
         <a href="04-luxury.html" target="_blank" rel="noopener">打开 ↗</a>
       </div>
     </div>
   </div>
 
   <div class="note">
-    <b>说明</b>：这些 Demo 是独立预览文件，不影响正式站点（在 <code>design-preview/</code> 目录，未接入构建）。
-    选定一个方向后，我会将它实现为正式主题，并与现在的像素主题做成<b>可切换皮肤</b>——两套主题随时互切。
-    如果某个方向想微调（配色 / 字体 / 密度），也可以先告诉我再定。
+    <b>说明</b>:标题带 <span class="tag-done">已上线</span> 的已实现为正式主题(改 <code>site.yml</code> 的 <code>theme</code> 即可切换);其余 Demo 选定后按同样方式实现为独立主题。全部文件在 <code>design-preview/</code> 下,不影响正式站点。
   </div>
 </div>
 </body>

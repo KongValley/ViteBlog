@@ -3,7 +3,15 @@
 import config from 'virtual:site-config';
 
 // 可用主题:与 vite.config.ts 及 src/themes/ 目录保持一致
-export const THEME_NAMES = ['pixel', 'swiss', 'editorial'] as const;
+export const THEME_NAMES = [
+  'pixel',
+  'swiss',
+  'editorial',
+  'brutalist',
+  'bento',
+  'terminal',
+  'glass',
+] as const;
 export type ThemeName = (typeof THEME_NAMES)[number];
 
 export interface Site {
