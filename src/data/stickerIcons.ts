@@ -106,6 +106,6 @@ export const stickerIcons = [
   'sticker-r10-c07',
   'sticker-r10-c08',
   'sticker-r10-c09',
-] as const
+] as const;
 
-export type StickerIconName = (typeof stickerIcons)[number]
+export type StickerIconName = (typeof stickerIcons)[number];

@@ -1,15 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import '@fontsource/press-start-2p'
-import '@fontsource/fusion-pixel-12px-proportional-sc'
-import '@fontsource/fira-code/400.css'
-import '@fontsource/fira-code/700.css'
-import './style.css'
-import App from './App'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+// 主题(样式与字体)由 site.yml 的 theme 字段在构建期决定:
+// pixel / swiss / editorial 三选一,只会打包被选中的那一套
+import 'virtual:site-theme';
+import App from './App';
 
 // biome-ignore lint/style/noNonNullAssertion: index.html 里保证了 #app 存在
-const container = document.getElementById('app')!
+const container = document.getElementById('app')!;
 
 createRoot(container).render(
   <StrictMode>
@@ -18,4 +16,4 @@ createRoot(container).render(
       <App />
     </BrowserRouter>
   </StrictMode>,
-)
+);

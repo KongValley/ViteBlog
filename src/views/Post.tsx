@@ -1,64 +1,96 @@
-import { useEffect, useMemo, useState, type MouseEvent as ReactMouseEvent } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { renderMarkdown } from '../data/markdown'
-import { adjacentPosts, getPostBySlug } from '../data/posts'
+import {
+  type MouseEvent as ReactMouseEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { formatDate } from '../data/format';
+import { renderMarkdown } from '../data/markdown';
+import { adjacentPosts, getPostBySlug } from '../data/posts';
 
-function formatDate(date: string): string {
-  if (!date) return ''
-  const [y, m, d] = date.split(' ')[0].split('-')
-  if (!m) return y
-  const day = d ? ` ${Number(d)} 日` : ''
-  return `${y} 年 ${Number(m)} 月${day}`
-}
-
-type TocItem = { id: string; text: string; level: 2 | 3 }
+type TocItem = { id: string; text: string; level: 2 | 3 };
 
 // 从 Markdown 源码里提取二、三级标题作为目录项,并生成对应顺序的 id 列表
 function buildToc(content: string): { toc: TocItem[]; ids: string[] } {
-  const toc: TocItem[] = []
-  const ids: string[] = []
+  const toc: TocItem[] = [];
+  const ids: string[] = [];
   for (const line of content.split(/\r?\n/)) {
-    const match = line.match(/^(#{2,3})\s+(.+?)\s*#*$/)
-    if (!match) continue
-    const id = `toc-${ids.length}`
-    ids.push(id)
+    const match = line.match(/^(#{2,3})\s+(.+?)\s*#*$/);
+    if (!match) continue;
+    const id = `toc-${ids.length}`;
+    ids.push(id);
     toc.push({
       id,
       text: match[2].replace(/[`*]/g, ''),
       level: match[1].length as 2 | 3,
-    })
+    });
   }
-  return { toc, ids }
+  return { toc, ids };
 }
 
 // 按出现顺序给渲染结果里的 h2/h3 注入同样的 id
 function injectHeadingIds(html: string, ids: string[]): string {
-  let index = 0
+  let index = 0;
   return html.replace(/<h([23])>/g, (match, level: string) => {
-    const id = ids[index++]
-    return id ? `<h${level} id="${id}">` : match
-  })
+    const id = ids[index++];
+    return id ? `<h${level} id="${id}">` : match;
+  });
 }
 
 export default function Post() {
-  const slug = useParams()['*']
-  const navigate = useNavigate()
-  const post = getPostBySlug(slug ?? '')
-  const { prev, next } = adjacentPosts(slug ?? '')
+  const slug = useParams()['*'];
+  const navigate = useNavigate();
+  const post = getPostBySlug(slug ?? '');
+  const { prev, next } = adjacentPosts(slug ?? '');
 
   // 正文里的站内链接已带上部署 base,拦截下来走 SPA 跳转,免去整页刷新;
   // 外链、锚点、修饰键点击(新标签打开)一概放行
   const handleContentClick = (event: ReactMouseEvent<HTMLDivElement>) => {
-    if (event.defaultPrevented || event.button !== 0) return
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-    const anchor = (event.target as HTMLElement).closest('a')
-    if (!anchor || anchor.target === '_blank') return
-    const href = anchor.getAttribute('href') ?? ''
-    const base = import.meta.env.BASE_URL
-    if (!href.startsWith(base)) return
-    event.preventDefault()
-    navigate(href.slice(base.length - 1))
-  }
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      return;
+    const anchor = (event.target as HTMLElement).closest('a');
+    if (!anchor || anchor.target === '_blank') return;
+    const href = anchor.getAttribute('href') ?? '';
+    const base = import.meta.env.BASE_URL;
+    if (!href.startsWith(base)) return;
+    event.preventDefault();
+    navigate(href.slice(base.length - 1));
+  };
+
+  // 所有 Hook 必须在提前 return 之前调用(React Hooks 规则),
+  // 否则从有效文章跳到不存在文章时,Hook 数量变化会直接报错。
+  // post 不存在时这里算出空结果,真正的 GAME OVER 分支放在 Hook 之后。
+  const { html, toc } = useMemo(() => {
+    if (!post) return { html: '', toc: [] as TocItem[] };
+    const { toc, ids } = buildToc(post.content);
+    return {
+      html: injectHeadingIds(renderMarkdown(post.content), ids),
+      toc,
+    };
+  }, [post]);
+
+  const [activeId, setActiveId] = useState('');
+
+  useEffect(() => {
+    if (toc.length === 0) return;
+    const onScroll = () => {
+      let current = '';
+      for (const item of toc) {
+        const el = document.getElementById(item.id);
+        if (el && el.getBoundingClientRect().top <= 120) current = item.id;
+      }
+      setActiveId(current);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [toc]);
+
+  const jumpTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   if (!post) {
     return (
@@ -69,37 +101,7 @@ export default function Post() {
           ← 返回首页
         </Link>
       </section>
-    )
-  }
-
-  // 内容是仓库内自己写的 Markdown,来源可控
-  const { html, toc } = useMemo(() => {
-    const { toc, ids } = buildToc(post.content)
-    return {
-      html: injectHeadingIds(renderMarkdown(post.content), ids),
-      toc,
-    }
-  }, [post])
-
-  const [activeId, setActiveId] = useState('')
-
-  useEffect(() => {
-    if (toc.length === 0) return
-    const onScroll = () => {
-      let current = ''
-      for (const item of toc) {
-        const el = document.getElementById(item.id)
-        if (el && el.getBoundingClientRect().top <= 120) current = item.id
-      }
-      setActiveId(current)
-    }
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [toc])
-
-  const jumpTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    );
   }
 
   return (
@@ -121,8 +123,8 @@ export default function Post() {
                       activeId === item.id ? 'toc-link toc-active' : 'toc-link'
                     }
                     onClick={(event) => {
-                      event.preventDefault()
-                      jumpTo(item.id)
+                      event.preventDefault();
+                      jumpTo(item.id);
                     }}
                   >
                     {item.text}
@@ -137,40 +139,46 @@ export default function Post() {
 
       <div className="post-body">
         <header className="post-header">
-        <h1 className="post-title">{post.title}</h1>
-        <div className="post-meta">
-          <time>{formatDate(post.date)}</time>
-          {post.tags.map((tag) => (
-            <span key={tag} className="tag tag-small">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </header>
+          <h1 className="post-title">{post.title}</h1>
+          <div className="post-meta">
+            <time>{formatDate(post.date)}</time>
+            {post.tags.map((tag) => (
+              <span key={tag} className="tag tag-small">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </header>
 
-      <div
-        className="post-content markdown-body"
-        onClick={handleContentClick}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: 事件代理只拦截正文里的站内链接做 SPA 跳转,链接本身天然可键盘访问 */}
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: 键盘 Enter 触发链接的原生 click 同样会冒泡到这里,无需单独的 keydown */}
+        <div
+          className="post-content markdown-body"
+          onClick={handleContentClick}
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: 正文是仓库内自己写的 Markdown,来源可控
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
 
-      <nav className="post-adjacent">
-        {next ? (
-          <Link to={`/post/${next.slug}`} className="adjacent-link">
-            <span className="adjacent-label">← 较新一篇</span>
-            <span className="adjacent-title">{next.title}</span>
-          </Link>
-        ) : (
-          <span />
-        )}
-        {prev && (
-          <Link to={`/post/${prev.slug}`} className="adjacent-link adjacent-right">
-            <span className="adjacent-label">较早一篇 →</span>
-            <span className="adjacent-title">{prev.title}</span>
-          </Link>
-        )}
+        <nav className="post-adjacent">
+          {next ? (
+            <Link to={`/post/${next.slug}`} className="adjacent-link">
+              <span className="adjacent-label">← 较新一篇</span>
+              <span className="adjacent-title">{next.title}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {prev && (
+            <Link
+              to={`/post/${prev.slug}`}
+              className="adjacent-link adjacent-right"
+            >
+              <span className="adjacent-label">较早一篇 →</span>
+              <span className="adjacent-title">{prev.title}</span>
+            </Link>
+          )}
         </nav>
       </div>
     </article>
-  )
+  );
 }

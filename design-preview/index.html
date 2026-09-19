@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ViteBlog · 新主题选型预览</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d11;
+  --card:#14141a;
+  --line:rgba(255,255,255,.09);
+  --txt:#eef0f6;
+  --mut:#9aa0b2;
+  --mono:ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:system-ui,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(1000px 500px at 50% -10%,rgba(120,120,255,.06),transparent 60%);
+}
+.page{max-width:1260px;margin:0 auto;padding:64px 32px 80px}
+.head{text-align:center;margin-bottom:52px}
+.head .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:#8f96ad}
+.head h1{font-size:34px;font-weight:700;letter-spacing:-.02em;margin-top:16px}
+.head p{margin:16px auto 0;max-width:680px;color:var(--mut);font-size:14.5px;line-height:1.9}
+.head p b{color:var(--txt);font-weight:600}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+.card{
+  border:1px solid var(--line);border-radius:18px;background:var(--card);overflow:hidden;
+  transition:border-color .35s,transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s;
+}
+.card:hover{border-color:rgba(255,255,255,.22);transform:translateY(-4px);box-shadow:0 40px 90px -50px rgba(0,0,0,.9)}
+.card-head{display:flex;align-items:baseline;gap:12px;padding:18px 22px 14px}
+.card-no{font-family:var(--mono);font-size:12px;color:#8f96ad}
+.card-name{font-size:16px;font-weight:600}
+.card-en{margin-left:auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;color:#7b8194;text-transform:uppercase}
+.preview{position:relative;display:block;width:100%;height:470px;overflow:hidden;background:#000;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.preview iframe{
+  width:1440px;height:2620px;border:0;pointer-events:none;
+  transform:scale(.4) translateY(0);transform-origin:0 0;
+  transition:transform 7s cubic-bezier(.24,.8,.3,1);
+}
+.card:hover .preview iframe{transform:scale(.4) translateY(-880px)}
+.preview .open-hint{
+  position:absolute;right:14px;bottom:14px;z-index:2;
+  padding:9px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.25);
+  background:rgba(10,10,14,.72);backdrop-filter:blur(10px);
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:#eef0f6;text-decoration:none;
+  opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s;
+}
+.card:hover .open-hint{opacity:1;transform:none}
+.preview .open-hint:hover{border-color:#fff}
+.card-foot{display:flex;align-items:flex-start;gap:14px;padding:16px 22px 20px}
+.card-foot p{flex:1;font-size:13px;color:var(--mut);line-height:1.8}
+.card-foot a{flex:none;margin-top:2px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);font-size:12.5px;color:var(--txt);text-decoration:none;transition:border-color .3s,background .3s}
+.card-foot a:hover{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.05)}
+
+.note{margin-top:52px;border:1px solid var(--line);border-radius:14px;padding:22px 26px;color:var(--mut);font-size:13.5px;line-height:2;background:rgba(255,255,255,.02)}
+.note b{color:var(--txt);font-weight:600}
+.note code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.06);padding:.14em .45em;border-radius:5px;color:#cfd4e6}
+@media (max-width:1100px){
+  .grid{grid-template-columns:1fr}
+  .preview{height:420px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <p class="kicker">VITEBLOG · THEME 2026</p>
+    <h1>新主题方向 · 四选一</h1>
+    <p>四套完整演示，内容完全相同，只有设计语言不同。<b>鼠标悬停卡片可预览滚动效果</b>，点击任意卡片打开完整页面（含入场动效与交互）。选定后我会把所选方向实现为与现有像素主题共存的可切换皮肤。</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="card-no">①</span><span class="card-name">现代编辑排版风</span><span class="card-en">Editorial</span></div>
+      <a class="preview" href="01-editorial.html" target="_blank" rel="noopener">
+        <iframe src="01-editorial.html" loading="lazy" tabindex="-1" title="现代编辑排版风预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>衬线大标题 + 无衬线正文，纸感底色与报纸刊头排版。克制、耐读、有书卷气，最适合技术博客的长期使用。</p>
+        <a href="01-editorial.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">②</span><span class="card-name">暗黑未来科技感</span><span class="card-en">Futuristic</span></div>
+      <a class="preview" href="02-futuristic.html" target="_blank" rel="noopener">
+        <iframe src="02-futuristic.html" loading="lazy" tabindex="-1" title="暗黑未来科技感预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>深色玻璃拟态 + 渐变光晕，鼠标跟随光斑与网格背景。视觉冲击力最强，科技气质拉满。</p>
+        <a href="02-futuristic.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">③</span><span class="card-name">极简瑞士网格风</span><span class="card-en">Swiss Grid</span></div>
+      <a class="preview" href="03-swiss.html" target="_blank" rel="noopener">
+        <iframe src="03-swiss.html" loading="lazy" tabindex="-1" title="极简瑞士网格风预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>强对比黑白 + 12 栏可见网格 + 红色点缀，机械感交互（悬停瞬间反色）。个性最锋利，设计感最浓。</p>
+        <a href="03-swiss.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-no">④</span><span class="card-name">奢华杂志风</span><span class="card-en">Luxury</span></div>
+      <a class="preview" href="04-luxury.html" target="_blank" rel="noopener">
+        <iframe src="04-luxury.html" loading="lazy" tabindex="-1" title="奢华杂志风预览"></iframe>
+        <span class="open-hint">打开完整 Demo ↗</span>
+      </a>
+      <div class="card-foot">
+        <p>深色底 + 金色画框点缀，高对比衬线大标题与缓慢优雅的动效。质感最奢华，偏品牌官网气质。</p>
+        <a href="04-luxury.html" target="_blank" rel="noopener">打开 ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>说明</b>：这些 Demo 是独立预览文件，不影响正式站点（在 <code>design-preview/</code> 目录，未接入构建）。
+    选定一个方向后，我会将它实现为正式主题，并与现在的像素主题做成<b>可切换皮肤</b>——两套主题随时互切。
+    如果某个方向想微调（配色 / 字体 / 密度），也可以先告诉我再定。
+  </div>
+</div>
+</body>
+</html>

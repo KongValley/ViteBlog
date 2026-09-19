@@ -1,4 +1,4 @@
-import { site } from '../data/site'
+import { site } from '../data/site';
 
 export default function PlayerCard() {
   return (
@@ -123,5 +123,5 @@ export default function PlayerCard() {
         <p className="gb-motto">{site.tagline}</p>
       </div>
     </aside>
-  )
+  );
 }

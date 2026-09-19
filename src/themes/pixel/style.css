@@ -12,13 +12,13 @@
   --muted: #7a6f58;
   --line: #1a1a1a;
   --shadow: #1a1a1a;
-  --red: #d82800;      /* 经典 NES 红 */
-  --green: #00a844;    /* 经典 NES 绿 */
-  --blue: #0058f8;     /* 经典 NES 蓝 */
+  --red: #d82800; /* 经典 NES 红 */
+  --green: #00a844; /* 经典 NES 绿 */
+  --blue: #0058f8; /* 经典 NES 蓝 */
   --gold: #f8b800;
   --pixel-outline: #1a1c2c;
   --pixel-purple: #6844fc;
-  --code-bg: #1a1c2c;  /* 代码块始终是深色“游戏窗口” */
+  --code-bg: #1a1c2c; /* 代码块始终是深色“游戏窗口” */
   --code-ink: #e8e6d8;
   --table-line: var(--line);
   --table-head-bg: var(--gold);
@@ -26,16 +26,16 @@
   --table-body-bg: transparent;
   --pattern: rgba(26, 26, 26, 0.05);
   --scanline: rgba(0, 0, 0, 0.045);
-  --strong-ink: var(--ink);  /* 浅色模式加粗不换色 */
+  --strong-ink: var(--ink); /* 浅色模式加粗不换色 */
 
-  --font-en: 'Press Start 2P', monospace;
-  --font-body: 'Fusion Pixel 12px Proportional SC', 'Press Start 2P',
-    system-ui, sans-serif;
-  --font-mono: ui-monospace, Consolas, 'Cascadia Code', monospace;
-  --font-code: 'Fira Code', ui-monospace, Consolas, 'Cascadia Code', monospace;
+  --font-en: "Press Start 2P", monospace;
+  --font-body:
+    "Fusion Pixel 12px Proportional SC", "Press Start 2P", system-ui, sans-serif;
+  --font-mono: ui-monospace, Consolas, "Cascadia Code", monospace;
+  --font-code: "Fira Code", ui-monospace, Consolas, "Cascadia Code", monospace;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --bg: #0f0e17;
   --surface: #1a1c2c;
   --ink: #e8e6d8;
@@ -57,7 +57,7 @@
   --table-body-bg: #191a28;
   --pattern: rgba(255, 255, 255, 0.035);
   --scanline: rgba(0, 0, 0, 0.06);
-  --strong-ink: var(--gold);  /* 暗夜模式加粗用 NES 金做高亮 */
+  --strong-ink: var(--gold); /* 暗夜模式加粗用 NES 金做高亮 */
 
   color-scheme: dark;
 }
@@ -85,7 +85,7 @@ body {
 
 /* CRT 扫描线覆盖层,纯装饰不影响交互 */
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -159,8 +159,14 @@ a:hover {
 }
 
 @keyframes blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .blink {
@@ -226,13 +232,13 @@ a:hover {
   color: var(--red);
 }
 
-.nav-link.router-link-active {
+.nav-link.active {
   color: var(--red);
   font-weight: 700;
 }
 
-.nav-link.router-link-active::before {
-  content: '▶ ';
+.nav-link.active::before {
+  content: "▶ ";
 }
 
 /* 像素按钮通用:硬边框 + 硬偏移阴影,按下时“压进去” */
@@ -248,7 +254,9 @@ a:hover {
   font-weight: 700;
   cursor: pointer;
   box-shadow: 3px 3px 0 var(--shadow);
-  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2);
+  transition:
+    transform 0.05s steps(2),
+    box-shadow 0.05s steps(2);
 }
 
 .theme-toggle:hover {
@@ -318,7 +326,9 @@ a:hover {
   line-height: 1.6;
   cursor: pointer;
   box-shadow: 3px 3px 0 var(--shadow);
-  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2),
+  transition:
+    transform 0.05s steps(2),
+    box-shadow 0.05s steps(2),
     background 0.05s steps(2);
 }
 
@@ -356,7 +366,9 @@ button.tag:hover,
   background: var(--surface);
   border: 4px solid var(--line);
   box-shadow: 6px 6px 0 var(--shadow);
-  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2);
+  transition:
+    transform 0.05s steps(2),
+    box-shadow 0.05s steps(2);
 }
 
 .post-card:hover {
@@ -400,7 +412,7 @@ button.tag:hover,
   image-rendering: pixelated;
 }
 
-[data-theme='dark'] .post-card-icon .sticker-needs-contrast {
+[data-theme="dark"] .post-card-icon .sticker-needs-contrast {
   background: #fdf6e3;
 }
 
@@ -427,7 +439,7 @@ button.tag:hover,
 }
 
 .post-card-date::before {
-  content: '▶ ';
+  content: "▶ ";
   color: var(--blue);
 }
 
@@ -458,7 +470,9 @@ button.tag:hover,
   line-height: 1.6;
   cursor: pointer;
   box-shadow: 3px 3px 0 var(--shadow);
-  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2),
+  transition:
+    transform 0.05s steps(2),
+    box-shadow 0.05s steps(2),
     background 0.05s steps(2);
 }
 
@@ -501,7 +515,9 @@ button.tag:hover,
   line-height: 1;
   cursor: pointer;
   box-shadow: 3px 3px 0 var(--shadow);
-  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2);
+  transition:
+    transform 0.05s steps(2),
+    box-shadow 0.05s steps(2);
 }
 
 .back-top-arrow {
@@ -666,7 +682,7 @@ button.tag:hover,
 }
 
 .post-meta time::before {
-  content: '▶ ';
+  content: "▶ ";
   color: var(--blue);
 }
 
@@ -688,7 +704,9 @@ button.tag:hover,
   background: var(--surface);
   box-shadow: 4px 4px 0 var(--shadow);
   color: inherit;
-  transition: transform 0.05s steps(2), box-shadow 0.05s steps(2);
+  transition:
+    transform 0.05s steps(2),
+    box-shadow 0.05s steps(2);
 }
 
 .adjacent-link:hover {
@@ -755,7 +773,7 @@ button.tag:hover,
 }
 
 .markdown-body h2::before {
-  content: '■ ';
+  content: "■ ";
   color: var(--red);
 }
 
@@ -764,7 +782,7 @@ button.tag:hover,
 }
 
 .markdown-body h3::before {
-  content: '▶ ';
+  content: "▶ ";
   color: var(--blue);
 }
 
@@ -922,7 +940,7 @@ button.tag:hover,
 
 .markdown-body .hljs-strong {
   font-weight: 700;
-  color: #ffd75e;  /* 代码窗永远是深色,加粗直接用金黄 */
+  color: #ffd75e; /* 代码窗永远是深色,加粗直接用金黄 */
 }
 
 .markdown-body .hljs-deletion {
@@ -938,7 +956,7 @@ button.tag:hover,
 }
 
 .section-title::before {
-  content: '■ ';
+  content: "■ ";
   color: var(--red);
 }
 
@@ -981,7 +999,7 @@ button.tag:hover,
   font-family: var(--font-code);
 }
 
-[data-theme='dark'] .terminal-card {
+[data-theme="dark"] .terminal-card {
   /* 夜晚:深色终端(类 GitHub Dark) */
   --tcard-bg: #0d1117;
   --tcard-ink: #e6edf3;
@@ -1038,7 +1056,9 @@ button.tag:hover,
   background: var(--tcard-bg);
   color: var(--tcard-ink);
   font-size: 13px;
-  transition: border-color 0.1s steps(2), color 0.1s steps(2),
+  transition:
+    border-color 0.1s steps(2),
+    color 0.1s steps(2),
     transform 0.05s steps(2);
 }
 
@@ -1178,7 +1198,7 @@ button.tag:hover,
 
 /* 屏幕上的液晶纹理 */
 .gb-screen::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -1204,7 +1224,7 @@ button.tag:hover,
 .gb-screen-name {
   display: block;
   margin-top: 10px;
-  font-family: 'Press Start 2P', 'Fusion Pixel 12px Proportional SC', monospace;
+  font-family: "Press Start 2P", "Fusion Pixel 12px Proportional SC", monospace;
   font-size: 8px;
   color: #0f380f;
   white-space: nowrap;
@@ -1218,7 +1238,7 @@ button.tag:hover,
 .gb-logo {
   margin: 12px 2px 6px;
   text-align: center;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   font-style: italic;
   font-weight: 600;
   font-size: 16px;
@@ -1252,7 +1272,7 @@ button.tag:hover,
 
 .gb-dpad i::before,
 .gb-dpad i::after {
-  content: '';
+  content: "";
   position: absolute;
   background: #26262a;
   border-radius: 7px !important;
@@ -1298,7 +1318,9 @@ button.tag:hover,
   background: #9c2b54;
   border-radius: 50% !important;
   border: 2px solid #26262a;
-  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25), 2px 3px 0 rgba(26, 26, 30, 0.3);
+  box-shadow:
+    inset 0 -4px 0 rgba(0, 0, 0, 0.25),
+    2px 3px 0 rgba(26, 26, 30, 0.3);
 }
 
 .gb-key-label {
@@ -1341,7 +1363,7 @@ button.tag:hover,
 .gb-pill-label {
   /* 仿真机印刷体,随整组一起倾斜,紧贴按钮 */
   margin-top: 0;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   font-style: italic;
   font-weight: 700;
   font-size: 9px;
@@ -1523,6 +1545,6 @@ a.tag:active {
   line-height: 1.5;
 }
 
-[data-theme='dark'] .tag-count {
+[data-theme="dark"] .tag-count {
   color: #1a1c2c;
 }

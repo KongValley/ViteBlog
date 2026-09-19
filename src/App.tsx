@@ -1,36 +1,46 @@
-import { useEffect, useState } from 'react'
-import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { site } from './data/site'
-import BackToTop from './components/BackToTop'
-import Home from './views/Home'
-import Post from './views/Post'
-import Tags from './views/Tags'
-import About from './views/About'
+import { useEffect, useState } from 'react';
+import {
+  Link,
+  Navigate,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
+import BackToTop from './components/BackToTop';
+import { site } from './data/site';
+import About from './views/About';
+import Home from './views/Home';
+import Post from './views/Post';
+import Tags from './views/Tags';
 
-type Theme = 'light' | 'dark'
+type Theme = 'light' | 'dark';
 
 function initialTheme(): Theme {
-  const stored = localStorage.getItem('theme')
-  if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  const stored = localStorage.getItem('theme');
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light';
 }
 
 // 路由切换时回到页面顶部(react-router 没有内置的滚动复位,手动实现)
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: pathname 不在闭包里读取,这里仅作为"路由变了"的触发器
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
-  return null
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
 }
 
 export default function App() {
-  const [theme, setTheme] = useState<Theme>(initialTheme)
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme
-    localStorage.setItem('theme', theme)
-  }, [theme])
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   return (
     <div className="page">
@@ -53,6 +63,7 @@ export default function App() {
               关于
             </NavLink>
             <button
+              type="button"
               className="theme-toggle"
               title={theme === 'dark' ? '切换到白天模式' : '切换到夜晚模式'}
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -78,17 +89,20 @@ export default function App() {
       <footer className="footer">
         <div className="container">
           <p className="footer-en pixel-en">
-            © {site.since} {site.author} · POWERED BY REACT × VITE ·
-            HOSTED ON GITHUB PAGES <span className="heart">♥</span>
+            © {site.since} {site.author} · POWERED BY REACT × VITE · HOSTED ON
+            GITHUB PAGES <span className="heart">♥</span>
           </p>
           <p className="footer-meta">
-            由 <a href={site.github} target="_blank" rel="noopener">GitHub</a> Pages
-            强力驱动 · {site.tagline}
+            由{' '}
+            <a href={site.github} target="_blank" rel="noopener">
+              GitHub
+            </a>{' '}
+            Pages 强力驱动 · {site.tagline}
           </p>
         </div>
       </footer>
 
       <BackToTop />
     </div>
-  )
+  );
 }

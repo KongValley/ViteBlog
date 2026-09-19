@@ -9,7 +9,14 @@ npm install     # 安装依赖
 npm run dev     # 启动开发服务器
 npm run build   # 类型检查(tsc)+ 构建生产版本到 dist/
 npm run preview # 本地预览构建产物
+npm run lint    # Biome 检查(格式 + lint),CI/提交前跑这个
+npm run lint:fix # Biome 自动修复可安全修复的问题
+npm run format  # 仅用 Biome 格式化代码
 ```
+
+项目使用 **Biome** 做代码检查与格式化(配置见根目录 `biome.json`),
+规则:2 空格缩进、单引号、导入自动排序;`public/` 静态资源不参与检查。
+个别确有理由的告警用 `// biome-ignore lint/规则名: 原因` 行内抑制。
 
 项目使用 **TypeScript 7**(原生 tsc):所有数据层(`src/data/*.ts`)有完整类型定义,
 构建前会先跑 `tsc --noEmit` 类型检查,CI 上有类型错误会直接部署失败。
@@ -53,6 +60,37 @@ avatar: https://github.com/KongValley.png?size=60 # 头像(可省略,默认 GitH
 
 本地 `npm run dev` 时改 yml 会自动热更新;push 到 GitHub 后自动重新部署。
 省略 `github` / `avatar` 字段时会根据 `githubUser` 自动生成,所以最小配置只需 5 行。
+
+## 主题
+
+站点内置三套**完全独立**的主题,通过根目录 `site.yml` 里的 `theme` 字段指定(本地改完自动热更新,push 后自动重新部署):
+
+```yaml
+theme: pixel   # 三选一:pixel / swiss / editorial
+```
+
+| theme | 风格 |
+| --- | --- |
+| `pixel`(默认) | 红白机像素风:游戏机名片、像素字体、CRT 扫描线 |
+| `swiss` | 瑞士网格风:强对比黑白、12 栏网格参考线、红色方点、悬浮反色 |
+| `editorial` | 现代编辑排版风:衬线大标题、纸感底色、报刊式排版 |
+
+三套主题在 `src/themes/<名字>/` 下各自独立(样式 + 字体 + 入口),**构建时只会打包被选中的那一套**,
+互不混装;首页结构也按主题区分(`src/views/home/` 下的三个组件,由 `src/views/Home.tsx` 按 `theme` 调度)。
+每个主题的 `index.ts` 是入口,经 vite 插件以虚拟模块 `virtual:site-theme` 注入到 `src/main.tsx`。
+
+```
+src/themes/pixel/       style.css(像素字体体积小,直接静态引入)
+src/themes/swiss/       style.css + fonts.ts(中文大字重,异步加载不阻塞首屏)
+src/themes/editorial/   style.css + fonts.ts(同上)
+```
+
+明暗模式三套主题都支持,右上角按钮在昼夜之间切换。想换主题时只改 `site.yml` 一行即可。
+
+## 设计稿
+
+`design-preview/` 里留有选型阶段的设计 Demo(四套风格 + 选型总览页),仅作参考,
+不参与构建;不需要时可整目录删除。本地预览:`node design-preview/serve.mjs`
 
 ## 部署说明
 

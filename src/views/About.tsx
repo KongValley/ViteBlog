@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { site } from '../data/site'
+import { Link } from 'react-router-dom';
+import { site } from '../data/site';
 
 // 终端风格小卡片(仿 open source 项目卡)
 function TerminalCard() {
@@ -28,7 +28,7 @@ function TerminalCard() {
         </a>
       </div>
     </div>
-  )
+  );
 }
 
 export default function About() {
@@ -43,8 +43,8 @@ export default function About() {
         </p>
         <p>
           本站使用 <strong>React + Vite</strong> 搭建,文章以 Markdown 编写,
-          托管在 GitHub Pages 上,通过 GitHub Actions 自动构建部署 ——
-          每次 push 到 main 分支,几分钟内线上就会更新。
+          托管在 GitHub Pages 上,通过 GitHub Actions 自动构建部署 —— 每次 push
+          到 main 分支,几分钟内线上就会更新。
         </p>
         <h2>如何联系我</h2>
         <ul>
@@ -60,5 +60,5 @@ export default function About() {
         </p>
       </div>
     </section>
-  )
+  );
 }
