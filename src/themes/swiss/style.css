@@ -208,7 +208,7 @@ a {
   border: 1px solid var(--sw-line-strong);
   border-left: none;
   font-family: var(--sw-mono);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.16em;
   color: var(--sw-ink);
   text-transform: uppercase;
@@ -241,7 +241,7 @@ a {
   color: var(--sw-ink);
   box-shadow: none;
   font-family: var(--sw-mono);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.12em;
   cursor: pointer;
   transition:
@@ -317,7 +317,7 @@ a {
   padding: 14px 28px;
   border: 2px solid var(--sw-ink);
   font-family: var(--sw-mono);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
@@ -443,12 +443,12 @@ a {
 
 .tag {
   display: inline-block;
-  padding: 8px 16px;
+  padding: 7px 13px;
   border: 1px solid var(--sw-line-strong);
   background: transparent;
   color: var(--sw-ink);
   font-family: var(--sw-mono);
-  font-size: 11.5px;
+  font-size: 13.5px;
   font-weight: 500;
   letter-spacing: 0.1em;
   line-height: 1.5;
@@ -486,7 +486,7 @@ a.tag:hover {
   background: transparent;
   color: var(--sw-mut);
   font-family: var(--sw-mono);
-  font-size: 10.5px;
+  font-size: 12.5px;
   letter-spacing: 0.08em;
   cursor: default;
   box-shadow: none;
@@ -602,7 +602,7 @@ a.tag:hover {
   background: transparent;
   color: var(--sw-ink);
   font-family: var(--sw-mono);
-  font-size: 11.5px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: 0.06em;
@@ -712,7 +712,7 @@ a.tag:hover {
   display: block;
   padding: 6px 18px;
   border-left: none;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--sw-mut);
   transition:
@@ -1127,7 +1127,7 @@ a.tag:hover {
 .tags-summary {
   margin: -8px 0 30px;
   font-family: var(--sw-mono);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.1em;
   color: var(--sw-mut);
 }
@@ -1151,7 +1151,7 @@ a.tag:hover {
   background: var(--sw-ink);
   color: var(--sw-inv-ink);
   font-family: var(--sw-mono);
-  font-size: 10px;
+  font-size: 12.5px;
   line-height: 1.7;
 }
 
@@ -1289,7 +1289,7 @@ a.tag:hover {
   border: 1px solid var(--sw-inv-line);
   background: transparent;
   color: var(--sw-inv-ink);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   transition:
     background 0.06s linear,
@@ -1433,14 +1433,14 @@ a.tag:hover {
 
   .nav-link {
     padding: 8px 10px;
-    font-size: 10.5px;
+    font-size: 14px;
     letter-spacing: 0.08em;
   }
 
   .theme-toggle {
     margin-left: 8px;
     padding: 9px 10px;
-    font-size: 10.5px;
+    font-size: 14px;
     letter-spacing: 0.04em;
   }
 

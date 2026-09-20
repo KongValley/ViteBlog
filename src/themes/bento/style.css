@@ -190,7 +190,7 @@ a {
   border-radius: 999px;
   background: transparent;
   color: var(--be-ink);
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   transition:
     border-color 0.25s,
@@ -355,7 +355,7 @@ a {
   border-radius: 999px;
   color: var(--be-mut);
   font-family: var(--be-mono);
-  font-size: 11px;
+  font-size: 13.5px;
   letter-spacing: 0.06em;
 }
 
@@ -429,7 +429,7 @@ a {
   background: transparent;
   color: var(--be-mut);
   font-family: var(--be-mono);
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.06em;
   cursor: pointer;
   transition:
@@ -452,7 +452,7 @@ a {
 .tags-cell .link {
   margin-top: auto;
   color: var(--be-accent);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -573,7 +573,7 @@ a {
   background: var(--be-cell);
   color: var(--be-ink);
   font-family: var(--be-mono);
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition:
     color 0.25s,
@@ -682,7 +682,7 @@ a {
 .toc-link {
   display: block;
   padding: 7px 18px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--be-mut);
   transition:
@@ -749,7 +749,7 @@ a {
   border: 1px solid var(--be-line-2);
   border-radius: 999px;
   font-family: var(--be-mono);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.06em;
   transition:
     color 0.25s,
@@ -1089,7 +1089,7 @@ a {
   margin: 0 0 26px;
   color: var(--be-mut);
   font-family: var(--be-mono);
-  font-size: 12.5px;
+  font-size: 14px;
 }
 
 .tag-cloud {
@@ -1128,7 +1128,7 @@ a {
   background: var(--be-tint);
   color: var(--be-accent);
   font-family: var(--be-mono);
-  font-size: 11px;
+  font-size: 12.5px;
   text-align: center;
 }
 
@@ -1268,7 +1268,7 @@ a {
   border: 1px solid var(--be-line-2);
   border-radius: 999px;
   color: var(--be-ink);
-  font-size: 12.5px;
+  font-size: 14px;
   transition:
     color 0.25s,
     border-color 0.25s;

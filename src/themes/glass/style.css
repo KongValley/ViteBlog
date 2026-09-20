@@ -245,7 +245,7 @@ body::after {
   padding: 8px 15px;
   border-radius: 999px;
   color: var(--gl-mut);
-  font-size: 13.5px;
+  font-size: 14px;
   white-space: nowrap;
   transition:
     color 0.25s,
@@ -272,7 +272,7 @@ body::after {
   background: transparent;
   color: var(--gl-mut);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   transition:
     color 0.25s,
@@ -555,7 +555,7 @@ body::after {
   background: var(--gl-glass);
   color: var(--gl-mut);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 13.5px;
   cursor: pointer;
   transition:
     color 0.25s,
@@ -586,13 +586,13 @@ body::after {
   border-color: var(--gl-chip-border);
   background: var(--gl-chip-bg);
   color: var(--gl-accent);
-  font-size: 11.5px;
+  font-size: 12.5px;
 }
 
 .tag-count {
   margin-left: 8px;
   font-family: var(--gl-mono);
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--gl-mut);
 }
 
@@ -617,7 +617,7 @@ body::after {
   background: var(--gl-glass);
   color: var(--gl-mut);
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   cursor: pointer;
   transition:
     color 0.25s,
@@ -739,7 +739,7 @@ body::after {
   display: block;
   padding: 6px 18px;
   color: var(--gl-mut);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.65;
   transition:
     color 0.2s,
@@ -1247,7 +1247,7 @@ body::after {
   border-radius: 999px;
   background: var(--gl-glass-strong);
   font-family: var(--gl-mono);
-  font-size: 12.5px;
+  font-size: 14px;
   transition:
     color 0.25s,
     border-color 0.25s,
@@ -1372,12 +1372,12 @@ body::after {
 
   .nav-link {
     padding: 8px 10px;
-    font-size: 12.5px;
+    font-size: 14px;
   }
 
   .theme-toggle {
     padding: 8px 10px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .gl-hero {

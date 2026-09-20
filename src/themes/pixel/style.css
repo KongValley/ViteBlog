@@ -348,7 +348,7 @@ button.tag:hover,
 .tag-small {
   cursor: default;
   padding: 0 10px;
-  font-size: 12px;
+  font-size: 12.5px;
   background: var(--surface);
   color: var(--green);
   box-shadow: 2px 2px 0 var(--shadow);
@@ -1055,7 +1055,7 @@ button.tag:hover,
   border-radius: 6px !important;
   background: var(--tcard-bg);
   color: var(--tcard-ink);
-  font-size: 13px;
+  font-size: 14px;
   transition:
     border-color 0.1s steps(2),
     color 0.1s steps(2),
@@ -1541,7 +1541,7 @@ a.tag:active {
   border: 2px solid var(--line);
   background: var(--gold);
   color: #141414;
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
