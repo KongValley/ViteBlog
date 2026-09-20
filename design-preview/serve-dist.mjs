@@ -32,13 +32,16 @@ const MIME = {
 
 // 主题 → 预览端口
 const VARIANTS = [
-  ['brutalist', 4191],
-  ['bento', 4192],
-  ['terminal', 4193],
-  ['glass', 4194],
-  ['ma', 4195],
-  ['blueprint', 4196],
-  ['noir', 4197],
+  ['pixel', 4191],
+  ['swiss', 4192],
+  ['editorial', 4193],
+  ['brutalist', 4194],
+  ['bento', 4195],
+  ['terminal', 4196],
+  ['glass', 4197],
+  ['ma', 4198],
+  ['blueprint', 4199],
+  ['noir', 4200],
 ];
 
 for (const [theme, port] of VARIANTS) {

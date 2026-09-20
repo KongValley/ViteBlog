@@ -111,9 +111,12 @@ src/themes/noir/        style.css + fonts.ts(同上)
 
 同目录下还有几个只用于本地验证的小脚本(同样不参与构建):
 
-- `serve-dist.mjs` — 每套主题的构建产物各占一个端口(4191~4197),按线上子路径 `/ViteBlog/` 提供服务
+- `serve-dist.mjs` — 每套主题的构建产物各占一个端口(4191~4200),按线上子路径 `/ViteBlog/` 提供服务
+- `build-all.mjs` — 逐主题构建并把产物拷进 `design-preview/out/<theme>/`(供 `serve-dist.mjs` 使用,构建期间临时改写 `site.yml`,结束按原文恢复)
 - `check-isolation.mjs` — 主题隔离自检:每套构建产物只含自己的样式,不混入其它主题
 - `shoot.mjs` — 无头 Chrome 逐主题逐页面全页截图,并检查控制台有无报错
+- `audit-fonts.mjs` — 交互控件字号体检 / 修正:导航、标签、分页、按钮、目录低于下限时报出来,加 `--fix` 按下限统一修正
+- `shoot-url.mjs` — 给任意 URL 拍一张全页截图(本地预览或线上站点皆可),用于单页验证与线上比对
 - `shoot-demos.mjs` — 给 `design-preview/` 里的选型 Demo 批量全页截图(需先跑 `serve.mjs`)
 
 ## 部署说明

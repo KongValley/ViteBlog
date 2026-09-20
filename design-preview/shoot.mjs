@@ -24,13 +24,16 @@ const CHROME_PATHS = [
 // 主题 → 预览端口;页面 → URL 后缀
 // 用法:node design-preview/shoot.mjs [主题名…]  —— 不带参数则跑全部
 const ALL_THEMES = [
-  ['brutalist', 4191],
-  ['bento', 4192],
-  ['terminal', 4193],
-  ['glass', 4194],
-  ['ma', 4195],
-  ['blueprint', 4196],
-  ['noir', 4197],
+  ['pixel', 4191],
+  ['swiss', 4192],
+  ['editorial', 4193],
+  ['brutalist', 4194],
+  ['bento', 4195],
+  ['terminal', 4196],
+  ['glass', 4197],
+  ['ma', 4198],
+  ['blueprint', 4199],
+  ['noir', 4200],
 ];
 const wanted = process.argv.slice(2).filter((a) => !a.startsWith('-'));
 const THEMES =
