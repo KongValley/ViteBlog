@@ -3,3 +3,8 @@
 # 默认要求 LF,于是 `npm run lint` 在 Windows 工作副本上必然报一堆格式错误。
 # 声明 eol=lf 后,git 在各平台都检出 LF,不再受 core.autocrlf 影响。
 * text=auto eol=lf
+
+# 例外:批处理脚本惯例用 CRLF(老式 cmd.exe 对纯 LF 的 .bat 在某些写法下会出问题)。
+# gitattributes 里后匹配的规则优先,所以例外写在通用规则之后。
+*.bat text eol=crlf
+*.cmd text eol=crlf
