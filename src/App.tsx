@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import {
   Link,
   Navigate,
@@ -13,6 +13,10 @@ import About from './views/About';
 import Home from './views/Home';
 import Post from './views/Post';
 import Tags from './views/Tags';
+
+// 音乐挂件(APlayer)是个固定层,单独切一个 chunk:首屏 JS 不受它影响,
+// 挂件本身在首帧之后异步补上(固定层的东西,晚一点出现不占位、不闪)
+const MusicDock = lazy(() => import('./components/MusicDock'));
 
 type Theme = 'light' | 'dark';
 
@@ -103,6 +107,9 @@ export default function App() {
       </footer>
 
       <BackToTop />
+      <Suspense fallback={null}>
+        <MusicDock />
+      </Suspense>
     </div>
   );
 }

@@ -1,0 +1,248 @@
+/* ============================================================
+   全局音乐挂件:贴左下角,可收进屏幕边缘
+   ------------------------------------------------------------
+   APlayer 是本项目引用的唯一第三方 UI 组件,自带一套写死的浅色样式。
+   这里把它接到主题变量上,每个主题只要在 .music-dock 上定义下面这些变量,
+   挂件就跟着主题走(不定义也能跑,兜底值对浅色主题基本可用):
+
+     --music-bg      播放器底色(默认 --surface)
+     --music-ink     主文字色(默认 --ink)
+     --music-muted   次要文字/图标色(默认 --muted)
+     --music-line    分割线、进度槽、滚动条(默认 --line)
+     --music-accent  进度条/高亮(默认 --red)
+     --music-radius  圆角(默认 0,像素风是直角;圆角主题自己给值)
+     --music-font    字体(默认 --font-body)
+     --music-width    展开时的宽度(默认 360px)
+     --music-inset    离屏幕左边/下边的距离(默认 16px)
+
+   挂件外观(边框 / 底色 / 阴影 / 内边距)与把手的尺寸配色,都由各主题自己的
+   style.css 写 —— 同 .back-top 的做法。这里只提供结构与兜底:兜底规则用
+   :where() 包起来(优先级 0),主题写同选择器就一定能覆盖,不用跟打包顺序较劲。
+
+   注意:这里只"使用"变量、不"声明"变量。声明会因打包顺序压掉主题值。
+   ============================================================ */
+
+/* ---------- 贴边定位与收纳 ---------- */
+.music-dock {
+  position: fixed;
+  left: var(--music-inset, 16px);
+  bottom: var(--music-inset, 16px);
+  z-index: 55; /* 低于返回顶部按钮(60),高于正文 */
+  max-width: calc(100vw - var(--music-inset, 16px) * 2);
+}
+
+.music-dock-body {
+  width: var(--music-width, 360px);
+  max-width: 100%;
+}
+
+/* 收起状态:只留封面方块(APlayer 在窄屏下的同款做法,这里自己控制) */
+.music-dock--mini .music-dock-body {
+  width: 66px;
+}
+
+.music-dock--mini .aplayer {
+  width: 66px;
+}
+
+.music-dock--mini .aplayer .aplayer-body,
+.music-dock--mini .aplayer .aplayer-pic {
+  height: 66px;
+  width: 66px;
+}
+
+.music-dock--mini .aplayer .aplayer-info,
+.music-dock--mini .aplayer .aplayer-list,
+.music-dock--mini .aplayer .aplayer-lrc,
+.music-dock--mini .music-dock-hint {
+  display: none;
+}
+
+/* 收起/展开的小把手:结构 + 兜底外观。
+   用 :where() 把优先级压成 0 —— 主题自己的 .music-dock-toggle 规则永远压过这里,
+   不必跟打包顺序较劲。 */
+:where(.music-dock-toggle) {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--music-line, var(--line, #1a1a1a));
+  border-radius: var(--music-radius, 0);
+  background: var(--music-bg, var(--surface, #fff));
+  color: var(--music-ink, var(--ink, #222));
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+:where(.music-dock-toggle:hover) {
+  border-color: var(--music-accent, var(--red, #e43b44));
+  color: var(--music-accent, var(--red, #e43b44));
+}
+
+:where(.music-dock-hint) {
+  max-width: var(--music-width, 360px);
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--music-muted, var(--muted, #666));
+}
+
+/* ---------- APlayer 本体:接到主题变量上 ---------- */
+.music-dock .aplayer {
+  margin: 0;
+  background: var(--music-bg, var(--surface, #fff));
+  color: var(--music-ink, var(--ink, #222));
+  border-radius: var(--music-radius, 0);
+  box-shadow: none;
+  font-family: var(--music-font, var(--font-body, inherit));
+  overflow: hidden;
+}
+
+.music-dock .aplayer.aplayer-withlist .aplayer-info {
+  border-bottom-color: var(--music-line, var(--line, #e9e9e9));
+}
+
+.music-dock .aplayer .aplayer-info .aplayer-music .aplayer-title {
+  color: var(--music-ink, var(--ink, #222));
+}
+
+.music-dock .aplayer .aplayer-info .aplayer-music .aplayer-author {
+  color: var(--music-muted, var(--muted, #666));
+}
+
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar {
+  background: var(--music-line, var(--line, #cdcdcd));
+}
+
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-loaded {
+  background: var(--music-muted, var(--muted, #aaa));
+}
+
+.music-dock .aplayer .aplayer-info .aplayer-controller .aplayer-time {
+  color: var(--music-muted, var(--muted, #999));
+}
+
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-time
+  .aplayer-icon
+  path {
+  fill: var(--music-muted, var(--muted, #666));
+}
+
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-time
+  .aplayer-icon:hover
+  path {
+  fill: var(--music-accent, var(--red, #e43b44));
+}
+
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-volume-wrap
+  .aplayer-volume-bar-wrap
+  .aplayer-volume-bar {
+  background: var(--music-line, var(--line, #aaa));
+}
+
+/* 歌词区:APlayer 在上下各铺了一层渐隐遮罩,颜色写死成白色,这里换成播放器底色 */
+.music-dock .aplayer .aplayer-lrc p {
+  color: var(--music-muted, var(--muted, #666));
+}
+
+.music-dock .aplayer .aplayer-lrc:before {
+  background: linear-gradient(
+    180deg,
+    var(--music-bg, var(--surface, #fff)) 0,
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.music-dock .aplayer .aplayer-lrc:after {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0,
+    var(--music-bg, var(--surface, #fff))
+  );
+}
+
+/* 播放列表 */
+.music-dock .aplayer .aplayer-list ol li {
+  border-top-color: var(--music-line, var(--line, #e9e9e9));
+  color: var(--music-ink, var(--ink, #333));
+}
+
+.music-dock .aplayer .aplayer-list ol li .aplayer-list-index,
+.music-dock .aplayer .aplayer-list ol li .aplayer-list-author {
+  color: var(--music-muted, var(--muted, #666));
+}
+
+.music-dock .aplayer .aplayer-list ol li:hover {
+  background: var(--music-line, var(--line, #efefef));
+}
+
+.music-dock .aplayer .aplayer-list ol li.aplayer-list-light {
+  background: var(--music-active, var(--music-line, var(--line, #e9e9e9)));
+}
+
+.music-dock .aplayer-list ol::-webkit-scrollbar-thumb {
+  background: var(--music-line, var(--line, #eee));
+}
+
+/* APlayer 把 theme 色当内联样式写在进度条 / 滑块 / 音量条 / 列表当前项上,
+   内联样式不会跟着深浅色切换刷新(它只在初始化时读一次),所以这里用
+   !important 接管这几处,让进度条颜色始终跟着主题变量走。 */
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played,
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played
+  .aplayer-thumb,
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-volume-wrap
+  .aplayer-volume-bar-wrap
+  .aplayer-volume-bar
+  .aplayer-volume,
+.music-dock .aplayer .aplayer-list ol li .aplayer-list-cur {
+  background-color: var(--music-accent, var(--red, #e43b44)) !important;
+}
+
+/* 封面上的播放键:圆角跟随主题的圆角语言 */
+.music-dock .aplayer .aplayer-pic .aplayer-button {
+  border-radius: var(--music-radius, 0);
+}

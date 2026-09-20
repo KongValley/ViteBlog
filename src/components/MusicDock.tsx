@@ -1,7 +1,7 @@
 import APlayer from 'aplayer';
 import { useEffect, useRef, useState } from 'react';
 import 'aplayer/dist/APlayer.min.css';
-import './MusicCard.css';
+import './MusicDock.css';
 import { type MusicConfig, site } from '../data/site';
 
 // Meting 接口(type=song)返回的就是 APlayer 的曲目结构
@@ -18,6 +18,27 @@ type Status =
   | { kind: 'ready' }
   | { kind: 'error'; message: string };
 
+// 收纳状态记在本地:上次收起过,下次进站还是收起的
+const MINI_KEY = 'viteblog-music-mini';
+
+function readStoredMini(): boolean {
+  // 窄屏上展开的挂件会糊住内容,没记录过状态时默认收起
+  if (window.matchMedia('(max-width: 560px)').matches) {
+    try {
+      const stored = localStorage.getItem(MINI_KEY);
+      if (stored !== '1' && stored !== '0') return true;
+    } catch {
+      return true;
+    }
+  }
+  try {
+    return localStorage.getItem(MINI_KEY) === '1';
+  } catch {
+    // 隐私模式下 localStorage 会抛错,按展开处理
+    return false;
+  }
+}
+
 // 把 api 模板里的 :server / :type / :id 换成配置值
 function metingUrl(music: MusicConfig, type: 'song'): string {
   return music.api
@@ -27,16 +48,18 @@ function metingUrl(music: MusicConfig, type: 'song'): string {
 }
 
 /**
- * 「关于本站」页的音乐卡片。
+ * 贴边音乐挂件:固定在左下角,可以收成一张封面方块贴在屏幕边缘。
  *
  * 数据来自 Meting API(和 MetingJS 用的是同一套接口,只是不走它的自定义元素):
  * 一次请求拿回播放地址、封面、歌词,交给 APlayer(npm 包)播放。
- * 配置见 site.yml 的 music 段;没配 music 时整张卡片不渲染。
+ * 配置见 site.yml 的 music 段;没配 music 时整个挂件不渲染。
+ *
+ * 挂在 App 上而不是「关于本站」页:固定层的东西跟路由走,切页面音乐就断了。
  */
-export default function MusicCard() {
-  const music = site.music;
+export default function MusicDock() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
+  const [mini, setMini] = useState(readStoredMini);
 
   useEffect(() => {
     // site.yml 是构建期注入的静态配置,值不会变,所以依赖数组留空
@@ -75,7 +98,7 @@ export default function MusicCard() {
           container,
           audio,
           // 主题色不走这里的 theme 选项(它是内联样式,切深浅色不会刷新),
-          // 由 MusicCard.css 用 --music-accent 接管
+          // 由 MusicDock.css 用 --music-accent 接管
           loop: 'all',
           preload: 'none', // 不点播放就不下载音频
           mutex: true,
@@ -92,7 +115,7 @@ export default function MusicCard() {
       }
     })();
 
-    // 离开关于页时销毁播放器:APlayer 不会自己清理 DOM 和时间轴
+    // 卸载时销毁播放器:APlayer 不会自己清理 DOM 和时间轴
     return () => {
       disposed = true;
       abort.abort();
@@ -100,20 +123,39 @@ export default function MusicCard() {
     };
   }, []);
 
-  if (!music) return null;
+  useEffect(() => {
+    try {
+      localStorage.setItem(MINI_KEY, mini ? '1' : '0');
+    } catch {
+      // 存不了就只在本次会话里生效
+    }
+  }, [mini]);
+
+  if (!site.music) return null;
+
+  // 播放器没加载出来时(加载中 / 失败)别缩成空壳:收起状态只在真的有播放器时才算数
+  const collapsed = mini && status.kind === 'ready';
 
   return (
-    <section className="music-card">
-      <h2 className="music-card-title">正在听</h2>
-      <p className="music-card-note">
-        最近一直在循环的一首。换歌改 site.yml 里的 music 段即可。
-      </p>
-      <div className="music-card-body" ref={bodyRef} />
+    <section className={`music-dock${collapsed ? ' music-dock--mini' : ''}`}>
+      {status.kind === 'ready' && (
+        <button
+          type="button"
+          className="music-dock-toggle"
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? '展开播放器' : '收起播放器'}
+          title={collapsed ? '展开播放器' : '收起播放器'}
+          onClick={() => setMini((value) => !value)}
+        >
+          <span aria-hidden="true">{collapsed ? '▶' : '◀'}</span>
+        </button>
+      )}
+      <div className="music-dock-body" ref={bodyRef} />
       {status.kind === 'loading' && (
-        <p className="music-card-hint">音乐加载中…</p>
+        <p className="music-dock-hint">音乐加载中…</p>
       )}
       {status.kind === 'error' && (
-        <p className="music-card-hint">
+        <p className="music-dock-hint">
           音乐加载失败:{status.message}。多半是 site.yml 里 music.api 指向的
           Meting 服务暂时不可用。
         </p>

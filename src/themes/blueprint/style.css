@@ -1447,9 +1447,9 @@ a {
   border: 1px solid var(--bp-line-2);
 }
 
-/* ---------- 关于页:音乐卡片(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
-.music-card {
-  /* APlayer 适配变量(见 src/components/MusicCard.css):本主题用的是 --bp-* 前缀,
+/* ---------- 全局音乐挂件:贴左下角,可收成一张封面方块(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-dock {
+  /* APlayer 适配变量(见 src/components/MusicDock.css):本主题用的是 --bp-* 前缀,
      这里显式映射一份 —— 深浅色都不用另写,直接跟着 [data-theme="dark"] 走 */
   --music-bg: var(--bp-panel);
   --music-ink: var(--bp-ink);
@@ -1460,76 +1460,61 @@ a {
   --music-active: color-mix(in srgb, var(--bp-mark) 14%, transparent);
   --music-radius: 0;
   --music-font: var(--bp-mono);
-  margin-top: 44px;
-  padding: 22px 24px;
+  /* 展开宽度按本主题字号定;贴边距离和右下角的 .back-top 对齐 */
+  --music-width: 340px;
+  --music-inset: 22px;
+  /* 小控件贴边摆放,内边距只留一圈图纸留白;挂件本身就是外框,APlayer 不再套框 */
+  padding: 11px;
   border: 1px solid var(--bp-line-2);
   background: color-mix(in srgb, var(--bp-panel) 42%, transparent);
 }
 
-.music-card-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
+/* 收起/展开的小把手:挂在挂件右上角外侧,细线小方标 + 琥珀色注释 */
+.music-dock-toggle {
+  top: -11px;
+  right: -11px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--bp-line);
+  background: color-mix(in srgb, var(--bp-panel) 80%, transparent);
+  color: var(--bp-mark);
   font-family: var(--bp-mono);
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  color: var(--bp-mut);
+  font-size: 10px;
+  transition:
+    color 0.25s,
+    border-color 0.25s,
+    background-color 0.25s;
 }
 
-.music-card-title::before {
-  content: "▸";
+.music-dock-toggle:hover {
+  border-color: var(--bp-mark);
+  background: color-mix(in srgb, var(--bp-mark) 14%, var(--bp-panel));
   color: var(--bp-mark);
 }
 
-/* 标题右侧拉一条尺寸标注线:细实线 + 两端 1px 短竖线,做法同首页的 .bp-dim */
-.music-card-title::after {
-  content: "";
-  flex: 1;
-  height: 9px;
-  border-left: 1px solid var(--bp-line);
-  border-right: 1px solid var(--bp-line);
-  background:
-    linear-gradient(var(--bp-line), var(--bp-line)) center / 100% 1px no-repeat;
-}
-
-.music-card-note {
-  max-width: 56ch;
-  margin: 12px 0 20px;
-  font-size: 15.5px;
-  line-height: 1.9;
-  color: var(--bp-ink-2);
-}
-
-/* 播放器本体:和本主题其它面板一样,1px 细线框 + 直角,底色是一块实心图纸板 */
-.music-card .aplayer {
-  border: 1px solid var(--bp-line-2);
-}
-
 /* 去掉 APlayer 写死的圆角:播放键、进度槽与进度点全部保持直角 */
-.music-card .aplayer .aplayer-pic .aplayer-button,
-.music-card
+.music-dock .aplayer .aplayer-pic .aplayer-button,
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
   .aplayer-bar-wrap
   .aplayer-bar,
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
   .aplayer-bar-wrap
   .aplayer-bar
   .aplayer-loaded,
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
   .aplayer-bar-wrap
   .aplayer-bar
   .aplayer-played,
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
@@ -1537,7 +1522,7 @@ a {
   .aplayer-bar
   .aplayer-played
   .aplayer-thumb,
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
@@ -1548,8 +1533,8 @@ a {
 }
 
 /* 加载中 / 加载失败:当一条图纸标注来写,左侧一条标注引出线 */
-.music-card-hint {
-  margin: 14px 0 0;
+.music-dock-hint {
+  margin: 10px 0 0;
   padding-left: 12px;
   border-left: 2px solid var(--bp-mark);
   color: var(--bp-mut);

@@ -1394,9 +1394,9 @@ a {
   border-radius: 2px;
 }
 
-/* ---------- 关于页:音乐卡片(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
-.music-card {
-  /* APlayer 适配变量(见 src/components/MusicCard.css):本主题用的是 --ma-* 前缀,
+/* ---------- 全局音乐挂件:贴左下角,可收成一张封面方块(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-dock {
+  /* APlayer 适配变量(见 src/components/MusicDock.css):本主题用的是 --ma-* 前缀,
      不透传给播放器就会退回适配层的兜底值(浅色发白、深色糊字),所以在这里显式映射。
      变量取自 [data-theme="dark"] 覆盖段,深浅色切换时播放器跟着一起翻 */
   --music-bg: var(--ma-panel);
@@ -1407,44 +1407,36 @@ a {
   --music-active: var(--ma-shu-soft);
   --music-radius: 2px;
   --music-font: var(--ma-serif);
-  margin-top: 56px;
-  padding: 32px 0 28px;
-  border-top: 1px solid var(--ma-hair);
-  border-bottom: 1px solid var(--ma-hair);
+  --music-width: 340px; /* 明朝体 16px 正文,曲名一行放得下 */
+  --music-inset: 26px; /* 和右下角「TOP」按钮对齐 */
+  padding: 12px;
+  border: 1px solid var(--ma-hair);
+  border-radius: 3px;
+  background: var(--ma-panel);
 }
 
-/* 标题:与 .contact-title 一样,朱印方点起头、疏字距 */
-.music-card-title {
-  margin: 0 0 12px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  color: var(--ma-ink);
+/* 收起/展开的小把手:挂在挂件右上角外侧,和纸小方块 + 一枚朱线收口 */
+.music-dock-toggle {
+  top: -12px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--ma-shu);
+  border-radius: 2px;
+  background: var(--ma-panel);
+  color: var(--ma-shu);
+  font-size: 9px;
 }
 
-.music-card-title::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  flex: none;
-  background: var(--ma-shu);
-}
-
-/* 说明文字:沿用 .contact-note 的 52ch 栏宽与松行高 */
-.music-card-note {
-  max-width: 52ch;
-  margin: 14px 0 24px;
-  font-size: 16px;
-  line-height: 2.05;
-  color: var(--ma-mut);
+.music-dock-toggle:hover {
+  border-color: var(--ma-shu);
+  background: var(--ma-shu-soft);
+  color: var(--ma-shu);
 }
 
 /* 加载中 / 加载失败:等宽小字,和页脚、日期一类落款注脚同调 */
-.music-card-hint {
-  margin: 14px 0 0;
+.music-dock-hint {
+  margin: 12px 0 0;
   color: var(--ma-mut);
   font-family: var(--ma-mono);
   font-size: 13px;
@@ -1452,24 +1444,19 @@ a {
   letter-spacing: 0.06em;
 }
 
-/* 播放器本体:只补一圈 1px 细线,底色/文字/进度色全部交给上面的 --music-* 变量 */
-.music-card .aplayer {
-  border: 1px solid var(--ma-hair);
-}
-
 /* 曲名用明朝体,作者换成等宽小字(和列表里的日期、标签同一种字) */
-.music-card .aplayer .aplayer-info .aplayer-music .aplayer-title {
+.music-dock .aplayer .aplayer-info .aplayer-music .aplayer-title {
   font-family: var(--ma-serif);
   letter-spacing: 0.06em;
 }
 
-.music-card .aplayer .aplayer-info .aplayer-music .aplayer-author {
+.music-dock .aplayer .aplayer-info .aplayer-music .aplayer-author {
   font-family: var(--ma-mono);
   font-size: 11px;
   letter-spacing: 0.14em;
 }
 
-/* 封面上的圆形播放键收成 2px 小方角,呼应标题前的朱印方点 */
-.music-card .aplayer .aplayer-pic .aplayer-button {
+/* 封面上的圆形播放键收成 2px 小方角,呼应主题里的朱印方点 */
+.music-dock .aplayer .aplayer-pic .aplayer-button {
   border-radius: 2px;
 }

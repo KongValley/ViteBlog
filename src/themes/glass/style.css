@@ -1465,12 +1465,12 @@ body::after {
   border-radius: 24px;
 }
 
-/* ---------- 关于页:音乐卡片(毛玻璃卡 + APlayer,配置见 site.yml 的 music) ---------- */
-.music-card {
-  /* APlayer 适配变量(见 src/components/MusicCard.css)。glass 主题只有 --gl-* 一套
+/* ---------- 全局音乐挂件:贴左下角,可收成一张封面方块(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-dock {
+  /* APlayer 适配变量(见 src/components/MusicDock.css)。glass 主题只有 --gl-* 一套
      变量,没有 --surface / --ink / --muted / --line / --red,所以这里必须逐条映射,
      否则播放器会退回 APlayer 写死的浅色值,深色模式下标题与图标会直接糊掉。
-     播放器底色没有照搬卡片的 0.55 毛玻璃,而是压上一层 0.9 的白:背后是流动的
+     播放器底色没有照搬挂件的 0.55 毛玻璃,而是压上一层 0.9 的白:背后是流动的
      渐变光斑,播放器跟着一起透的话,APlayer 的文字与进度槽对比度会随光斑位置漂移,
      压到近实心之后,浅色下 --gl-ink 的对比度稳定在 12:1 以上 */
   --music-bg: rgba(255, 255, 255, 0.9);
@@ -1478,69 +1478,72 @@ body::after {
   --music-muted: var(--gl-mut);
   --music-line: var(--gl-chip-border);
   --music-accent: var(--gl-accent);
-  --music-radius: 18px;
+  --music-radius: 12px; /* 外框 20px 减掉 10px 内边距,内层面板的圆角才对得上 */
   --music-font: var(--gl-sans);
-  margin-top: 40px;
-  padding: 26px 28px;
+  --music-width: 360px; /* 正文 16px 的字号,360px 正好放下标题 + 作者 + 控制条 */
+  --music-inset: 22px; /* 和右下角「TOP」按钮的 right / bottom 对齐 */
+  padding: 10px;
   border: 1px solid var(--gl-glass-border);
-  border-radius: 26px;
+  border-radius: 20px;
   background: var(--gl-glass);
   box-shadow: var(--gl-shadow);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   backdrop-filter: blur(18px) saturate(140%);
 }
 
-/* 深色:卡片只剩 0.06 白的玻璃,播放器换成 0.94 的深靛蓝实底(同代码块的做法),
+/* 深色:挂件只剩 0.06 白的玻璃,播放器换成 0.94 的深靛蓝实底(同代码块的做法),
    浅色文字与进度槽在霓虹光斑上同样稳定 —— --gl-ink 约 15:1,--gl-mut 约 6:1 */
-[data-theme="dark"] .music-card {
+[data-theme="dark"] .music-dock {
   --music-bg: rgba(18, 21, 44, 0.94);
 }
 
-.music-card-title {
-  margin: 0 0 12px;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--gl-ink);
+/* 收起/展开的小把手:挂在挂件右上角外侧,毛玻璃底 + 半透明白描边 + 靛蓝字,
+   和导航胶囊 / 「TOP」按钮同一套语言,压在页面的渐变光斑上也看得清 */
+.music-dock-toggle {
+  top: -12px;
+  right: -12px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--gl-glass-border);
+  border-radius: 999px;
+  background: var(--gl-glass-strong);
+  color: var(--gl-accent);
+  font-size: 10px;
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: 0 12px 30px -16px rgba(59, 66, 150, 0.55);
 }
 
-.music-card-note {
-  max-width: 52ch;
-  margin: 12px 0 22px;
-  font-size: 15.5px;
-  line-height: 1.95;
-  color: var(--gl-mut);
+.music-dock-toggle:hover {
+  border-color: var(--gl-accent);
+  background: var(--gl-accent);
+  color: var(--gl-on-accent);
 }
 
-.music-card-hint {
-  margin: 18px 0 0;
+/* 加载中 / 失败时的提示:小号次要文字,收起时由适配层隐藏 */
+.music-dock-hint {
+  margin: 10px 0 0;
   font-size: 13.5px;
-  line-height: 1.8;
+  line-height: 1.7;
   color: var(--gl-mut);
-}
-
-/* 播放器面板:描边和胶囊 / 标签共用 --gl-chip-border —— 浅色模式下白描边压在
-   近白的底上看不见,靛蓝描边两种模式都能勾出面板边界 */
-.music-card .aplayer {
-  border: 1px solid var(--gl-chip-border);
 }
 
 /* 进度槽与进度条:加高到 6px 并改成胶囊型(主题里的按钮 / 标签一律 999px),
    默认 2px 的细线在光斑上太弱;进度条本身的配色由 APlayer 按 --music-accent 上 */
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
   .aplayer-bar-wrap
   .aplayer-bar,
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
   .aplayer-bar-wrap
   .aplayer-bar
   .aplayer-loaded,
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller
@@ -1553,7 +1556,7 @@ body::after {
 
 /* 进度圆点:默认那套是按 2px 槽位算的,放到 6px 槽上会偏上,这里重新对齐;
    外加一圈主题淡色柔光,悬停在近白底 / 深靛底上都看得见 */
-.music-card
+.music-dock
   .aplayer
   .aplayer-info
   .aplayer-controller

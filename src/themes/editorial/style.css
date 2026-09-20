@@ -1419,9 +1419,9 @@ a.tag:hover {
   border-radius: 3px;
 }
 
-/* ---------- 关于页:音乐卡片(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
-.music-card {
-  /* APlayer 适配变量(见 src/components/MusicCard.css):本主题的变量是 --ed-*,
+/* ---------- 全局音乐挂件:贴左下角,可收成一张封面方块(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-dock {
+  /* APlayer 适配变量(见 src/components/MusicDock.css):本主题的变量是 --ed-*,
      不是适配层兜底用的 --surface / --ink / --muted / --line / --red,所以必须在这里
      显式接一遍,否则播放器会退回灰底灰字。值一律写成 var(--ed-*) 引用而不写死颜色,
      深浅切换时由 [data-theme="dark"] 里的 --ed-* 自动带过去,不用再写覆盖段 */
@@ -1432,36 +1432,37 @@ a.tag:hover {
   --music-accent: var(--ed-accent);
   --music-radius: 3px;
   --music-font: var(--ed-sans);
+  --music-width: 360px;
+  --music-inset: 24px; /* 和右下角「回到顶部」按钮对齐 */
 
-  /* 卡片本体:与上面 .contact-card / .terminal-card 同一套纸面小卡语言 */
-  margin-top: 46px;
-  padding: 26px 30px;
+  /* 挂件本体:沿用纸面小卡的印刷细线,但贴边时按小控件收一圈内边距 */
+  padding: 11px;
   border: 1px solid var(--ed-hair-strong);
   border-radius: 3px;
   background: var(--ed-surface);
 }
 
-/* 卡片标题走纸张上的衬线大标题,规格对齐 .contact-title */
-.music-card-title {
-  margin: 0 0 12px;
-  font-family: var(--ed-serif);
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  color: var(--ed-ink);
+/* 收起/展开的小把手:挂在挂件右上角外侧,一枚纸面上的细线小方块 */
+.music-dock-toggle {
+  top: -12px;
+  right: -12px;
+  width: 25px;
+  height: 25px;
+  border: 1px solid var(--ed-hair-strong);
+  background: var(--ed-paper);
+  color: var(--ed-muted);
+  font-size: 10px;
 }
 
-.music-card-note {
-  max-width: 52ch;
-  margin: 12px 0 22px;
-  font-size: 15.5px;
-  line-height: 1.9;
-  color: var(--ed-muted);
+.music-dock-toggle:hover {
+  border-color: var(--ed-accent);
+  background: var(--ed-accent);
+  color: var(--ed-paper);
 }
 
 /* 加载中 / 加载失败的小字提示:用本主题的等宽小字,像脚注 */
-.music-card-hint {
-  margin: 16px 0 0;
+.music-dock-hint {
+  margin: 10px 0 0;
   font-family: var(--ed-mono);
   font-size: 12px;
   letter-spacing: 0.05em;
@@ -1469,13 +1470,7 @@ a.tag:hover {
   color: var(--ed-muted);
 }
 
-/* 播放器本体:底色调成更浅的纸色(--ed-paper),在 --ed-surface 的卡片上凹成一块内嵌版面;
-   再压一圈 1px 细边,和卡片、终端小卡同一种印刷细线 */
-.music-card .aplayer {
-  border: 1px solid var(--ed-hair);
-}
-
-/* 播放器里的曲名改用衬线,和卡片标题连成一套;作者名仍是小字次要色 */
-.music-card .aplayer .aplayer-info .aplayer-music .aplayer-title {
+/* 播放器里的曲名改用衬线,和本主题的编辑排版连成一套;作者名仍是小字次要色 */
+.music-dock .aplayer .aplayer-info .aplayer-music .aplayer-title {
   font-family: var(--ed-serif);
 }

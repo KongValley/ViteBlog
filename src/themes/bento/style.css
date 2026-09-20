@@ -1459,11 +1459,11 @@ a {
   border-radius: 16px;
 }
 
-/* ---------- 关于页:音乐卡片(一张便当格 + APlayer,配置见 site.yml 的 music) ---------- */
-.music-card {
-  /* APlayer 适配变量(见 src/components/MusicCard.css):本主题用的是 --be-* 命名,
+/* ---------- 全局音乐挂件:贴左下角,可收成一张封面方块(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-dock {
+  /* APlayer 适配变量(见 src/components/MusicDock.css):本主题用的是 --be-* 命名,
      不显式给值的话播放器会退回兜底色,深浅两种模式都会和便当格对不上。
-     卡片是浅色白卡 / 深色暗卡,播放器取同系内层色(--be-cell-2),嵌一层但不跳。 */
+     挂件是浅色白卡 / 深色暗卡,播放器取同系内层色(--be-cell-2),嵌一层但不跳。 */
   --music-bg: var(--be-cell-2);
   --music-ink: var(--be-ink);
   --music-muted: var(--be-mut);
@@ -1472,55 +1472,42 @@ a {
   --music-active: var(--be-tint);
   --music-radius: 16px;
   --music-font: var(--be-sans);
-  margin-top: 40px;
-  padding: 24px 26px;
+  --music-width: 360px;
+  --music-inset: 22px; /* 和右下角 .back-top 对齐 */
+  padding: 12px;
   border: 1px solid var(--be-line);
   border-radius: 20px;
   background: var(--be-cell);
   box-shadow: var(--be-shadow);
 }
 
-/* 标题沿用关于页 h2 的方形小色块,和正文层级同一套记号 */
-.music-card-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 12px;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+/* 收起/展开的小把手:挂在挂件右上角外侧,便当格语言的一枚小圆钮 */
+.music-dock-toggle {
+  top: -12px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--be-line-2);
+  border-radius: 999px;
+  background: var(--be-cell);
   color: var(--be-ink);
+  font-family: var(--be-mono);
+  font-size: 9px;
 }
 
-.music-card-title::before {
-  content: "";
-  width: 9px;
-  height: 9px;
-  border-radius: 3px;
-  flex: none;
-  background: var(--be-accent);
-}
-
-.music-card-note {
-  max-width: 52ch;
-  margin: 0 0 18px;
-  font-size: 15.5px;
-  line-height: 1.9;
-  color: var(--be-mut);
+.music-dock-toggle:hover {
+  border-color: var(--be-accent);
+  background: var(--be-tint);
+  color: var(--be-accent);
 }
 
 /* 状态提示(加载中 / 加载失败):一块淡色托底的小格子,和正文说明区分开 */
-.music-card-hint {
-  margin: 16px 0 0;
+.music-dock-hint {
+  margin: 10px 0 0;
   padding: 12px 16px;
   border-radius: 12px;
   background: var(--be-tint);
   color: var(--be-mut);
   font-size: 13.5px;
   line-height: 1.8;
-}
-
-/* 播放器本体:跟着便当格描一道细边,圆角与内部配色交给上面的变量 */
-.music-card .aplayer {
-  border: 1px solid var(--be-line);
 }

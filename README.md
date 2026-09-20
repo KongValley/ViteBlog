@@ -61,9 +61,9 @@ avatar: https://github.com/KongValley.png?size=60 # 头像(可省略,默认 GitH
 本地 `npm run dev` 时改 yml 会自动热更新;push 到 GitHub 后自动重新部署。
 省略 `github` / `avatar` 字段时会根据 `githubUser` 自动生成,所以最小配置只需 5 行。
 
-### 关于页的音乐卡片
+### 音乐挂件(贴边播放器)
 
-`site.yml` 的 `music` 段可以给「关于本站」页加一个音乐播放器(Meting 接口取地址 + [APlayer](https://github.com/DIYgod/APlayer) 播放,npm 依赖已装好):
+`site.yml` 的 `music` 段可以给站点加一个音乐挂件:Meting 接口取播放地址 + [APlayer](https://github.com/DIYgod/APlayer) 播放(npm 依赖已装好),固定在**左下角**,可以收成一张封面方块贴在屏幕边缘(状态记在 localStorage,收起后下次进站还是收起的)。
 
 ```yaml
 music:
@@ -73,8 +73,9 @@ music:
 ```
 
 - 三个占位符 `:server` / `:type` / `:id` 必须保留,组件会按需替换;写错会回退到默认公共实例并在控制台提示。
-- 公共实例偶尔不可用,此时卡片会显示一行失败提示(不影响页面其它部分)。想稳一点可以按 [Meting-API](https://github.com/metowolf/Meting-API) 自建后改 `api`。
-- 整段删除(或留空 `id`)则不显示音乐卡片,`id` 目前只支持单曲。
+- 公共实例偶尔不可用,此时挂件里显示一行失败提示(不影响页面其它部分)。想稳一点可以按 [Meting-API](https://github.com/metowolf/Meting-API) 自建后改 `api`。
+- 整段删除(或留空 `id`)则不渲染挂件,`id` 目前只支持单曲。
+- 挂件挂在 `App` 上而不是某个页面:固定层的东西跟路由走的话,切页面音乐就断了。
 - 播放器只能手动点播放(浏览器不允许自动播放),且音频地址由第三方接口提供,能否播放取决于对方服务。
 
 ## 主题
