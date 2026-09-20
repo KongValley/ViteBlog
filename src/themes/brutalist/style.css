@@ -1215,44 +1215,6 @@ a.tag:hover {
   color: var(--br-mut);
 }
 
-.term-title {
-  margin: 12px 0 18px;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--br-ink);
-  overflow-wrap: anywhere;
-}
-
-.term-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.term-btn {
-  display: inline-block;
-  padding: 7px 15px;
-  border: 2px solid var(--br-ink);
-  background: var(--br-card);
-  color: var(--br-ink);
-  font-size: 14px;
-  font-weight: 700;
-  box-shadow: 3px 3px 0 var(--br-ink);
-  transition:
-    transform 0.08s linear,
-    box-shadow 0.08s linear,
-    background 0.08s linear;
-}
-
-.term-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 var(--br-ink);
-  background: var(--br-yellow);
-  color: #0a0a0a;
-  text-decoration: none;
-}
-
 /* ---------- 页脚 ---------- */
 .footer {
   padding: 24px 0;

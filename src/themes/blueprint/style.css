@@ -1235,36 +1235,6 @@ a {
   color: var(--bp-mut);
 }
 
-.term-title {
-  margin: 0 0 16px;
-  font-size: 17px;
-  font-weight: 500;
-}
-
-.term-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.term-btn {
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid var(--bp-line);
-  font-family: var(--bp-mono);
-  font-size: 14px;
-  transition:
-    background 0.25s,
-    color 0.25s,
-    border-color 0.25s;
-}
-
-.term-btn:hover {
-  border-color: var(--bp-mark);
-  background: var(--bp-mark);
-  color: var(--bp-bg);
-}
-
 /* ---------- 页脚 ---------- */
 .footer {
   margin-top: 80px;

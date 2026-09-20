@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import PlayerScreen from '../components/PlayerScreen';
 import { SocialIcon } from '../components/SocialIcon';
 import { type SocialLink, site } from '../data/site';
@@ -15,20 +14,6 @@ function TerminalCard() {
         </div>
       </div>
       <p className="term-sub pixel-en">$ OPEN · SOURCE · 100% STATIC</p>
-      <p className="term-title">A_pixel_blog_by_{site.githubUser}</p>
-      <div className="term-actions">
-        <Link to="/post/hello-vite-blog" className="term-btn">
-          $ get started
-        </Link>
-        <a
-          className="term-btn"
-          href={site.github}
-          target="_blank"
-          rel="noopener"
-        >
-          $ view source
-        </a>
-      </div>
     </div>
   );
 }
@@ -106,9 +91,21 @@ export default function About() {
           开发中踩过的坑,以及一些有趣的东西。
         </p>
         <p>
+          内容以成系列的笔记为主:JavaScript 从变量、闭包写到异步与模块,
+          TypeScript 从基础类型、泛型写到工具类型与工程化,Node 和 Python
+          从运行时、标准库一路写到 Web 框架、数据库与部署;此外还有这个博客
+          从零搭起、发布到 GitHub Pages 的完整过程,以及一些日常工具与折腾记录。
+        </p>
+        <p>
           本站使用 <strong>React + Vite</strong> 搭建,文章以 Markdown 编写,
           托管在 GitHub Pages 上,通过 GitHub Actions 自动构建部署 —— 每次 push
           到 main 分支,几分钟内线上就会更新。
+        </p>
+        <p>
+          没有后端和数据库:文章就是 <code>src/posts/</code> 下的 Markdown 文件,
+          标题、日期、标签、摘要这些都写在文件头的 frontmatter 里;站点信息集中在
+          <code>site.yml</code>,主题也是其中的一项 ——
+          改一个字段就能换掉整套风格, 构建时只会打包选中的那一套。
         </p>
       </div>
       <ContactCard />

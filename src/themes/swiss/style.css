@@ -1332,42 +1332,6 @@ a.tag:hover {
   opacity: 0.75;
 }
 
-.term-title {
-  margin: 12px 0 18px;
-  font-family: var(--sw-disp);
-  font-size: 21px;
-  font-weight: 700;
-  color: var(--sw-inv-ink);
-  overflow-wrap: anywhere;
-}
-
-.term-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.term-btn {
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid var(--sw-inv-line);
-  background: transparent;
-  color: var(--sw-inv-ink);
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  transition:
-    background 0.06s linear,
-    color 0.06s linear,
-    border-color 0.06s linear;
-}
-
-.term-btn:hover {
-  border-color: var(--sw-red);
-  background: var(--sw-red);
-  color: #fff;
-  text-decoration: none;
-}
-
 /* ---------- 页脚:黑色条带 ---------- */
 .footer {
   padding: 24px 0;

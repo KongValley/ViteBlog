@@ -1025,45 +1025,6 @@ button.tag:hover,
   color: var(--tcard-ink);
 }
 
-.term-title {
-  margin: 12px 0 18px;
-  font-size: 21px;
-  font-weight: 700;
-  color: var(--tcard-ink);
-  overflow-wrap: anywhere;
-}
-
-.term-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.term-btn {
-  display: inline-block;
-  padding: 6px 14px;
-  border: 1px solid var(--tcard-line);
-  border-radius: 6px !important;
-  background: var(--tcard-bg);
-  color: var(--tcard-ink);
-  font-size: 14px;
-  transition:
-    border-color 0.1s steps(2),
-    color 0.1s steps(2),
-    transform 0.05s steps(2);
-}
-
-.term-btn:hover {
-  text-decoration: none;
-  border-color: var(--tcard-accent);
-  color: var(--tcard-accent);
-  transform: translate(-1px, -1px);
-}
-
-.term-btn:active {
-  transform: translate(1px, 1px);
-}
-
 /* ---------- 页脚 ---------- */
 .footer {
   border-top: 4px solid var(--line);

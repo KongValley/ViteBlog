@@ -1160,35 +1160,6 @@ body::after {
   letter-spacing: 0.14em;
 }
 
-.term-title {
-  margin: 0 0 14px;
-  color: var(--tm-green);
-  font-size: 16px;
-}
-
-.term-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.term-btn {
-  display: inline-block;
-  padding: 6px 14px;
-  border: 1px solid var(--tm-green-dim);
-  border-radius: 4px;
-  color: var(--tm-green);
-  font-size: 14px;
-  transition:
-    background 0.15s,
-    color 0.15s;
-}
-
-.term-btn:hover {
-  background: var(--tm-green);
-  color: var(--tm-bg);
-}
-
 /* ---------- 页脚 ---------- */
 .footer {
   margin-top: 30px;

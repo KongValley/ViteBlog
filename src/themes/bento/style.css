@@ -1236,40 +1236,6 @@ a {
   letter-spacing: 0.14em;
 }
 
-.term-title {
-  margin: 12px 0 18px;
-  font-family: var(--be-sans);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--be-ink);
-  overflow-wrap: anywhere;
-}
-
-.term-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.term-btn {
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid var(--be-line-2);
-  border-radius: 999px;
-  color: var(--be-ink);
-  font-size: 14px;
-  transition:
-    color 0.25s,
-    border-color 0.25s;
-}
-
-.term-btn:hover {
-  border-color: var(--be-accent);
-  color: var(--be-accent);
-  text-decoration: none;
-}
-
 /* ---------- 页脚 ---------- */
 .footer {
   padding: 30px 0 42px;

@@ -1148,36 +1148,6 @@ a {
   color: var(--ma-mut);
 }
 
-.term-title {
-  margin: 0 0 16px;
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-}
-
-.term-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-}
-
-.term-btn {
-  display: inline-block;
-  padding: 5px 0;
-  border-bottom: 1px solid var(--ma-hair);
-  font-family: var(--ma-mono);
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  transition:
-    color 0.3s,
-    border-color 0.3s;
-}
-
-.term-btn:hover {
-  color: var(--ma-shu);
-  border-bottom-color: var(--ma-shu);
-}
-
 /* ---------- 页脚:落款 ---------- */
 .footer {
   margin-top: 104px;
