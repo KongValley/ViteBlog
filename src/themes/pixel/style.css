@@ -1601,27 +1601,30 @@ a.tag:active {
   color: var(--bg);
 }
 
-/* 联系卡片左右布局:内容居左,头像区居右(窄屏时头像区换行,屏幕跟着居中) */
+/* 联系卡片左右布局:内容居左,头像区居右(窄屏时头像区换行,屏幕跟着居中)
+   卡片宽度跟着内容走,不撑满整页宽度:文字列就是 note 的 52ch 上限(390px),
+   屏幕 154px + 中间 24px + 两侧内边距 —— 一旦撑满,多出来的空间
+   只能摊到屏幕两侧变成死白(屏幕左右各空过约 70px) */
 .contact-card {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 24px;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .contact-main {
-  flex: 1 1 320px;
+  /* 文字列不抢剩余宽度,屏幕就能紧挨着它,而不是被顶到卡片另一头 */
+  flex: 0 1 auto;
   min-width: 0;
 }
 
 /* 关于页联系卡片:右侧头像区
-   像素主题直接把首页那块掌机屏幕(gb-screen)搬过来,
-   这块区域固定 300px,屏幕在区域里水平居中(垂直由卡片的 align-items 居中);
+   像素主题直接把首页那块掌机屏幕(gb-screen)搬过来,区域宽度就是屏幕宽度;
    margin: 0 auto 只在窄屏换行、这一行只剩它自己时才生效 —— 那时把它推到卡片中间,
-   和文字同一行时空间都被文字区(flex-grow)吃掉,自动外边距为 0,不会把屏幕顶到右边 */
+   和文字同一行时空间都被文字区吃掉,自动外边距为 0,不会把屏幕顶到右边 */
 .contact-screen {
-  flex: 0 1 300px;
-  display: flex;
-  justify-content: center;
+  flex: 0 0 auto;
   margin: 0 auto;
 }
