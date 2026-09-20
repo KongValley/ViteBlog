@@ -1111,11 +1111,6 @@ a {
   border-bottom: 1px solid var(--ma-shu-soft);
 }
 
-.about-note {
-  color: var(--ma-mut);
-  font-size: 13.5px;
-}
-
 /* 关于页的开源项目小卡片 */
 .terminal-card {
   margin: 26px 0;

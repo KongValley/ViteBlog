@@ -1258,11 +1258,6 @@ a {
   border-bottom: 1px solid var(--nr-neon-2);
 }
 
-.about-note {
-  color: var(--nr-mut);
-  font-size: 13.5px;
-}
-
 /* 关于页的开源项目小卡片 */
 .terminal-card {
   position: relative;

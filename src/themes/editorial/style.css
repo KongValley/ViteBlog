@@ -1143,16 +1143,6 @@ a.tag:hover {
   text-decoration: none;
 }
 
-.about-note {
-  margin-top: 30px;
-  padding: 14px 18px;
-  border: 1px solid var(--ed-hair-strong);
-  border-radius: 2px;
-  background: var(--ed-surface);
-  font-size: 13.5px;
-  color: var(--ed-muted);
-}
-
 /* 终端小卡片 → 纸面小卡 */
 .terminal-card {
   max-width: none;

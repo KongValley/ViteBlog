@@ -1218,17 +1218,6 @@ a.tag:hover {
   text-decoration: none;
 }
 
-.about-note {
-  margin-top: 30px;
-  padding: 16px 18px;
-  border: 1px solid var(--sw-line-strong);
-  background: transparent;
-  font-family: var(--sw-mono);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--sw-mut);
-}
-
 /* 联系卡片:邮箱 + 社交账号(数据来自 site.yml,留空则整块不渲染) */
 .contact-card {
   margin-top: 46px;

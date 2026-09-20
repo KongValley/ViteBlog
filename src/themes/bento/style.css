@@ -1196,16 +1196,6 @@ a {
   text-decoration: none;
 }
 
-.about-note {
-  margin-top: 28px;
-  padding: 16px 20px;
-  border: 1px solid var(--be-line);
-  border-radius: 16px;
-  background: var(--be-cell);
-  color: var(--be-mut);
-  font-size: 13.5px;
-}
-
 /* 终端小卡片:一张便当格 */
 .terminal-card {
   max-width: none;

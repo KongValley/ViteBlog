@@ -1198,11 +1198,6 @@ a {
   color: var(--bp-mark);
 }
 
-.about-note {
-  color: var(--bp-mut);
-  font-size: 13.5px;
-}
-
 /* 关于页的开源项目小卡片 */
 .terminal-card {
   margin: 24px 0;

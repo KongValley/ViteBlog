@@ -110,9 +110,6 @@ export default function About() {
           托管在 GitHub Pages 上,通过 GitHub Actions 自动构建部署 —— 每次 push
           到 main 分支,几分钟内线上就会更新。
         </p>
-        <p className="about-note">
-          这段内容在 <code>src/views/About.tsx</code>,改成你自己的介绍吧。
-        </p>
       </div>
       <ContactCard />
     </section>

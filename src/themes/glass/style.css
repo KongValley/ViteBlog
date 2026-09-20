@@ -1182,11 +1182,6 @@ body::after {
   border-bottom-color: var(--gl-accent);
 }
 
-.about-note {
-  color: var(--gl-mut);
-  font-size: 13.5px;
-}
-
 /* 关于页的开源项目小卡片 */
 .terminal-card {
   margin: 22px 0;

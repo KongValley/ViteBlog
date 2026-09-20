@@ -972,15 +972,6 @@ button.tag:hover,
   padding: 2px 7px;
 }
 
-.about-note {
-  margin-top: 26px;
-  padding: 12px 16px;
-  border: 3px dashed var(--line);
-  background: var(--surface);
-  font-size: 14px;
-  color: var(--muted);
-}
-
 /* ---------- 终端风格小卡片(配色跟随主题:白天浅色 / 夜晚深色终端) ---------- */
 .terminal-card {
   /* 白天:浅色终端(类 GitHub Light) */
