@@ -1450,7 +1450,7 @@ a.tag:hover {
 
 .contact-pill {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
   text-decoration: none;
   padding: 7px 14px;

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SocialIcon } from '../components/SocialIcon';
 import { type SocialLink, site } from '../data/site';
 
 // 终端风格小卡片(仿 open source 项目卡)
@@ -87,6 +88,7 @@ function ContactCard() {
               target="_blank"
               rel="noopener"
             >
+              <SocialIcon name={link.name} url={link.url} />
               <span className="contact-pill-name">{link.name}</span>
               {link.handle && (
                 <span className="contact-pill-handle">{link.handle}</span>
