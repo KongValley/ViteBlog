@@ -28,7 +28,6 @@ const POLICY = [
   // 标签筛选条 / 标签云里的可点标签
   { test: /\.(tag|chip|tag-cloud-item)$/, min: 13.5, why: '标签筛选(可点)' },
   { test: /\.contact-pill$/, min: 13.5, why: '社交胶囊(可点)' },
-  { test: /\.contact-copy$/, min: 14, why: '复制邮箱按钮(可点)' },
   { test: /\.toc-link$/, min: 14, why: '文章目录(可点)' },
   { test: /\.nav-link$/, min: 14, why: '顶部导航(可点)' },
   { test: /\.theme-toggle$/, min: 14, why: '昼夜切换(可点)' },
@@ -52,7 +51,6 @@ const INTERACTIVE = [
   '.page-btn',
   '.theme-toggle',
   '.toc-link',
-  '.contact-copy',
   '.contact-pill',
   '.filter',
   '.link',

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SocialIcon } from '../components/SocialIcon';
 import { type SocialLink, site } from '../data/site';
@@ -33,11 +32,9 @@ function TerminalCard() {
   );
 }
 
-// 联系卡片:邮箱 + 社交账号,数据全部来自 site.yml
-// 邮箱留空就不显示那一行;社交账号会自动补上 GitHub(用 githubUser 拼)
+// 联系卡片:社交账号胶囊,数据全部来自 site.yml
+// 社交账号会自动补上 GitHub(用 githubUser 拼);没有可显示的条目则整卡隐藏
 function ContactCard() {
-  const [copied, setCopied] = useState(false);
-
   const socials: SocialLink[] = [];
   if (site.githubUser) {
     socials.push({ name: 'GitHub', handle: site.githubUser, url: site.github });
@@ -49,54 +46,32 @@ function ContactCard() {
     if (!exists) socials.push(link);
   }
 
-  if (!site.email && socials.length === 0) return null;
-
-  const copyEmail = async () => {
-    try {
-      if (!navigator.clipboard) throw new Error('剪贴板不可用');
-      await navigator.clipboard.writeText(site.email);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
-    } catch {
-      setCopied(false);
-    }
-  };
+  if (socials.length === 0) return null;
 
   return (
     <section className="contact-card">
       <h2 className="contact-title">来聊聊吧</h2>
       <p className="contact-note">
-        文章里的错误、想讨论的技术问题,或者只是想打个招呼,都欢迎写信给我。
+        文章里的错误、想讨论的技术问题,或者只是想打个招呼,都欢迎来找我。
       </p>
 
-      {site.email && (
-        <div className="contact-mail">
-          <span className="contact-email">{site.email}</span>
-          <button type="button" className="contact-copy" onClick={copyEmail}>
-            {copied ? '已复制' : '复制邮箱'}
-          </button>
-        </div>
-      )}
-
-      {socials.length > 0 && (
-        <div className="contact-social">
-          {socials.map((link) => (
-            <a
-              key={link.name}
-              className="contact-pill"
-              href={link.url}
-              target="_blank"
-              rel="noopener"
-            >
-              <SocialIcon name={link.name} url={link.url} />
-              <span className="contact-pill-name">{link.name}</span>
-              {link.handle && (
-                <span className="contact-pill-handle">{link.handle}</span>
-              )}
-            </a>
-          ))}
-        </div>
-      )}
+      <div className="contact-social">
+        {socials.map((link) => (
+          <a
+            key={link.name}
+            className="contact-pill"
+            href={link.url}
+            target="_blank"
+            rel="noopener"
+          >
+            <SocialIcon name={link.name} url={link.url} />
+            <span className="contact-pill-name">{link.name}</span>
+            {link.handle && (
+              <span className="contact-pill-handle">{link.handle}</span>
+            )}
+          </a>
+        ))}
+      </div>
     </section>
   );
 }

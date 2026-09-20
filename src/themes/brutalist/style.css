@@ -1436,41 +1436,6 @@ a.tag:hover {
   color: var(--br-mut);
 }
 
-.contact-mail {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid var(--br-ink);
-}
-
-.contact-email {
-  padding-bottom: 2px;
-  border-bottom: 3px solid var(--br-ink);
-  font-size: clamp(22px, 2.6vw, 28px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--br-ink);
-  word-break: break-all;
-}
-
-.contact-copy {
-  padding: 7px 15px;
-  border: 2px solid var(--br-ink);
-  background: var(--br-yellow);
-  color: var(--br-ink);
-  font-family: var(--br-mono);
-  font-size: 14px;
-  font-weight: 700;
-  box-shadow: 3px 3px 0 var(--br-ink);
-  cursor: pointer;
-}
-
-.contact-copy:hover {
-  background: var(--br-pink);
-}
-
 .contact-social {
   display: flex;
   flex-wrap: wrap;

@@ -33,7 +33,6 @@ export interface Site {
   githubUser: string;
   avatar: string;
   theme: ThemeName;
-  email: string;
   social: SocialLink[];
 }
 
@@ -46,7 +45,6 @@ const defaults: Site = {
   githubUser: '',
   avatar: '',
   theme: 'pixel',
-  email: '',
   social: [],
 };
 
@@ -78,7 +76,6 @@ export const site: Site = {
   ...defaults,
   ...config,
   theme: normalizeTheme(config.theme),
-  email: typeof config.email === 'string' ? config.email.trim() : '',
   social: normalizeSocial(config.social),
 };
 

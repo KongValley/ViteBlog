@@ -1264,47 +1264,6 @@ a.tag:hover {
   color: var(--sw-mut);
 }
 
-.contact-mail {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding-bottom: 22px;
-  border-bottom: 1px solid var(--sw-line);
-}
-
-.contact-email {
-  padding-bottom: 2px;
-  border-bottom: 2px solid var(--sw-red);
-  font-family: var(--sw-disp);
-  font-size: clamp(20px, 2.6vw, 28px);
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--sw-ink);
-  word-break: break-all;
-}
-
-.contact-copy {
-  padding: 7px 14px;
-  border: 1px solid var(--sw-line-strong);
-  background: transparent;
-  color: var(--sw-ink);
-  font-family: var(--sw-mono);
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  transition:
-    background 0.06s linear,
-    border-color 0.06s linear,
-    color 0.06s linear;
-}
-
-.contact-copy:hover {
-  border-color: var(--sw-red);
-  background: var(--sw-red);
-  color: #fff;
-}
-
 .contact-social {
   display: flex;
   flex-wrap: wrap;
