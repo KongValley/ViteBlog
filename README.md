@@ -61,6 +61,22 @@ avatar: https://github.com/KongValley.png?size=60 # 头像(可省略,默认 GitH
 本地 `npm run dev` 时改 yml 会自动热更新;push 到 GitHub 后自动重新部署。
 省略 `github` / `avatar` 字段时会根据 `githubUser` 自动生成,所以最小配置只需 5 行。
 
+### 关于页的音乐卡片
+
+`site.yml` 的 `music` 段可以给「关于本站」页加一个音乐播放器(Meting 接口取地址 + [APlayer](https://github.com/DIYgod/APlayer) 播放,npm 依赖已装好):
+
+```yaml
+music:
+  server: tencent                 # tencent(QQ音乐)/ netease(网易云)/ kugou / kuwo / baidu
+  id: 003qYzA508Z2yF              # 歌曲 ID:QQ 音乐歌曲页 URL 里 songDetail/ 后面那串
+  api: https://api.injahow.cn/meting/?server=:server&type=:type&id=:id
+```
+
+- 三个占位符 `:server` / `:type` / `:id` 必须保留,组件会按需替换;写错会回退到默认公共实例并在控制台提示。
+- 公共实例偶尔不可用,此时卡片会显示一行失败提示(不影响页面其它部分)。想稳一点可以按 [Meting-API](https://github.com/metowolf/Meting-API) 自建后改 `api`。
+- 整段删除(或留空 `id`)则不显示音乐卡片,`id` 目前只支持单曲。
+- 播放器只能手动点播放(浏览器不允许自动播放),且音频地址由第三方接口提供,能否播放取决于对方服务。
+
 ## 主题
 
 站点内置十套**完全独立**的主题,通过根目录 `site.yml` 里的 `theme` 字段指定(本地改完自动热更新,push 后自动重新部署):

@@ -1428,3 +1428,71 @@ body::after {
   border: 1px solid var(--tm-line);
   border-radius: 4px;
 }
+
+/* ---------- 关于页:音乐卡片(终端面板,数据来自 site.yml 的 music 段) ---------- */
+.music-card {
+  /* APlayer 适配变量(见 src/components/MusicCard.css):全部接到本主题的 --tm-*,
+     播放器的底色/文字/图标/进度条才会跟着浅深两套色板一起变 */
+  --music-bg: var(--tm-bg);
+  --music-ink: var(--tm-text);
+  --music-muted: var(--tm-mut);
+  --music-line: var(--tm-line);
+  --music-accent: var(--tm-green);
+  --music-radius: 4px;
+  --music-font: var(--tm-mono);
+  margin-top: 40px;
+  padding: 20px 22px;
+  border: 1px solid var(--tm-line);
+  border-radius: 6px;
+  background: var(--tm-panel);
+  font-family: var(--tm-mono);
+}
+
+.music-card-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tm-green);
+}
+
+.music-card-title::before {
+  content: "$ ";
+  color: var(--tm-green-dim);
+}
+
+.music-card-note {
+  max-width: 56ch;
+  margin: 10px 0 20px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--tm-mut);
+}
+
+.music-card-hint {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--tm-mut);
+}
+
+/* 播放器本体:像卡片里嵌的一屏 —— 底色取页面底 --tm-bg,比面板 --tm-panel 略深(浅色)/略浅(深色),
+   配一圈 1px 框线就分得开;内部配色一律交给上面的变量 */
+.music-card .aplayer {
+  border: 1px solid var(--tm-line);
+}
+
+/* 封面上的播放键与进度条圆点:跟主题的按钮一样收成 4px 方角,不做纯圆 */
+.music-card .aplayer .aplayer-pic .aplayer-button {
+  border-radius: 4px;
+}
+
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played
+  .aplayer-thumb {
+  border-radius: 2px;
+}

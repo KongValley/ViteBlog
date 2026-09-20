@@ -1590,3 +1590,91 @@ a.tag:active {
   flex: 0 0 auto;
   margin: 0 auto;
 }
+
+/* ---------- 关于页:音乐卡片(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-card {
+  /* APlayer 适配变量(见 src/components/MusicCard.css):像素风一律直角 */
+  --music-radius: 0;
+  --music-font: var(--font-body);
+  margin-top: 40px;
+  padding: 20px 24px;
+  border: 3px solid var(--line);
+  border-radius: 10px !important;
+  background: var(--surface);
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+
+.music-card-title {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.music-card-note {
+  max-width: 52ch;
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--muted);
+}
+
+.music-card-hint {
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* 播放器本体:和卡片一样套一圈硬边框,里面的配色交给 --music-* 变量 */
+.music-card .aplayer {
+  border: 3px solid var(--line);
+}
+
+.music-card .aplayer .aplayer-info .aplayer-music .aplayer-title,
+.music-card .aplayer .aplayer-info .aplayer-music .aplayer-author {
+  font-family: var(--font-body);
+}
+
+/* 封面上的圆形播放键 / 进度条圆点:像素风改成方块 */
+.music-card .aplayer .aplayer-pic .aplayer-button {
+  border-radius: 0;
+}
+
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar,
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-loaded,
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played {
+  height: 4px;
+  border-radius: 0;
+}
+
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played
+  .aplayer-thumb {
+  width: 6px;
+  height: 10px;
+  margin-top: -3px;
+  border-radius: 0;
+}

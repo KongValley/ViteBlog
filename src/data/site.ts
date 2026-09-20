@@ -24,6 +24,16 @@ export interface SocialLink {
   url: string;
 }
 
+// 「关于本站」页的音乐卡片(site.yml 的 music 段;不填就不显示播放器)
+export interface MusicConfig {
+  /** 平台:tencent(QQ音乐)/ netease(网易云)/ kugou / kuwo / baidu … */
+  server: string;
+  /** 歌曲 ID:QQ 音乐歌曲页 URL 里 songDetail/ 后面那串 */
+  id: string;
+  /** Meting API 模板,必须带 :server / :type / :id 三个占位符 */
+  api: string;
+}
+
 export interface Site {
   name: string;
   tagline: string;
@@ -34,6 +44,7 @@ export interface Site {
   avatar: string;
   theme: ThemeName;
   social: SocialLink[];
+  music?: MusicConfig;
 }
 
 const defaults: Site = {
@@ -72,11 +83,43 @@ function normalizeSocial(raw: unknown): SocialLink[] {
     .filter((item) => item.name !== '' && item.url !== '');
 }
 
+// 公共 Meting 实例:接口来自 MetingJS 同款(https://github.com/metowolf/Meting-API)
+// 自建后把 site.yml 的 music.api 换掉即可
+const DEFAULT_METING_API =
+  'https://api.injahow.cn/meting/?server=:server&type=:type&id=:id';
+
+// yml 里的音乐配置:歌曲 id 没填就当没配(整张卡片不渲染);
+// api 模板缺占位符时打回默认实例,免得写错了整页没声音还看不出原因
+function normalizeMusic(raw: unknown): MusicConfig | undefined {
+  if (typeof raw !== 'object' || raw === null) return undefined;
+  const item = raw as Record<string, unknown>;
+
+  const id = typeof item.id === 'string' ? item.id.trim() : '';
+  if (!id) return undefined;
+
+  const server =
+    typeof item.server === 'string' && item.server.trim() !== ''
+      ? item.server.trim()
+      : 'tencent';
+  const api = typeof item.api === 'string' ? item.api.trim() : '';
+  if (!api) return { server, id, api: DEFAULT_METING_API };
+
+  const placeholders = [':server', ':type', ':id'];
+  if (placeholders.some((placeholder) => !api.includes(placeholder))) {
+    console.warn(
+      `[site.yml] music.api 缺少 ${placeholders.join(' / ')} 占位符,已回退到默认 Meting 接口`,
+    );
+    return { server, id, api: DEFAULT_METING_API };
+  }
+  return { server, id, api };
+}
+
 export const site: Site = {
   ...defaults,
   ...config,
   theme: normalizeTheme(config.theme),
   social: normalizeSocial(config.social),
+  music: normalizeMusic(config.music),
 };
 
 // 未配置仓库地址时,用 GitHub 用户名拼一个

@@ -1516,3 +1516,95 @@ a {
   object-fit: cover;
   border: 1px solid var(--nr-line);
 }
+
+/* ---------- 关于页:音乐卡片(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-card {
+  /* APlayer 适配变量(见 src/components/MusicCard.css):本主题的变量是 --nr-*,
+     必须在这里显式映射一遍,否则播放器会退回适配层的兜底色(--surface / --ink / --line) */
+  --music-bg: var(--nr-panel);
+  --music-ink: var(--nr-ink);
+  --music-muted: var(--nr-mut);
+  --music-line: var(--nr-line);
+  --music-accent: var(--nr-neon);
+  --music-active: var(--nr-neon-3);
+  --music-radius: 0;
+  --music-font: var(--nr-body);
+  margin-top: 44px;
+  padding: 24px 26px;
+  border: 1px solid var(--nr-line);
+  background: var(--nr-panel);
+  /* 辉光只落在卡片轮廓之外,不往卡片内部铺,免得糊住播放器里的歌名和时间 */
+  box-shadow: 0 0 26px var(--nr-neon-3);
+}
+
+.music-card-title {
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--nr-display);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--nr-ink);
+}
+
+/* 标题前的霓虹方点:和联系卡片同款,这里让它按老招牌的节奏闪一下 */
+.music-card-title::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  flex: none;
+  background: var(--nr-neon);
+  box-shadow: 0 0 10px var(--nr-neon);
+  animation: nr-flicker 6.5s infinite steps(1, end);
+}
+
+.music-card-note {
+  max-width: 52ch;
+  margin: 12px 0 22px;
+  font-size: 15.5px;
+  line-height: 1.9;
+  color: var(--nr-mut);
+}
+
+/* 加载中/加载失败的状态行:等宽小字,和终端小卡片的说明行一个腔调 */
+.music-card-hint {
+  margin: 14px 0 0;
+  color: var(--nr-mut);
+  font-family: var(--nr-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
+/* 播放器本体:套一圈霓虹描边,直角;里面一律不描 text-shadow */
+.music-card .aplayer {
+  border: 1px solid var(--nr-neon-2);
+  text-shadow: none;
+}
+
+/* 封面上的播放键保持 APlayer 原生的白色描边(压在任何封面上都看得见),
+   只在外圈补一层霓虹辉光 —— 按钮上没有文字,光晕糊不到东西 */
+.music-card .aplayer .aplayer-pic .aplayer-button {
+  box-shadow: 0 0 16px var(--nr-neon-2);
+}
+
+.music-card .aplayer .aplayer-pic .aplayer-button:hover {
+  box-shadow: 0 0 24px var(--nr-neon);
+}
+
+/* 播放器内部提示条(音频加载失败等):APlayer 写死了浅色底,这里接回主题色 */
+.music-card .aplayer .aplayer-notice {
+  border: 1px solid var(--nr-neon-2);
+  border-radius: 0;
+  background: var(--music-bg);
+  color: var(--music-ink);
+}
+
+/* 降低动效偏好:关掉标题方点的闪烁 */
+@media (prefers-reduced-motion: reduce) {
+  .music-card-title::before {
+    animation: none;
+  }
+}

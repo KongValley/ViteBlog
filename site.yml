@@ -51,3 +51,18 @@ social:
   - name: Bilibili
     handle: Choooiiiiii
     url: https://space.bilibili.com/26600138
+
+# ============================================================
+#  「关于本站」页的音乐卡片(QQ 音乐 / 网易云等,走 Meting 接口)
+#  填了 id 才显示;整段删掉则关于页不出现音乐卡片
+# ============================================================
+
+music:
+  # 平台:tencent(QQ音乐)/ netease(网易云)/ kugou / kuwo / baidu
+  server: tencent
+  # 歌曲 ID:QQ 音乐歌曲页 https://y.qq.com/n/ryqq_v2/songDetail/003qYzA508Z2yF
+  #         里 songDetail/ 后面那串就是(只支持单曲)
+  id: 003qYzA508Z2yF
+  # Meting 接口地址,:server / :type / :id 三个占位符必须保留,会被自动替换
+  # 公共实例偶尔会挂;想稳一点可以按 https://github.com/metowolf/Meting-API 自建后改这里
+  api: https://api.injahow.cn/meting/?server=:server&type=:type&id=:id

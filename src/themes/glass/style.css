@@ -1464,3 +1464,108 @@ body::after {
   border: 1px solid var(--gl-glass-border);
   border-radius: 24px;
 }
+
+/* ---------- 关于页:音乐卡片(毛玻璃卡 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-card {
+  /* APlayer 适配变量(见 src/components/MusicCard.css)。glass 主题只有 --gl-* 一套
+     变量,没有 --surface / --ink / --muted / --line / --red,所以这里必须逐条映射,
+     否则播放器会退回 APlayer 写死的浅色值,深色模式下标题与图标会直接糊掉。
+     播放器底色没有照搬卡片的 0.55 毛玻璃,而是压上一层 0.9 的白:背后是流动的
+     渐变光斑,播放器跟着一起透的话,APlayer 的文字与进度槽对比度会随光斑位置漂移,
+     压到近实心之后,浅色下 --gl-ink 的对比度稳定在 12:1 以上 */
+  --music-bg: rgba(255, 255, 255, 0.9);
+  --music-ink: var(--gl-ink);
+  --music-muted: var(--gl-mut);
+  --music-line: var(--gl-chip-border);
+  --music-accent: var(--gl-accent);
+  --music-radius: 18px;
+  --music-font: var(--gl-sans);
+  margin-top: 40px;
+  padding: 26px 28px;
+  border: 1px solid var(--gl-glass-border);
+  border-radius: 26px;
+  background: var(--gl-glass);
+  box-shadow: var(--gl-shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+/* 深色:卡片只剩 0.06 白的玻璃,播放器换成 0.94 的深靛蓝实底(同代码块的做法),
+   浅色文字与进度槽在霓虹光斑上同样稳定 —— --gl-ink 约 15:1,--gl-mut 约 6:1 */
+[data-theme="dark"] .music-card {
+  --music-bg: rgba(18, 21, 44, 0.94);
+}
+
+.music-card-title {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--gl-ink);
+}
+
+.music-card-note {
+  max-width: 52ch;
+  margin: 12px 0 22px;
+  font-size: 15.5px;
+  line-height: 1.95;
+  color: var(--gl-mut);
+}
+
+.music-card-hint {
+  margin: 18px 0 0;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--gl-mut);
+}
+
+/* 播放器面板:描边和胶囊 / 标签共用 --gl-chip-border —— 浅色模式下白描边压在
+   近白的底上看不见,靛蓝描边两种模式都能勾出面板边界 */
+.music-card .aplayer {
+  border: 1px solid var(--gl-chip-border);
+}
+
+/* 进度槽与进度条:加高到 6px 并改成胶囊型(主题里的按钮 / 标签一律 999px),
+   默认 2px 的细线在光斑上太弱;进度条本身的配色由 APlayer 按 --music-accent 上 */
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar,
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-loaded,
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played {
+  height: 6px;
+  border-radius: 999px;
+}
+
+/* 进度圆点:默认那套是按 2px 槽位算的,放到 6px 槽上会偏上,这里重新对齐;
+   外加一圈主题淡色柔光,悬停在近白底 / 深靛底上都看得见 */
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played
+  .aplayer-thumb {
+  right: 0;
+  width: 12px;
+  height: 12px;
+  margin-top: -3px;
+  margin-right: -6px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--gl-chip-bg);
+}

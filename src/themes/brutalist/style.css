@@ -1445,3 +1445,149 @@ a.tag:hover {
   border: 2px solid var(--br-ink);
   box-shadow: 3px 3px 0 var(--br-ink);
 }
+
+/* ---------- 关于页:音乐卡片(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+.music-card {
+  /* APlayer 适配变量(见 src/components/MusicCard.css):本主题的底色/文字/线条
+     直接从 --br-* 取,深色模式下那几个变量整体翻转,播放器不用另写一份覆盖;
+     --music-accent 用撞色红 —— 它在 #ffffff 和 #1c1c1c 上都有足够对比,
+     不像黄/粉那样压到白底就发飘 */
+  --music-bg: var(--br-card);
+  --music-ink: var(--br-ink);
+  --music-muted: var(--br-mut);
+  --music-line: var(--br-ink);
+  --music-accent: var(--br-red);
+  --music-radius: 0;
+  --music-font: var(--br-mono);
+  margin-top: 44px;
+  padding: 24px 26px;
+  border: var(--br-border);
+  background: var(--br-card);
+  box-shadow: var(--br-shadow);
+}
+
+.music-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--br-ink);
+}
+
+/* 标题前的方块:和关于页正文里的 h2 用同一个记号 */
+.music-card-title::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  flex: none;
+  background: var(--br-pink);
+  border: 2px solid var(--br-ink);
+}
+
+.music-card-note {
+  max-width: 52ch;
+  margin: 0 0 22px;
+  font-family: var(--br-mono);
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--br-mut);
+}
+
+/* 加载中 / 失败提示:直接做成一条硬边框小色条 */
+.music-card-hint {
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  border: 2px solid var(--br-ink);
+  background: var(--br-bg);
+  font-family: var(--br-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--br-mut);
+}
+
+/* 播放器本体:和卡片一样套一圈硬边框 + 实心偏移阴影,内部配色交给 --music-* */
+.music-card .aplayer {
+  border: var(--br-border);
+  box-shadow: 3px 3px 0 var(--br-ink);
+}
+
+/* 播放列表外框:APlayer 写死的 1px 浅灰改成主题硬线 */
+.music-card .aplayer .aplayer-list {
+  border-color: var(--br-ink);
+}
+
+/* 列表整行:hover 与「正在播放」行 —— 这里铺的是主题黄,而黄底不随深浅色翻转,
+   所以行内的文字变量一起压深,免得深色模式下翻成米白的文字落在黄底上读不清 */
+.music-card .aplayer .aplayer-list ol li:hover,
+.music-card .aplayer .aplayer-list ol li.aplayer-list-light {
+  --music-ink: #0a0a0a;
+  --music-muted: #4a4120;
+  background: var(--br-yellow);
+}
+
+/* 封面上的播放键:圆键改方键,柔和投影换成实心偏移 */
+.music-card .aplayer .aplayer-pic .aplayer-button {
+  border-radius: 0;
+  box-shadow: 3px 3px 0 var(--br-ink);
+}
+
+/* 进度条加厚到 6px(槽、已缓冲、已播放三段一起加,不然细线会浮在粗槽顶部) */
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar,
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-loaded,
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played {
+  height: 6px;
+}
+
+/* 拖动块 / 音量槽 / 列表滚动条:圆角一律削平 */
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played
+  .aplayer-thumb,
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-volume-wrap
+  .aplayer-volume-bar-wrap
+  .aplayer-volume-bar,
+.music-card .aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
+  border-radius: 0;
+}
+
+/* 拖动块跟着加粗的进度条重新居中(默认 -4px 是按 2px 槽算的) */
+.music-card
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar
+  .aplayer-played
+  .aplayer-thumb {
+  width: 10px;
+  height: 10px;
+  margin-top: -2px;
+}

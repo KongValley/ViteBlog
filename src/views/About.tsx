@@ -1,6 +1,10 @@
+import { lazy, Suspense } from 'react';
 import PlayerScreen from '../components/PlayerScreen';
 import { SocialIcon } from '../components/SocialIcon';
 import { type SocialLink, site } from '../data/site';
+
+// 音乐播放器(APlayer)只在关于页用得到,单独切一个 chunk,别让首页替它买单
+const MusicCard = lazy(() => import('../components/MusicCard'));
 
 // 终端风格小卡片(仿 open source 项目卡)
 function TerminalCard() {
@@ -108,6 +112,16 @@ export default function About() {
           改一个字段就能换掉整套风格, 构建时只会打包选中的那一套。
         </p>
       </div>
+      <Suspense
+        fallback={
+          <section className="music-card">
+            <h2 className="music-card-title">正在听</h2>
+            <p className="music-card-hint">音乐加载中…</p>
+          </section>
+        }
+      >
+        <MusicCard />
+      </Suspense>
       <ContactCard />
     </section>
   );

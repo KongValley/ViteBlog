@@ -1526,3 +1526,90 @@ a.tag:hover {
   object-fit: cover;
   border: 1px solid var(--sw-line-strong);
 }
+
+/* ---------- 关于页:音乐卡片(Meting 接口 + APlayer,配置见 site.yml 的 music) ---------- */
+/* 卡片沿用瑞士风的画框语言:1px 硬边线、无圆角,标题配红色方点。
+   APlayer 不认 --sw-* 这套变量名,所以在卡片上显式映射适配层读的 --music-*
+   (见 src/components/MusicCard.css)。映射成 var(--sw-*) 之后,深色模式里
+   [data-theme="dark"] 对 --sw-* 的翻转会顺着继承一起传到播放器,
+   不用再为播放器单独写一份深色覆盖;APlayer 的进度条与滑块还会把这里的
+   --music-accent 读成内联 theme 色,两种模式下都是本主题自己的红 */
+.music-card {
+  --music-bg: var(
+    --sw-surface
+  ); /* 播放器底色:浅色 #f4f4f4 / 深色 #161616,比页面底色各浅一档 */
+  --music-ink: var(
+    --sw-ink
+  ); /* 曲名:浅色黑字 / 深色白字,始终压在 --music-bg 上 */
+  --music-muted: var(--sw-mut); /* 作者、时长、图标:次要灰 */
+  --music-line: var(--sw-line); /* 列表分割线、滚动条、悬停底色 */
+  --music-active: var(--sw-line); /* 播放列表当前行底色 */
+  --music-accent: var(
+    --sw-red
+  ); /* 进度条与图标 hover:浅色 #e0281e / 深色 #ff453a */
+  --music-radius: 0; /* 瑞士风没有圆角 */
+  --music-font: var(--sw-mono); /* 等宽,和标签、终端小卡片同一套字 */
+  margin-top: 46px;
+  padding: 30px 32px 28px;
+  border: 1px solid var(--sw-line-strong);
+}
+
+.music-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  font-family: var(--sw-disp);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--sw-ink);
+}
+
+.music-card-title::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  flex: none;
+  background: var(--sw-red);
+}
+
+.music-card-note {
+  max-width: 52ch;
+  margin: 0 0 24px;
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--sw-mut);
+}
+
+.music-card-hint {
+  margin: 18px 0 0;
+  font-family: var(--sw-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--sw-mut);
+}
+
+/* 播放器本体:再套一圈硬边线,和卡片凑成双层画框(底色交给 --music-bg) */
+.music-card .aplayer {
+  border: 1px solid var(--sw-line-strong);
+}
+
+/* 进度槽:默认的浅灰在两种播放器底色上都太糊,换成主题的硬边线色
+   (浅色黑线 / 深色白线),未播放段才是瑞士风的一根硬线;适配层那条规则
+   同为 6 个 class 且先于本文件打包,故多带一层 .music-card-body 压过它 */
+.music-card
+  .music-card-body
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-bar-wrap
+  .aplayer-bar {
+  background: var(--sw-line-strong);
+}
+
+/* 封面上的播放键:瑞士风的红色方点(全局已禁用圆角,这里只换底色) */
+.music-card .aplayer .aplayer-pic .aplayer-button {
+  background: var(--sw-red);
+  opacity: 1;
+}
