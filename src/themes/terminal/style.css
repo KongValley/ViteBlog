@@ -1377,3 +1377,97 @@ body::after {
     animation: none;
   }
 }
+
+/* ---------- 关于页:联系卡片(终端面板,数据来自 site.yml) ---------- */
+.contact-card {
+  margin-top: 40px;
+  padding: 20px 22px;
+  border: 1px solid var(--tm-line);
+  border-radius: 6px;
+  background: var(--tm-panel);
+  font-family: var(--tm-mono);
+}
+
+.contact-title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tm-green);
+}
+
+.contact-title::before {
+  content: "$ ";
+  color: var(--tm-green-dim);
+}
+
+.contact-note {
+  max-width: 56ch;
+  margin: 10px 0 20px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--tm-mut);
+}
+
+.contact-mail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--tm-line);
+}
+
+.contact-email {
+  font-size: clamp(18px, 2.2vw, 24px);
+  color: var(--tm-cyan);
+  word-break: break-all;
+}
+
+.contact-copy {
+  padding: 6px 14px;
+  border: 1px solid var(--tm-green-dim);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--tm-green);
+  font-family: var(--tm-mono);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.contact-copy:hover {
+  background: var(--tm-green);
+  color: var(--tm-bg);
+}
+
+.contact-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 1px solid var(--tm-line);
+  border-radius: 4px;
+  color: var(--tm-text);
+  font-size: 13.5px;
+}
+
+.contact-pill:hover {
+  border-color: var(--tm-green);
+  color: var(--tm-green);
+  text-decoration: none;
+}
+
+.contact-pill-handle {
+  color: var(--tm-mut);
+}
+
+.contact-pill:hover .contact-pill-handle {
+  color: var(--tm-green-dim);
+}

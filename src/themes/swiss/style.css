@@ -1229,6 +1229,122 @@ a.tag:hover {
   color: var(--sw-mut);
 }
 
+/* 联系卡片:邮箱 + 社交账号(数据来自 site.yml,留空则整块不渲染) */
+.contact-card {
+  margin-top: 46px;
+  padding: 30px 32px 28px;
+  border: 1px solid var(--sw-line-strong);
+}
+
+.contact-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  font-family: var(--sw-disp);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--sw-ink);
+}
+
+.contact-title::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  flex: none;
+  background: var(--sw-red);
+}
+
+.contact-note {
+  max-width: 52ch;
+  margin: 0 0 24px;
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--sw-mut);
+}
+
+.contact-mail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--sw-line);
+}
+
+.contact-email {
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--sw-red);
+  font-family: var(--sw-disp);
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--sw-ink);
+  word-break: break-all;
+}
+
+.contact-copy {
+  padding: 7px 14px;
+  border: 1px solid var(--sw-line-strong);
+  background: transparent;
+  color: var(--sw-ink);
+  font-family: var(--sw-mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background 0.06s linear,
+    border-color 0.06s linear,
+    color 0.06s linear;
+}
+
+.contact-copy:hover {
+  border-color: var(--sw-red);
+  background: var(--sw-red);
+  color: #fff;
+}
+
+.contact-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  padding: 7px 14px;
+  border: 1px solid var(--sw-line-strong);
+  color: var(--sw-ink);
+  font-family: var(--sw-mono);
+  font-size: 13.5px;
+  transition:
+    background 0.06s linear,
+    color 0.06s linear;
+}
+
+.contact-pill:hover {
+  background: var(--sw-ink);
+  color: var(--sw-inv-ink);
+  text-decoration: none;
+}
+
+.contact-pill-name {
+  font-weight: 500;
+}
+
+.contact-pill-handle {
+  color: var(--sw-mut);
+}
+
+.contact-pill:hover .contact-pill-handle {
+  color: var(--sw-inv-mut);
+}
+
 /* 终端小卡片 → 瑞士风黑色块(深色模式下反转为白色块) */
 .terminal-card {
   max-width: none;

@@ -1548,3 +1548,97 @@ a.tag:active {
 [data-theme="dark"] .tag-count {
   color: #1a1c2c;
 }
+
+/* ---------- 关于页:联系卡片(配色跟随主题,数据来自 site.yml) ---------- */
+.contact-card {
+  margin-top: 40px;
+  padding: 20px 24px;
+  border: 3px solid var(--line);
+  border-radius: 10px !important;
+  background: var(--surface);
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+
+.contact-title {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink-strong);
+}
+
+.contact-note {
+  max-width: 52ch;
+  margin: 10px 0 20px;
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--muted);
+}
+
+.contact-mail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 3px dashed var(--line);
+}
+
+.contact-email {
+  font-family: var(--font-code);
+  font-size: clamp(20px, 2.4vw, 26px);
+  color: var(--red);
+  word-break: break-all;
+}
+
+.contact-copy {
+  padding: 6px 14px;
+  border: 3px solid var(--line);
+  border-radius: 6px !important;
+  background: var(--bg);
+  color: var(--ink-strong);
+  font-family: var(--font-code);
+  font-size: 14px;
+  box-shadow: 3px 3px 0 var(--shadow);
+  cursor: pointer;
+}
+
+.contact-copy:hover {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+}
+
+.contact-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 3px solid var(--line);
+  border-radius: 6px !important;
+  background: var(--bg);
+  color: var(--ink-strong);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+}
+
+.contact-pill:hover {
+  background: var(--ink);
+  color: var(--bg);
+  text-decoration: none;
+}
+
+.contact-pill-handle {
+  color: var(--muted);
+}
+
+.contact-pill:hover .contact-pill-handle {
+  color: var(--bg);
+}

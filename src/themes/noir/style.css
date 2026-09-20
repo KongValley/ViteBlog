@@ -1462,3 +1462,104 @@ a {
     animation: none;
   }
 }
+
+/* ---------- 关于页:联系卡片(霓虹描边面板,数据来自 site.yml) ---------- */
+.contact-card {
+  margin-top: 44px;
+  padding: 24px 26px;
+  border: 1px solid var(--nr-line);
+  background: var(--nr-panel);
+}
+
+.contact-title {
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--nr-display);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--nr-ink);
+}
+
+.contact-title::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  flex: none;
+  background: var(--nr-neon);
+  box-shadow: 0 0 10px var(--nr-neon);
+}
+
+.contact-note {
+  max-width: 52ch;
+  margin: 12px 0 22px;
+  font-size: 15.5px;
+  line-height: 1.9;
+  color: var(--nr-mut);
+}
+
+.contact-mail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--nr-line);
+}
+
+.contact-email {
+  font-family: var(--nr-display);
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 800;
+  color: var(--nr-neon);
+  word-break: break-all;
+}
+
+.contact-copy {
+  padding: 9px 17px;
+  border: 1px solid var(--nr-line);
+  background: transparent;
+  color: var(--nr-neon);
+  font-family: var(--nr-mono);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.contact-copy:hover {
+  border-color: var(--nr-neon);
+}
+
+.contact-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  padding: 9px 17px;
+  border: 1px solid var(--nr-line);
+  color: var(--nr-ink);
+  font-family: var(--nr-mono);
+  font-size: 13.5px;
+}
+
+.contact-pill:hover {
+  border-color: var(--nr-neon-2);
+  color: var(--nr-neon-2);
+  text-decoration: none;
+}
+
+.contact-pill-handle {
+  color: var(--nr-mut);
+}
+
+.contact-pill:hover .contact-pill-handle {
+  color: var(--nr-neon-2);
+}

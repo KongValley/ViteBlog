@@ -17,6 +17,13 @@ export const THEME_NAMES = [
 ] as const;
 export type ThemeName = (typeof THEME_NAMES)[number];
 
+// 社交账号(「关于本站」页的联系卡片用)
+export interface SocialLink {
+  name: string;
+  handle: string;
+  url: string;
+}
+
 export interface Site {
   name: string;
   tagline: string;
@@ -26,6 +33,8 @@ export interface Site {
   githubUser: string;
   avatar: string;
   theme: ThemeName;
+  email: string;
+  social: SocialLink[];
 }
 
 const defaults: Site = {
@@ -37,6 +46,8 @@ const defaults: Site = {
   githubUser: '',
   avatar: '',
   theme: 'pixel',
+  email: '',
+  social: [],
 };
 
 // yml 里写错主题名时兜底回像素风(vite 插件在构建期也会给出明确报错)
@@ -47,10 +58,28 @@ function normalizeTheme(raw: unknown): ThemeName {
     : 'pixel';
 }
 
+// yml 里的社交账号列表:丢掉 name 或 url 没填的项,顺序即展示顺序
+function normalizeSocial(raw: unknown): SocialLink[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter(
+      (item): item is Record<string, unknown> =>
+        typeof item === 'object' && item !== null,
+    )
+    .map((item) => ({
+      name: typeof item.name === 'string' ? item.name.trim() : '',
+      handle: typeof item.handle === 'string' ? item.handle.trim() : '',
+      url: typeof item.url === 'string' ? item.url.trim() : '',
+    }))
+    .filter((item) => item.name !== '' && item.url !== '');
+}
+
 export const site: Site = {
   ...defaults,
   ...config,
   theme: normalizeTheme(config.theme),
+  email: typeof config.email === 'string' ? config.email.trim() : '',
+  social: normalizeSocial(config.social),
 };
 
 // 未配置仓库地址时,用 GitHub 用户名拼一个
