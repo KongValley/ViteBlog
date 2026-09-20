@@ -445,7 +445,7 @@ export function PixelIcon({ name }: PixelIconProps) {
         aria-hidden="true"
       >
         <image
-          href={`${import.meta.env.BASE_URL}icons/stickers/${stickerName}.svg`}
+          href={`${import.meta.env.BASE_URL}icons/stickers/${stickerName}.svg?v=2`}
           x={0}
           y={0}
           width={24}
