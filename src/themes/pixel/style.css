@@ -1602,9 +1602,9 @@ a.tag:active {
 }
 
 /* 联系卡片左右布局:内容居左,头像区居右(窄屏时头像区换行,屏幕跟着居中)
-   卡片宽度跟着内容走,不撑满整页宽度:文字列就是 note 的 52ch 上限(390px),
-   屏幕 154px + 中间 24px + 两侧内边距 —— 一旦撑满,多出来的空间
-   只能摊到屏幕两侧变成死白(屏幕左右各空过约 70px) */
+   先按内容收缩(文字列就是 note 的 52ch 上限 390px,屏幕 154px + 中间 24px
+   + 两侧内边距),再像上面的终端小卡片那样居中 —— 撑满整页宽度的话,
+   多出来的空间只能摊到屏幕两侧变成死白(屏幕左右各空过约 70px) */
 .contact-card {
   display: flex;
   flex-wrap: wrap;
@@ -1612,6 +1612,7 @@ a.tag:active {
   gap: 24px;
   width: fit-content;
   max-width: 100%;
+  margin-inline: auto;
 }
 
 .contact-main {
