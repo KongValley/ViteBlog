@@ -71,7 +71,6 @@ export const stickerIcons = [
   'sticker-r06-c01',
   'sticker-r06-c02',
   'sticker-r06-c03',
-  'sticker-r06-c04',
   'sticker-r06-c05',
   'sticker-r06-c06',
   'sticker-r06-c07',
