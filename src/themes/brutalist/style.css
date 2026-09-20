@@ -1471,3 +1471,25 @@ a.tag:hover {
 .contact-pill:hover .contact-pill-handle {
   color: var(--br-ink);
 }
+
+/* 联系卡片左右布局:内容居左,头像居右(窄屏时头像换行) */
+.contact-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+.contact-main {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.contact-avatar {
+  width: 96px;
+  height: 96px;
+  flex: none;
+  object-fit: cover;
+  border: 2px solid var(--br-ink);
+  box-shadow: 3px 3px 0 var(--br-ink);
+}

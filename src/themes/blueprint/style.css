@@ -1460,3 +1460,24 @@ a {
 .contact-pill-handle {
   color: var(--bp-mut);
 }
+
+/* 联系卡片左右布局:内容居左,头像居右(窄屏时头像换行) */
+.contact-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+.contact-main {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.contact-avatar {
+  width: 88px;
+  height: 88px;
+  flex: none;
+  object-fit: cover;
+  border: 1px solid var(--bp-line-2);
+}

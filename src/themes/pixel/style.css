@@ -1609,3 +1609,27 @@ a.tag:active {
 .contact-pill:hover .contact-pill-handle {
   color: var(--bg);
 }
+
+/* 联系卡片左右布局:内容居左,头像居右(窄屏时头像换行) */
+.contact-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+.contact-main {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.contact-avatar {
+  width: 96px;
+  height: 96px;
+  flex: none;
+  object-fit: cover;
+  border: 3px solid var(--line);
+  border-radius: 6px !important;
+  box-shadow: 3px 3px 0 var(--shadow);
+  image-rendering: pixelated;
+}

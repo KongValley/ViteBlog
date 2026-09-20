@@ -50,28 +50,39 @@ function ContactCard() {
 
   return (
     <section className="contact-card">
-      <h2 className="contact-title">来聊聊吧</h2>
-      <p className="contact-note">
-        文章里的错误、想讨论的技术问题,或者只是想打个招呼,都欢迎来找我。
-      </p>
+      <div className="contact-main">
+        <h2 className="contact-title">来聊聊吧</h2>
+        <p className="contact-note">
+          文章里的错误、想讨论的技术问题,或者只是想打个招呼,都欢迎来找我。
+        </p>
 
-      <div className="contact-social">
-        {socials.map((link) => (
-          <a
-            key={link.name}
-            className="contact-pill"
-            href={link.url}
-            target="_blank"
-            rel="noopener"
-          >
-            <SocialIcon name={link.name} url={link.url} />
-            <span className="contact-pill-name">{link.name}</span>
-            {link.handle && (
-              <span className="contact-pill-handle">{link.handle}</span>
-            )}
-          </a>
-        ))}
+        <div className="contact-social">
+          {socials.map((link) => (
+            <a
+              key={link.name}
+              className="contact-pill"
+              href={link.url}
+              target="_blank"
+              rel="noopener"
+            >
+              <SocialIcon name={link.name} url={link.url} />
+              <span className="contact-pill-name">{link.name}</span>
+              {link.handle && (
+                <span className="contact-pill-handle">{link.handle}</span>
+              )}
+            </a>
+          ))}
+        </div>
       </div>
+
+      {site.avatar && (
+        <img
+          className="contact-avatar"
+          src={site.avatar}
+          alt={site.author}
+          loading="lazy"
+        />
+      )}
     </section>
   );
 }
