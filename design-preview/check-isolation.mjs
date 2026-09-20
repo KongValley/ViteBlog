@@ -11,8 +11,10 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 
-// 每套主题的"指纹"选择器 + 变量前缀
+// 每套主题的"指纹":两个只出现在该主题样式里的字符串
+// (多数主题用「类名 + 变量前缀」,pixel 的变量不带前缀,改用专有字体名与变量名)
 const FINGERPRINTS = {
+  pixel: ['--surface:', 'Fusion Pixel'],
   brutalist: ['.br-post', '--br-'],
   bento: ['.be-kicker', '--be-'],
   terminal: ['.tm-log-row', '--tm-'],
@@ -95,17 +97,30 @@ for (const theme of THEME_LIST) {
   );
 }
 
-// ---- 2. 当前 dist(默认主题)不混入任何新主题 ----
+// ---- 2. 当前 dist(即 site.yml 选中的主题)不混入其它主题 ----
+const siteYml = existsSync(join(ROOT, 'site.yml'))
+  ? readFileSync(join(ROOT, 'site.yml'), 'utf8')
+  : '';
+const selected = (siteYml.match(/^theme:\s*([^\s#]+)/m)?.[1] ?? '').trim();
 const dist = readDirAssets(join(ROOT, 'dist'));
-console.log('\n[dist 当前构建]');
+console.log(`\n[dist 当前构建 · site.yml 选中「${selected || '未知'}」]`);
 if (!dist) {
   console.log('   ✗ 缺少 dist(先 npm run build)');
   failed += 1;
 } else {
   for (const theme of THEME_LIST) {
+    if (theme === selected) continue; // 选中的那套本来就该出现在 dist 里
     const [cls, varPrefix] = FINGERPRINTS[theme];
     const leaked = dist.css.includes(cls) || dist.css.includes(varPrefix);
     check(!leaked, `未混入「${theme}」的样式`);
+  }
+  // 正向确认:选中的主题确实被打进去了
+  const own = FINGERPRINTS[selected];
+  if (own) {
+    check(
+      dist.css.includes(own[0]) && dist.css.includes(own[1]),
+      `确实包含选中的「${selected}」样式`,
+    );
   }
 }
 

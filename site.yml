@@ -19,7 +19,7 @@ name: ViteBlog
 #   blueprint 工程蓝图(坐标网格、尺寸标注、等距线框、图签栏)
 #   noir      暗夜霓虹(纯黑底、品红霓虹描边、招牌闪烁)
 # 改完保存:本地开发自动热更新;push 到 GitHub 后自动重新部署
-theme: pixel
+theme: blueprint
 
 # 一句话简介(首页标题下方 + 页脚显示)
 tagline: 记录学习与生活
