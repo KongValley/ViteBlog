@@ -1610,7 +1610,7 @@ a.tag:active {
   color: var(--bg);
 }
 
-/* 联系卡片左右布局:内容居左,头像居右(窄屏时头像换行) */
+/* 联系卡片左右布局:内容居左,头像区居右(窄屏时头像区换行,屏幕跟着居中) */
 .contact-card {
   display: flex;
   flex-wrap: wrap;
@@ -1623,13 +1623,14 @@ a.tag:active {
   min-width: 0;
 }
 
-.contact-avatar {
-  width: 96px;
-  height: 96px;
-  flex: none;
-  object-fit: cover;
-  border: 3px solid var(--line);
-  border-radius: 6px !important;
-  box-shadow: 3px 3px 0 var(--shadow);
-  image-rendering: pixelated;
+/* 关于页联系卡片:右侧头像区
+   像素主题直接把首页那块掌机屏幕(gb-screen)搬过来,
+   这块区域固定 300px,屏幕在区域里水平居中(垂直由卡片的 align-items 居中);
+   margin: 0 auto 只在窄屏换行、这一行只剩它自己时才生效 —— 那时把它推到卡片中间,
+   和文字同一行时空间都被文字区(flex-grow)吃掉,自动外边距为 0,不会把屏幕顶到右边 */
+.contact-screen {
+  flex: 0 1 300px;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
 }

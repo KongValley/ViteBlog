@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PlayerScreen from '../components/PlayerScreen';
 import { SocialIcon } from '../components/SocialIcon';
 import { type SocialLink, site } from '../data/site';
 
@@ -75,14 +76,21 @@ function ContactCard() {
         </div>
       </div>
 
-      {site.avatar && (
-        <img
-          className="contact-avatar"
-          src={site.avatar}
-          alt={site.author}
-          loading="lazy"
-        />
-      )}
+      {/* 头像区:像素主题直接复用首页那块掌机屏幕(在区域内居中),
+          其余主题仍用普通头像图,各自的主题 CSS 已按自己的设计语言写好 */}
+      {site.avatar &&
+        (site.theme === 'pixel' ? (
+          <div className="contact-screen">
+            <PlayerScreen />
+          </div>
+        ) : (
+          <img
+            className="contact-avatar"
+            src={site.avatar}
+            alt={site.author}
+            loading="lazy"
+          />
+        ))}
     </section>
   );
 }
