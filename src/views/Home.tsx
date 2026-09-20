@@ -3,9 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import { posts } from '../data/posts';
 import { site } from '../data/site';
 import BentoHome from './home/BentoHome';
+import BlueprintHome from './home/BlueprintHome';
 import BrutalistHome from './home/BrutalistHome';
 import EditorialHome from './home/EditorialHome';
 import GlassHome from './home/GlassHome';
+import MaHome from './home/MaHome';
+import NoirHome from './home/NoirHome';
 import PixelHome from './home/PixelHome';
 import SwissHome from './home/SwissHome';
 import { type HomeData, PAGE_SIZE } from './home/shared';
@@ -83,5 +86,8 @@ export default function Home() {
   if (site.theme === 'bento') return <BentoHome {...data} />;
   if (site.theme === 'terminal') return <TerminalHome {...data} />;
   if (site.theme === 'glass') return <GlassHome {...data} />;
+  if (site.theme === 'ma') return <MaHome {...data} />;
+  if (site.theme === 'blueprint') return <BlueprintHome {...data} />;
+  if (site.theme === 'noir') return <NoirHome {...data} />;
   return <PixelHome {...data} />;
 }

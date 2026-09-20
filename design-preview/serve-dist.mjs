@@ -36,6 +36,9 @@ const VARIANTS = [
   ['bento', 4192],
   ['terminal', 4193],
   ['glass', 4194],
+  ['ma', 4195],
+  ['blueprint', 4196],
+  ['noir', 4197],
 ];
 
 for (const [theme, port] of VARIANTS) {

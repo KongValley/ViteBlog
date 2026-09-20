@@ -11,6 +11,9 @@ export const THEME_NAMES = [
   'bento',
   'terminal',
   'glass',
+  'ma',
+  'blueprint',
+  'noir',
 ] as const;
 export type ThemeName = (typeof THEME_NAMES)[number];
 

@@ -63,10 +63,10 @@ avatar: https://github.com/KongValley.png?size=60 # 头像(可省略,默认 GitH
 
 ## 主题
 
-站点内置七套**完全独立**的主题,通过根目录 `site.yml` 里的 `theme` 字段指定(本地改完自动热更新,push 后自动重新部署):
+站点内置十套**完全独立**的主题,通过根目录 `site.yml` 里的 `theme` 字段指定(本地改完自动热更新,push 后自动重新部署):
 
 ```yaml
-theme: pixel   # 七选一:pixel / swiss / editorial / brutalist / bento / terminal / glass
+theme: pixel   # 十选一:pixel / swiss / editorial / brutalist / bento / terminal / glass / ma / blueprint / noir
 ```
 
 | theme | 风格 |
@@ -78,9 +78,12 @@ theme: pixel   # 七选一:pixel / swiss / editorial / brutalist / bento / termi
 | `bento` | Bento 便当格:六栏卡片矩阵、特性大卡与数据小格混排 |
 | `terminal` | 终端 CLI:命令提示符、git log 文章列表、neofetch 面板、vim 状态栏 |
 | `glass` | 玻璃拟态:渐变光斑背景、毛玻璃卡片、悬浮胶囊导航 |
+| `ma` | 日式极简「间」:和纸底、明朝体大标题、竖排落款、朱印、首行缩进 |
+| `blueprint` | 工程蓝图:坐标网格、尺寸标注线、等距线框插图、右下角图签栏 |
+| `noir` | 暗夜霓虹:纯黑底、品红霓虹描边字、招牌闪烁、点唱机式列表 |
 
-七套主题在 `src/themes/<名字>/` 下各自独立(样式 + 字体 + 入口),**构建时只会打包被选中的那一套**,
-互不混装;首页结构也按主题区分(`src/views/home/` 下的七个组件,由 `src/views/Home.tsx` 按 `theme` 调度)。
+十套主题在 `src/themes/<名字>/` 下各自独立(样式 + 字体 + 入口),**构建时只会打包被选中的那一套**,
+互不混装;首页结构也按主题区分(`src/views/home/` 下的十个组件,由 `src/views/Home.tsx` 按 `theme` 调度)。
 每个主题的 `index.ts` 是入口,经 vite 插件以虚拟模块 `virtual:site-theme` 注入到 `src/main.tsx`。
 
 ```
@@ -91,23 +94,27 @@ src/themes/brutalist/   style.css + fonts.ts(同上)
 src/themes/bento/       style.css + fonts.ts(同上)
 src/themes/terminal/    style.css + fonts.ts(同上)
 src/themes/glass/       style.css + fonts.ts(同上)
+src/themes/ma/          style.css + fonts.ts(同上)
+src/themes/blueprint/   style.css + fonts.ts(同上)
+src/themes/noir/        style.css + fonts.ts(同上)
 ```
 
-明暗模式七套主题都支持,右上角按钮在昼夜之间切换。想换主题时只改 `site.yml` 一行即可。
+明暗模式十套主题都支持,右上角按钮在昼夜之间切换。想换主题时只改 `site.yml` 一行即可。
 
 新增一套主题:在 `src/themes/<名字>/` 放 `index.ts`(引入 `style.css`,字体大就拆到 `fonts.ts` 里异步加载),
 写一个 `src/views/home/<名字>Home.tsx`,再把名字加进 `vite.config.ts` 的 `THEMES` 和 `src/data/site.ts` 的 `THEME_NAMES`。
 
 ## 设计稿
 
-`design-preview/` 里留有选型阶段的设计 Demo(十一套风格 + 选型总览页),仅作参考,
+`design-preview/` 里留有选型阶段的设计 Demo(十六套风格 + 选型总览页),仅作参考,
 不参与构建;不需要时可整目录删除。本地预览:`node design-preview/serve.mjs`
 
-同目录下还有三个只用于本地验证的小脚本(同样不参与构建):
+同目录下还有几个只用于本地验证的小脚本(同样不参与构建):
 
-- `serve-dist.mjs` — 四套主题的构建产物各占一个端口(4191~4194),按线上子路径 `/ViteBlog/` 提供服务
+- `serve-dist.mjs` — 每套主题的构建产物各占一个端口(4191~4197),按线上子路径 `/ViteBlog/` 提供服务
 - `check-isolation.mjs` — 主题隔离自检:每套构建产物只含自己的样式,不混入其它主题
 - `shoot.mjs` — 无头 Chrome 逐主题逐页面全页截图,并检查控制台有无报错
+- `shoot-demos.mjs` — 给 `design-preview/` 里的选型 Demo 批量全页截图(需先跑 `serve.mjs`)
 
 ## 部署说明
 

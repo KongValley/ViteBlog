@@ -16,6 +16,9 @@ const THEMES = [
   'bento',
   'terminal',
   'glass',
+  'ma',
+  'blueprint',
+  'noir',
 ] as const;
 type Theme = (typeof THEMES)[number];
 

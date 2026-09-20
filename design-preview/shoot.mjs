@@ -22,12 +22,25 @@ const CHROME_PATHS = [
 ];
 
 // 主题 → 预览端口;页面 → URL 后缀
-const THEMES = [
+// 用法:node design-preview/shoot.mjs [主题名…]  —— 不带参数则跑全部
+const ALL_THEMES = [
   ['brutalist', 4191],
   ['bento', 4192],
   ['terminal', 4193],
   ['glass', 4194],
+  ['ma', 4195],
+  ['blueprint', 4196],
+  ['noir', 4197],
 ];
+const wanted = process.argv.slice(2).filter((a) => !a.startsWith('-'));
+const THEMES =
+  wanted.length > 0
+    ? ALL_THEMES.filter(([name]) => wanted.includes(name))
+    : ALL_THEMES;
+if (THEMES.length === 0) {
+  console.error(`没有匹配的主题,可选:${ALL_THEMES.map(([n]) => n).join(' / ')}`);
+  process.exit(1);
+}
 const PAGES = [
   ['home', '/ViteBlog/'],
   ['post', '/ViteBlog/post/hello-vite-blog'],

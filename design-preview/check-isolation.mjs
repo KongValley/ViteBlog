@@ -17,9 +17,23 @@ const FINGERPRINTS = {
   bento: ['.be-kicker', '--be-'],
   terminal: ['.tm-log-row', '--tm-'],
   glass: ['.gl-card', '--gl-'],
+  ma: ['.ma-row', '--ma-'],
+  blueprint: ['.bp-table', '--bp-'],
+  noir: ['.nr-item', '--nr-'],
   swiss: ['.sw-marquee', '--sw-'],
   editorial: ['.ed-row', '--ed-'],
 };
+
+// 逐套核对隔离性的主题(即 src/themes/ 下的独立主题)
+const THEME_LIST = [
+  'brutalist',
+  'bento',
+  'terminal',
+  'glass',
+  'ma',
+  'blueprint',
+  'noir',
+];
 
 function readDirAssets(dir) {
   const assets = join(dir, 'assets');
@@ -47,8 +61,8 @@ const check = (ok, label) => {
   console.log(`   ${ok ? '✓' : '✗'} ${label}`);
 };
 
-// ---- 1. 四套新主题的独立构建 ----
-for (const theme of ['brutalist', 'bento', 'terminal', 'glass']) {
+// ---- 1. 各主题的独立构建 ----
+for (const theme of THEME_LIST) {
   const dir = join(ROOT, 'design-preview', 'out', theme);
   const info = readDirAssets(dir);
   console.log(`\n[${theme}]`);
@@ -88,7 +102,7 @@ if (!dist) {
   console.log('   ✗ 缺少 dist(先 npm run build)');
   failed += 1;
 } else {
-  for (const theme of ['brutalist', 'bento', 'terminal', 'glass']) {
+  for (const theme of THEME_LIST) {
     const [cls, varPrefix] = FINGERPRINTS[theme];
     const leaked = dist.css.includes(cls) || dist.css.includes(varPrefix);
     check(!leaked, `未混入「${theme}」的样式`);
