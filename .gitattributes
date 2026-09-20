@@ -1,0 +1,5 @@
+# 行尾统一为 LF:仓库内容与各平台的工作副本保持一致,也与 biome 格式化要求一致。
+# 背景:Windows 上 core.autocrlf=true 会把检出的文件变成 CRLF,而 biome 的格式化
+# 默认要求 LF,于是 `npm run lint` 在 Windows 工作副本上必然报一堆格式错误。
+# 声明 eol=lf 后,git 在各平台都检出 LF,不再受 core.autocrlf 影响。
+* text=auto eol=lf
