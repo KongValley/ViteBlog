@@ -9,6 +9,7 @@ import MarkdownBody from '../components/MarkdownBody';
 import MobileToc from '../components/MobileToc';
 import ReadingProgress from '../components/ReadingProgress';
 import ShareBar from '../components/ShareBar';
+import { excerptFromMarkdown } from '../data/excerpt';
 import { formatDate } from '../data/format';
 import { renderMarkdown } from '../data/markdown';
 import { usePageMeta } from '../data/pageMeta';
@@ -226,6 +227,7 @@ export default function Post() {
           minutes={post.minutes}
           tags={post.tags}
           cover={post.cover}
+          excerpt={post.excerpt || excerptFromMarkdown(content)}
         />
 
         {related.length > 0 && (

@@ -13,12 +13,18 @@ type Props = {
   tags: string[];
   /** 封面图(可选):有就铺在标题上方,像公众号分享卡;跨域取不到时自动退回无封面版 */
   cover?: string;
+  /** 摘录(可选):标题下面引一段正文,像公众号的摘要 */
+  excerpt?: string;
 };
 
 const WIDTH = 800;
 const BASE_HEIGHT = 1120;
 /** 有封面时封面图占的高度(整幅通栏) */
 const COVER_HEIGHT = 380;
+/** 摘录:字形与行高,最多三行(超了省略号收尾) */
+const EXCERPT_SIZE = 22;
+const EXCERPT_LINE_HEIGHT = 34;
+const EXCERPT_MAX_LINES = 3;
 const PADDING = 56;
 
 // 画海报用的一套颜色:直接读当前主题的 CSS 变量,深浅色自动跟随
@@ -51,7 +57,30 @@ function readPalette(): Palette {
   };
 }
 
-// 按可用宽度把标题切成若干行(中文逐字、英文按词,简单但够用)
+/**
+ * 没有空格的超长词(分享图上的网址、长哈希)按字符切成能放下的块。
+ * 不切的话它在下面会被当成一个塞不进的 token 整段画出去,直接画到卡片外面。
+ */
+function splitByWidth(
+  ctx: CanvasRenderingContext2D,
+  token: string,
+  maxWidth: number,
+): string[] {
+  const chunks: string[] = [];
+  let chunk = '';
+  for (const char of token) {
+    if (chunk && ctx.measureText(chunk + char).width > maxWidth) {
+      chunks.push(chunk);
+      chunk = char;
+    } else {
+      chunk += char;
+    }
+  }
+  if (chunk) chunks.push(chunk);
+  return chunks;
+}
+
+// 按可用宽度把文本切成若干行(中文逐字、英文按词,简单但够用)
 function wrapText(
   ctx: CanvasRenderingContext2D,
   text: string,
@@ -60,9 +89,15 @@ function wrapText(
 ): string[] {
   const lines: string[] = [];
   let current = '';
-  const tokens = text.match(
-    /[\u4e00-\u9fff\u3000-\u303f]|[^\s\u4e00-\u9fff]+|\s+/g,
-  ) ?? [text];
+  const tokens = (
+    text.match(/[\u4e00-\u9fff\u3000-\u303f]|[^\s\u4e00-\u9fff]+|\s+/g) ?? [
+      text,
+    ]
+  ).flatMap((token) =>
+    ctx.measureText(token).width <= maxWidth
+      ? [token]
+      : splitByWidth(ctx, token, maxWidth),
+  );
   for (const token of tokens) {
     const candidate = current + token;
     if (ctx.measureText(candidate.trimEnd()).width <= maxWidth || !current) {
@@ -116,6 +151,7 @@ export default function SharePoster({
   minutes,
   tags,
   cover,
+  excerpt,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'drawing' | 'ready' | 'failed'>(
@@ -165,8 +201,24 @@ export default function SharePoster({
       });
 
       const coverHeight = coverImage ? COVER_HEIGHT : 0;
-      const height = BASE_HEIGHT + coverHeight;
       const palette = readPalette();
+      // 摘录占几行要先量出来:画布一旦按某个高度建好,再想加高度就得重画
+      const quote = (excerpt ?? '').trim();
+      const measure = canvas.getContext('2d');
+      if (measure) measure.font = `400 ${EXCERPT_SIZE}px ${palette.font}`;
+      const quoteLines =
+        quote && measure
+          ? wrapText(
+              measure,
+              quote,
+              WIDTH - PADDING * 2 - 24,
+              EXCERPT_MAX_LINES,
+            )
+          : [];
+      const quoteHeight = quoteLines.length
+        ? quoteLines.length * EXCERPT_LINE_HEIGHT + 18
+        : 0;
+      const height = BASE_HEIGHT + coverHeight + quoteHeight;
       const ratio = Math.min(2, window.devicePixelRatio || 1);
       canvas.width = WIDTH * ratio;
       canvas.height = height * ratio;
@@ -232,6 +284,28 @@ export default function SharePoster({
       for (const line of lines) {
         ctx.fillText(line, PADDING, cursorY);
         cursorY += 62;
+      }
+
+      // 摘录:左侧一道主色竖线 + 最多三行正文(行已在上方量好)
+      if (quoteLines.length > 0) {
+        const quoteTop = cursorY + 8;
+        ctx.font = `400 ${EXCERPT_SIZE}px ${palette.font}`;
+        ctx.fillStyle = palette.accent;
+        ctx.fillRect(
+          PADDING,
+          quoteTop + 4,
+          4,
+          quoteLines.length * EXCERPT_LINE_HEIGHT - 12,
+        );
+        ctx.fillStyle = palette.muted;
+        quoteLines.forEach((line, index) => {
+          ctx.fillText(
+            line,
+            PADDING + 20,
+            quoteTop + index * EXCERPT_LINE_HEIGHT,
+          );
+        });
+        cursorY = quoteTop + quoteLines.length * EXCERPT_LINE_HEIGHT;
       }
 
       // 元信息:日期 · 阅读时长
@@ -320,7 +394,7 @@ export default function SharePoster({
     } catch {
       setStatus('failed');
     }
-  }, [title, url, date, minutes, tags, cover]);
+  }, [title, url, date, minutes, tags, cover, excerpt]);
 
   // 打开面板时再画,关掉时把画布清空,省内存
   useEffect(() => {

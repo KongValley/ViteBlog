@@ -16,6 +16,8 @@ type Props = {
   tags: string[];
   /** 封面图,有就铺在分享图顶部 */
   cover?: string;
+  /** 摘录,放在标题下面 */
+  excerpt?: string;
 };
 
 // 把相对路径拼成可直接分享的绝对地址(与预渲染 HTML 里的 canonical 一致)
@@ -37,6 +39,7 @@ export default function ShareBar({
   minutes,
   tags,
   cover,
+  excerpt,
 }: Props) {
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle');
   const [canNativeShare, setCanNativeShare] = useState(false);
@@ -106,6 +109,7 @@ export default function ShareBar({
       <SharePoster
         title={title}
         cover={cover}
+        excerpt={excerpt}
         path={path}
         date={date}
         minutes={minutes}
