@@ -102,6 +102,21 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 - 音乐播放器从「关于页里的一张卡片」改成全局挂件:挂在 `App` 上而不是某个页面,切路由不断播;
   固定层小控件(`.back-top` / 挂件)移出 `.page`,不参与宽屏放大。
 
+### 变更
+
+- **全站 51 篇封面换成 AI 生成的像素插画**(`qwen-image-3.0-pro`,深蓝底 + NES 红/金/青,
+  与 pixel 主题同一套配色;全部无文字,已逐张目检)。
+- `npm run cover:ai` 默认把 `prompt_extend` 打开并给出 `--no-extend`:实测关掉后模型会把主题词
+  原样排成标题字(比如给 JavaScript 主题画一张写着 "Jauscript" 的海报),开启后是干净的无字插画。
+- 新增 `scripts/cover-scenes.json`:每篇一句纯视觉场景描述("机器人搬木箱"这类,不含任何技术名词),
+  脚本优先用它当主题 —— 想重打某篇时最不容易出文字。
+- 新增 `--concurrency` / `--delay` 与 429 退避重试(4s→8s→…→90s):账号按请求数限速,
+  默认改成串行 + 2s 间隔,`--concurrency 3 --delay 800` 是实测跑通全站的节奏。
+- 修掉参数解析 bug:`--model` / `--style` / `--index` 之前会被位置参数的预处理吞掉,
+  等于一直用默认值;现在全部生效(`--concurrency 3` 也不会再被当成文章 slug)。
+- `DASHSCOPE_BASE_URL` 现在接受裸 WorkspaceId、裸域名、标准 URL、自定义中转四种填法,
+  脚本启动时打印补全结果。
+
 ### 修复
 
 - `npm run cover:ai` 的 `DASHSCOPE_BASE_URL` 现在**认各种填法**:只填 WorkspaceId(`ws-xxxx`)会自动补成

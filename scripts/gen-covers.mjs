@@ -18,7 +18,8 @@
 //   --size  1600x840                            默认按封面比例(1200×630)留一点裁切余量;也可 auto
 //   --index N                                   换一张:同一篇用不同 seed 重打
 //   --style "额外的风格补充"                      追加到提示词尾部
-//   --extend                                    开启提示词的智能改写(默认关闭,免得把风格要求改跑)
+//   --no-extend                                 关闭提示词智能改写(默认开启:实测关闭后模型会把主题词画成标题字
+//                                               —— 例如给 JavaScript 主题生成 "Jauscript" 大标题;开启后是干净的无字插画)
 //
 // 生成结果下载后裁成 1200×630,存到 public/images/covers/<slug>.jpg 并回填 frontmatter 的 cover。
 // 之所以落在 public/images/:构建期的 webp 变体管线只认清单里的本地图,而且分享长图是同源取图
@@ -40,7 +41,7 @@ const POSTS_DIR = join(ROOT, 'src', 'posts');
 const COVER_DIR = join(ROOT, 'public', 'images', 'covers');
 const WIDTH = 1200;
 const HEIGHT = 630;
-const CONCURRENCY = 2;
+const CONCURRENCY = Number(process.env.CONCURRENCY ?? 1);
 
 // 支持把 key 放进 .env.local(已被 .gitignore 的 *.local 覆盖),免得写进 shell 历史
 for (const envFile of ['.env.local', '.env']) {
@@ -96,14 +97,30 @@ const option = (name, fallback) => {
   return index >= 0 && args[index + 1] ? args[index + 1] : fallback;
 };
 
+/**
+ * 带值的选项:扫描位置参数时要连它们的值一起跳过,
+ * 否则 `--all --concurrency 3` 会把 3 当成 slug。
+ * 注意别改动 args —— 下面的 option() 还要从里面取值。
+ */
+const VALUE_OPTIONS = new Set([
+  '--model',
+  '--size',
+  '--style',
+  '--index',
+  '--concurrency',
+  '--delay',
+]);
 const positional = [];
-for (const value of ['--model', '--size', '--style', '--index']) {
-  const at = args.indexOf(value);
-  if (at >= 0) args.splice(at, 2);
+for (let at = 0; at < args.length; at += 1) {
+  const arg = args[at];
+  if (arg.startsWith('--')) {
+    if (VALUE_OPTIONS.has(arg)) at += 1;
+    continue;
+  }
+  if (arg !== 'all') positional.push(arg);
 }
-for (const arg of args)
-  if (!arg.startsWith('--') && arg !== 'all') positional.push(arg);
 const [slug] = positional;
+
 const all = flag('all');
 const dryRun = flag('dry-run');
 
@@ -111,7 +128,17 @@ const model = option('model', 'qwen-image-3.0-pro');
 const size = option('size', '1600x840');
 const style = option('style', '');
 const index = Number(option('index', '0')) || 0;
-const extend = flag('extend');
+const extend = !flag('no-extend');
+
+/** 请求节奏:默认串行 + 每次间隔 2s,免得撞上账号的限速(实测 2 并发很快 429) */
+const DELAY = Math.max(0, Number(option('delay', '2000')) || 2000);
+let nextAllowed = 0;
+async function pace() {
+  const now = Date.now();
+  const wait = Math.max(0, nextAllowed - now);
+  nextAllowed = Math.max(now, nextAllowed) + DELAY;
+  if (wait > 0) await sleep(wait);
+}
 
 if (!slug && !all) {
   console.error(
@@ -241,21 +268,35 @@ function topicOf(postSlug, meta) {
     .join(', ');
 }
 
+/**
+ * 无字场景表(scripts/cover-scenes.json,slug → 纯视觉描述)。
+ * 实测:提示词里出现 "javascript"/"modules" 这类技术词,模型就会把它们画成标题字;
+ * 换成「木箱/管道/森林」这类只有实物的描述后,出图基本不再带字。
+ */
+const SCENES = (() => {
+  const file = join(ROOT, 'scripts', 'cover-scenes.json');
+  try {
+    return JSON.parse(readFileSync(file, 'utf8'));
+  } catch {
+    return {};
+  }
+})();
+
 /** 固定的像素风模板 + 该文主题;明确禁止文字,模型很爱往图上写字 */
 function buildPrompt(postSlug, meta) {
-  const topic = topicOf(postSlug, meta) || 'programming';
-  const title =
-    meta.title && /[\u4e00-\u9fff]/.test(meta.title)
-      ? `文章主题:${meta.title}。`
-      : '';
+  const topic = SCENES[postSlug] || topicOf(postSlug, meta) || 'programming';
   return [
     'Retro pixel art cover illustration for a tech blog article, 8-bit / 16-bit game style.',
+    // 这个模型很爱把提示词里的主题原样画成标题字 —— 所以主题只给英文关键词,
+    // 并且把「不要任何文字」放在开头、结尾和 negative_prompt 三处一起压。
+    'Purely pictorial scene: the subject is shown as objects, characters or scenery only.',
+    'ABSOLUTELY NO TEXT: no letters, no characters, no words, no numbers, no captions,',
+    'no titles, no labels, no signage, no interface panels, no code blocks.',
     'Chunky visible pixels, hard edges, no anti-aliasing, limited retro palette:',
     'deep navy background (#0f0e17), NES red (#e43d44), warm gold (#f8b800), cyan accents (#22d3ee).',
     'Simple bold centered composition with generous negative space, one clear focal subject,',
     'subtle dark texture blocks in the background, generous margins so nothing touches the edges.',
-    `Article topic: ${topic}.`,
-    title,
+    `Subject (illustrate it as a wordless scene): ${topic}.`,
     style,
   ]
     .filter(Boolean)
@@ -263,13 +304,36 @@ function buildPrompt(postSlug, meta) {
 }
 
 const NEGATIVE = [
-  '文字, 字母, 汉字, 数字, 水印, 签名, logo, 截图, 界面',
-  'text, letters, words, numbers, watermark, signature, logo, UI screenshot,',
+  '文字, 字母, 汉字, 数字, 标题, 字幕, 招牌, 标签, 代码, 水印, 签名, logo, 截图, 界面, 对话框',
+  'text, letters, words, numbers, glyphs, typography, title, caption, subtitle, signage,',
+  'label, code block, terminal window, UI screenshot, interface panel, watermark, signature, logo,',
   'blurry, low quality, jpeg artifacts, photo, 3d render, gradient mesh, anti-aliased edges',
 ].join(', ');
 
-/** 调一次百炼的 OpenAI 兼容接口,返回图片二进制 */
+/** 限速与临时故障等一会儿再试就好;参数错误(400/401 等)直接抛 */
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+const MAX_RETRIES = 6;
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** 调一次百炼的 OpenAI 兼容接口,返回图片二进制(含限速退避重试) */
 async function generate(prompt, seed) {
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      return await generateOnce(prompt, seed);
+    } catch (error) {
+      if (!error.retryable || attempt >= MAX_RETRIES) throw error;
+      // 4s、8s、16s…最多 90s,加一点抖动避免同时重试
+      const wait = Math.min(90_000, 4000 * 2 ** attempt) + Math.random() * 1500;
+      console.log(
+        `  · ${error.message.slice(0, 60)}(第 ${attempt + 1}/${MAX_RETRIES} 次重试,${Math.round(wait / 1000)}s 后)`,
+      );
+      await sleep(wait);
+    }
+  }
+}
+
+async function generateOnce(prompt, seed) {
+  await pace();
   const body = {
     model,
     prompt,
@@ -277,7 +341,7 @@ async function generate(prompt, seed) {
     size,
     n: 1,
     seed, // 固定 seed,--index 就是换 seed 重打
-    prompt_extend: extend, // 默认关:提示词已经写得很具体,免得被改写着跑
+    prompt_extend: extend, // 默认开:关掉后模型会把提示词里的主题词直接画成文字
     watermark: false,
   };
 
@@ -293,7 +357,11 @@ async function generate(prompt, seed) {
     });
   } catch (error) {
     // DNS / TLS 直接失败:多半是域名里还留着 {WorkspaceId} 之类的占位符
-    throw new Error(`请求发不出去(${error?.message ?? error})。\n${BASE_HINT}`);
+    const failure = new Error(
+      `请求发不出去(${error?.message ?? error})。\n${BASE_HINT}`,
+    );
+    failure.retryable = true;
+    throw failure;
   }
 
   if (!response.ok) {
@@ -302,7 +370,11 @@ async function generate(prompt, seed) {
       response.status === 404 || text.includes('Workspace endpoint is invalid')
         ? `\n${BASE_HINT}`
         : '';
-    throw new Error(`接口返回 HTTP ${response.status}:${text}${hint}`);
+    const failure = new Error(
+      `接口返回 HTTP ${response.status}:${text}${hint}`,
+    );
+    failure.retryable = RETRYABLE_STATUS.has(response.status);
+    throw failure;
   }
   const payload = await response.json();
   const url = payload.data?.[0]?.url;
@@ -313,7 +385,11 @@ async function generate(prompt, seed) {
   }
   // 百炼这边只给 URL(有效期 24 小时),必须马上下载
   const image = await fetch(url);
-  if (!image.ok) throw new Error(`下载生成结果失败:HTTP ${image.status}`);
+  if (!image.ok) {
+    const failure = new Error(`下载生成结果失败:HTTP ${image.status}`);
+    failure.retryable = RETRYABLE_STATUS.has(image.status);
+    throw failure;
+  }
   return Buffer.from(await image.arrayBuffer());
 }
 
@@ -430,8 +506,14 @@ if (slug) {
 
 // ---- 批量 ----
 const files = listPosts();
-console.log(`批量:${files.length} 篇(并发 ${CONCURRENCY})\n`);
-const results = await mapWithLimit(files, CONCURRENCY, one);
+const jobs = Math.max(
+  1,
+  Number(option('concurrency', String(CONCURRENCY))) || CONCURRENCY,
+);
+console.log(
+  `批量:${files.length} 篇(并发 ${jobs},请求间隔 ${DELAY}ms;限速会自动退避重试)\n`,
+);
+const results = await mapWithLimit(files, jobs, one);
 
 const ok = results.filter((r) => r.ok);
 const failed = results.filter((r) => !r.ok);

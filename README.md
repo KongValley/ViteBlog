@@ -228,15 +228,27 @@ npm run cover:ai -- --all       # 全站批量(每篇一次请求,注意计费)
 npm run cover:ai -- --all --dry-run   # 不需要 key:只打印将要发出的请求体
 ```
 
-   **`DASHSCOPE_BASE_URL` 必须设**,而且要用**业务空间专属域名**(`{WorkspaceId}` 在百炼控制台「业务空间详情」里看;
-   新加坡地域把 `cn-beijing` 换成 `ap-southeast-1`)。实测 `dashscope.aliyuncs.com` 这类老域名上
-   **没有** `/compatible-mode/v1/images/generations` 这条路由(直接 404),只有专属域名有。
+   **`DASHSCOPE_BASE_URL` 必须设**,填法随便(脚本会自己补全并打印结果):
+   只填 WorkspaceId(`ws-xxxxxxxx`)会自动补成 `https://ws-xxxxxxxx.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
+   (换地域加 `DASHSCOPE_REGION=ap-southeast-1`);只填域名会补 `https://` 与 `/compatible-mode/v1`;
+   自定义中转地址原样使用。实测 `dashscope.aliyuncs.com` 这类老域名上**没有**
+   `/compatible-mode/v1/images/generations` 这条路由(直接 404),只有业务空间专属域名有。
 
-   默认模型 `qwen-image-3.0-pro`、`size 1600x840`;提示词里固定带「8-bit 粗像素 / 深蓝底 + NES 红金青 / 不要文字」这套要求,
-   并配了中英双语反向提示词(文字、水印、截图、模糊…),主题短语由标题与标签自动推出。
-   `--index N` 换 seed 重打、`--style "夜间城市电路板"` 追加风格、`--size auto` 交给模型定分辨率、
-   `--extend` 开启提示词智能改写(默认关闭,免得把风格要求改跑)。
-   生成结果裁成 1200×630 存进 `public/images/covers/`,和上面几种来源走完全一样的管线。
+   默认模型 `qwen-image-3.0-pro`、`size 1600x840`;提示词固定带「8-bit 粗像素 / 深蓝底 + NES 红金青 / 不要文字」,
+   并配中英双语反向提示词(文字、水印、截图、模糊…)。
+
+   **`prompt_extend`(提示词智能改写)默认开启,别关**:实测关掉后模型会把提示词里的主题词原样画成标题字
+   (给 JavaScript 主题生成一张写着 "Jauscript" 的海报),开启后是干净的无字插画。需要精确控制提示词时用 `--no-extend`。
+
+   想更保险可以往 `scripts/cover-scenes.json` 里按 slug 写一句**纯视觉场景**(脚本优先用它当主题;
+   全站 51 篇已经写好了)。避开 "javascript / module / screen" 这类词、只写木头箱子、机器人、森林这些实物,
+   出图基本不会带字 —— 模型对技术名词的第一反应就是把它排成字。
+
+   限速:账号按请求数限速,并发高会 429;脚本自带退避重试(4s→8s→…→90s),
+   `--concurrency 3 --delay 800` 是实测能跑通全站的节奏。`--index N` 换 seed 重打、
+   `--style "夜间城市电路板"` 追加风格、`--size auto` 交给模型定分辨率、`--model qwen-image-3.0` 换标准版。
+   生成结果裁成 1200×630 存进 `public/images/covers/`,和上面几种来源走完全一样的管线
+   (记得再跑一次 `npm run images` 生成 webp 变体)。
 
 三个来源都能用,但**一定要落在 `public/images/` 里**:
 
