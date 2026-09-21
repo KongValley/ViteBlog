@@ -217,18 +217,26 @@ CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` 
 theme: pixel   # 十选一:pixel / swiss / editorial / brutalist / bento / terminal / glass / ma / blueprint / noir
 ```
 
-| theme | 风格 |
-| --- | --- |
-| `pixel`(默认) | 红白机像素风:游戏机名片、像素字体、CRT 扫描线 |
-| `swiss` | 瑞士网格风:强对比黑白、12 栏网格参考线、红色方点、悬浮反色 |
-| `editorial` | 现代编辑排版风:衬线大标题、纸感底色、报刊式排版 |
-| `brutalist` | 新粗野主义:粗黑边框、实心偏移阴影、高饱和撞色、机械按键手感 |
-| `bento` | Bento 便当格:六栏卡片矩阵、特性大卡与数据小格混排 |
-| `terminal` | 终端 CLI:命令提示符、git log 文章列表、neofetch 面板、vim 状态栏 |
-| `glass` | 玻璃拟态:渐变光斑背景、毛玻璃卡片、悬浮胶囊导航 |
-| `ma` | 日式极简「间」:和纸底、明朝体大标题、竖排落款、朱印、首行缩进 |
-| `blueprint` | 工程蓝图:坐标网格、尺寸标注线、等距线框插图、右下角图签栏 |
-| `noir` | 暗夜霓虹:纯黑底、品红霓虹描边字、招牌闪烁、点唱机式列表 |
+| 预览 | theme | 风格 |
+| --- | --- | --- |
+| [![](docs/themes/pixel.webp)](docs/themes/pixel.webp) | `pixel`(默认) | 红白机像素风:游戏机名片、像素字体、CRT 扫描线 |
+| [![](docs/themes/swiss.webp)](docs/themes/swiss.webp) | `swiss` | 瑞士网格风:强对比黑白、12 栏网格参考线、红色方点、悬浮反色 |
+| [![](docs/themes/editorial.webp)](docs/themes/editorial.webp) | `editorial` | 现代编辑排版风:衬线大标题、纸感底色、报刊式排版 |
+| [![](docs/themes/brutalist.webp)](docs/themes/brutalist.webp) | `brutalist` | 新粗野主义:粗黑边框、实心偏移阴影、高饱和撞色、机械按键手感 |
+| [![](docs/themes/bento.webp)](docs/themes/bento.webp) | `bento` | Bento 便当格:六栏卡片矩阵、特性大卡与数据小格混排 |
+| [![](docs/themes/terminal.webp)](docs/themes/terminal.webp) | `terminal` | 终端 CLI:命令提示符、git log 文章列表、neofetch 面板、vim 状态栏 |
+| [![](docs/themes/glass.webp)](docs/themes/glass.webp) | `glass` | 玻璃拟态:渐变光斑背景、毛玻璃卡片、悬浮胶囊导航 |
+| [![](docs/themes/ma.webp)](docs/themes/ma.webp) | `ma` | 日式极简「间」:和纸底、明朝体大标题、竖排落款、朱印、首行缩进 |
+| [![](docs/themes/blueprint.webp)](docs/themes/blueprint.webp) | `blueprint` | 工程蓝图:坐标网格、尺寸标注线、等距线框插图、右下角图签栏 |
+| [![](docs/themes/noir.webp)](docs/themes/noir.webp) | `noir` | 暗夜霓虹:纯黑底、品红霓虹描边字、招牌闪烁、点唱机式列表 |
+
+预览图就是上面那张表(每套一张首屏截图,存在 `docs/themes/`),主题样式改动后按顺序重跑三步即可刷新:
+
+```bash
+node design-preview/build-all.mjs      # 逐主题构建到 design-preview/out/
+node design-preview/serve-dist.mjs     # 起预览服务器(4191-4200)
+node design-preview/readme-shots.mjs   # 截图 → docs/themes/*.webp
+```
 
 十套主题在 `src/themes/<名字>/` 下各自独立(样式 + 字体 + 入口),**构建时只会打包被选中的那一套**,
 互不混装;首页结构也按主题区分(`src/views/home/` 下的十个组件,由 `src/views/Home.tsx` 按 `theme` 调度)。
