@@ -47,69 +47,72 @@ export default function App() {
   }, [theme]);
 
   return (
-    <div className="page">
-      <ScrollToTop />
+    <>
+      <div className="page">
+        <ScrollToTop />
 
-      <header className="header">
-        <div className="container header-inner">
-          <Link to="/" className="brand">
-            {site.name}
-            <span className="brand-dot">.</span>
-          </Link>
-          <nav className="nav">
-            <NavLink to="/" end className="nav-link">
-              首页
-            </NavLink>
-            <NavLink to="/tags" className="nav-link">
-              标签
-            </NavLink>
-            <NavLink to="/about" className="nav-link">
-              关于
-            </NavLink>
-            <button
-              type="button"
-              className="theme-toggle"
-              title={theme === 'dark' ? '切换到白天模式' : '切换到夜晚模式'}
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            >
-              {theme === 'dark' ? '昼' : '夜'}
-            </button>
-          </nav>
-        </div>
-      </header>
+        <header className="header">
+          <div className="container header-inner">
+            <Link to="/" className="brand">
+              {site.name}
+              <span className="brand-dot">.</span>
+            </Link>
+            <nav className="nav">
+              <NavLink to="/" end className="nav-link">
+                首页
+              </NavLink>
+              <NavLink to="/tags" className="nav-link">
+                标签
+              </NavLink>
+              <NavLink to="/about" className="nav-link">
+                关于
+              </NavLink>
+              <button
+                type="button"
+                className="theme-toggle"
+                title={theme === 'dark' ? '切换到白天模式' : '切换到夜晚模式'}
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              >
+                {theme === 'dark' ? '昼' : '夜'}
+              </button>
+            </nav>
+          </div>
+        </header>
 
-      <main className="main">
-        <div className="container">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/post/*" element={<Post />} />
-            <Route path="/tags" element={<Tags />} />
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
-      </main>
+        <main className="main">
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/post/*" element={<Post />} />
+              <Route path="/tags" element={<Tags />} />
+              <Route path="/about" element={<About />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
+        </main>
 
-      <footer className="footer">
-        <div className="container">
-          <p className="footer-en pixel-en">
-            © {site.since} {site.author} · POWERED BY REACT × VITE · HOSTED ON
-            GITHUB PAGES <span className="heart">♥</span>
-          </p>
-          <p className="footer-meta">
-            由{' '}
-            <a href={site.github} target="_blank" rel="noopener">
-              GitHub
-            </a>{' '}
-            Pages 强力驱动 · {site.tagline}
-          </p>
-        </div>
-      </footer>
+        <footer className="footer">
+          <div className="container">
+            <p className="footer-en pixel-en">
+              © {site.since} {site.author} · POWERED BY REACT × VITE · HOSTED ON
+              GITHUB PAGES <span className="heart">♥</span>
+            </p>
+            <p className="footer-meta">
+              由{' '}
+              <a href={site.github} target="_blank" rel="noopener">
+                GitHub
+              </a>{' '}
+              Pages 强力驱动 · {site.tagline}
+            </p>
+          </div>
+        </footer>
+      </div>
 
+      {/* 固定层挂件放在 .page 外面:宽屏放大是给 .page 加 zoom 的,挂件跟着放大会糊成一团 */}
       <BackToTop />
       <Suspense fallback={null}>
         <MusicDock />
       </Suspense>
-    </div>
+    </>
   );
 }

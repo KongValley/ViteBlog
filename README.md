@@ -118,6 +118,8 @@ src/themes/noir/        style.css + fonts.ts(同上)
 
 明暗模式十套主题都支持,右上角按钮在昼夜之间切换。想换主题时只改 `site.yml` 一行即可。
 
+**宽屏自适应放大**:内容列宽每套主题是固定的(1000~1280px),在 2K/4K 屏上两侧会空掉一大片。所以从 1200px 起按视口宽度分档给整页加 `zoom`(等比放大,版面比例和字号关系都不变),把留白吃回去;倍率按「容器宽 × 倍率 ≤ 该档起点视口宽」定死,任何宽度都不会出现横向滚动。固定层小控件(`.back-top`、音乐挂件)挂在 `.page` 外面,不参与放大。
+
 新增一套主题:在 `src/themes/<名字>/` 放 `index.ts`(引入 `style.css`,字体大就拆到 `fonts.ts` 里异步加载),
 写一个 `src/views/home/<名字>Home.tsx`,再把名字加进 `vite.config.ts` 的 `THEMES` 和 `src/data/site.ts` 的 `THEME_NAMES`。
 
