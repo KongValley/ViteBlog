@@ -18,7 +18,7 @@ Hexo官网里面有都文档说明，首先打开 Git Bash，先定位到你要�
 cd 文件夹
 ```
 
-![](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-1.png?x-oss-process=style/2333)
+![在 Git Bash 里 cd 到放博客的文件夹](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-1.png?x-oss-process=style/2333)
 
 这样就定为到了 `D:\My-blog`，然后开始安装 Hexo
 
@@ -34,7 +34,7 @@ hexo
 
 如果出现以下这图就说明你的 Hexo 安装成功
 
-![](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-2.png?x-oss-process=style/2333)
+![Hexo 安装成功的命令行输出](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-2.png?x-oss-process=style/2333)
 
 <br>
 
@@ -51,7 +51,7 @@ npm install
 
 安装完成后，你的文件夹里就会变成这样
 
-![](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-3.png?x-oss-process=style/2333)
+![hexo init 之后的项目文件夹结构](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-3.png?x-oss-process=style/2333)
 
 这里的 `_config.yml` 是你的站点配置文件，你可以打开它修改你的站点信息（每个：后面都有一个空格）
 

@@ -26,7 +26,8 @@ type Theme = (typeof THEMES)[number];
 // 把根目录的 site.yml 注入为虚拟模块:
 //   virtual:site-config → yml 解析结果(站点信息)
 //   virtual:site-theme  → 只 import 选中的那套主题(样式 + 字体)
-// 构建时只会打包被选中的主题,三套主题互不混装
+//   virtual:site-home   → 只 import 选中主题对应的首页组件
+// 构建时只会打包被选中的主题与它的首页,十套首页组件不会一起进首屏
 function siteConfig(): Plugin {
   const file = resolve(root, 'site.yml');
 
@@ -59,6 +60,7 @@ function siteConfig(): Plugin {
     resolveId(id) {
       if (id === 'virtual:site-config') return '\0site-config';
       if (id === 'virtual:site-theme') return '\0site-theme';
+      if (id === 'virtual:site-home') return '\0site-home';
     },
     load(id) {
       if (id === '\0site-config') {
@@ -68,6 +70,22 @@ function siteConfig(): Plugin {
       if (id === '\0site-theme') {
         this.addWatchFile(file); // 改 theme 字段时重新解析主题入口
         return `import ${JSON.stringify(`/src/themes/${readTheme()}/index.ts`)}`;
+      }
+      if (id === '\0site-home') {
+        this.addWatchFile(file);
+        const theme = readTheme();
+        // 主题名 → 首页组件名:pixel → PixelHome,ma → MaHome
+        const name = `${theme[0].toUpperCase()}${theme.slice(1)}Home`;
+        const dir = resolve(root, 'src', 'views', 'home');
+        const hit = readdirSync(dir).find(
+          (entry) => entry.toLowerCase() === `${name.toLowerCase()}.tsx`,
+        );
+        if (!hit) {
+          throw new Error(
+            `主题 ${theme} 缺少首页组件:src/views/home/${name}.tsx 不存在`,
+          );
+        }
+        return `export { default } from ${JSON.stringify(`/src/views/home/${hit}`)}`;
       }
     },
   };

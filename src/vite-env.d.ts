@@ -9,6 +9,15 @@ declare module 'virtual:site-config' {
 // 按 site.yml 的 theme 字段加载对应主题(样式 + 字体)的虚拟入口
 declare module 'virtual:site-theme';
 
+// 按 site.yml 的 theme 字段只加载对应那一套首页组件(首屏不再装十套)
+declare module 'virtual:site-home' {
+  import type { ComponentType } from 'react';
+  import type { HomeData } from './views/home/shared';
+
+  const Home: ComponentType<HomeData>;
+  export default Home;
+}
+
 // vite.config.ts 里扫描 src/posts 得到的元信息列表(正文不在里面,按需 dynamic import)
 declare module 'virtual:posts-index' {
   import type { Post } from './data/posts';

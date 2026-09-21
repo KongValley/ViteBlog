@@ -1,0 +1,13 @@
+/* pixel 主题的正文中西文像素字体:单独一个 CSS 块,由 index.ts 异步加载,不进首屏主样式。
+   为什么单独:全量 @fontsource/fusion-pixel-12px-proportional-sc 的 woff2 有 588 KB
+   (包里还配了 1438 KB 的 woff 老格式),是整站最大单体;scripts/subset-fonts.mjs 在
+   predev/prebuild 里按站内实际用到的字符裁成几十 KB,落在 ./fonts/fusion-pixel-subset.woff2。
+   这里手写 @font-face 引子集(路径交给 Vite 处理成带 base 的哈希资源),族名与原来那份一致,
+   style.css 里 --font-body 的首选就能命中它。 */
+@font-face {
+  font-family: "Fusion Pixel 12px Proportional SC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/fusion-pixel-subset.woff2") format("woff2");
+}

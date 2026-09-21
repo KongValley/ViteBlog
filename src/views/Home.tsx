@@ -1,19 +1,10 @@
+import ThemedHome from 'virtual:site-home';
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { usePageMeta } from '../data/pageMeta';
 import { posts } from '../data/posts';
 import { site } from '../data/site';
-import BentoHome from './home/BentoHome';
-import BlueprintHome from './home/BlueprintHome';
-import BrutalistHome from './home/BrutalistHome';
-import EditorialHome from './home/EditorialHome';
-import GlassHome from './home/GlassHome';
-import MaHome from './home/MaHome';
-import NoirHome from './home/NoirHome';
-import PixelHome from './home/PixelHome';
-import SwissHome from './home/SwissHome';
 import { type HomeData, PAGE_SIZE } from './home/shared';
-import TerminalHome from './home/TerminalHome';
 
 const MAX_HOME_TAGS = 10;
 
@@ -88,15 +79,6 @@ export default function Home() {
     onGoToPage: goToPage,
   };
 
-  // 主题在构建期由 site.yml 的 theme 字段决定
-  if (site.theme === 'swiss') return <SwissHome {...data} />;
-  if (site.theme === 'editorial') return <EditorialHome {...data} />;
-  if (site.theme === 'brutalist') return <BrutalistHome {...data} />;
-  if (site.theme === 'bento') return <BentoHome {...data} />;
-  if (site.theme === 'terminal') return <TerminalHome {...data} />;
-  if (site.theme === 'glass') return <GlassHome {...data} />;
-  if (site.theme === 'ma') return <MaHome {...data} />;
-  if (site.theme === 'blueprint') return <BlueprintHome {...data} />;
-  if (site.theme === 'noir') return <NoirHome {...data} />;
-  return <PixelHome {...data} />;
+  // 主题在构建期由 site.yml 的 theme 字段决定:虚拟模块只把选中的那套首页组件装进来
+  return <ThemedHome {...data} />;
 }

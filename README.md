@@ -162,11 +162,13 @@ music:
 | 图片 | 懒加载、点击放大(灯箱);本地图构建期还会生成 webp 变体与 srcset |
 | 公式 / 图表 | KaTeX 与 Mermaid,按需加载(正文没用到就不下载) |
 | 彩蛋 | 首页游戏机卡片上的点击粒子;输入 Konami 码(↑↑↓↓←→←→BA)有惊喜 |
-| 订阅与收录 | 构建期生成 `feed.xml`、`atom.xml`、`sitemap.xml`、`robots.txt` |
+| 订阅与收录 | 构建期生成 `feed.xml`、`atom.xml`、`sitemap.xml`、`robots.txt`;页脚也有 RSS / Atom / Sitemap 入口 |
+| 静态页预渲染 | 非文章页(`/tags`、`/categories/…`、`/archive`、`/search`、`/about`)也生成静态 HTML,线上直接 200,不再走 SPA 404 兜底 |
+| 结构化数据 | 文章页注入 `BlogPosting`、站点页注入 `WebSite` / `Person` 的 JSON-LD;所有页面 head 带 `rel=alternate` 订阅发现 |
 | 分享卡片 | 每篇文章构建期预渲染静态 HTML(独立 title/description/OG)并生成 1200×630 分享图 |
 | 页面内分享条 | 文章底部的「复制链接 / 微博 / X / 生成分享图」,四个按钮等宽等高(108×40,2px 描边 + 硬阴影,按下有回弹) |
-| 自动封面 | 没写  的文章,构建前自动生成一张 1200×630 的像素风封面():图案就是该文在首页用的那个像素图标,底纹方块与边框按 slug 稳定生成 —— 同一篇每次都是同一张图。输出到 ,dev 与构建都能直接取到 |
-| 分享长图 | 「生成分享图」用 canvas 现画一张海报(站点名、标题、日期、阅读时长、标签、二维码、页脚),可直接下载或长按保存;配色跟随当前主题,二维码指向文章地址。文章有  时,封面会通栏铺在标题上方(800×1500),没有则是 800×1120。二维码库按需加载(独立 23 KB chunk),不点就不下载 |
+| 自动封面 | 没写 `cover` 的文章,构建前自动生成一张 1200×630 的像素风封面(`scripts/build-covers.mjs`):图案就是该文在首页用的那个像素图标,底纹方块与边框按 slug 稳定生成 —— 同一篇每次都是同一张图。输出到 `public/covers/`,dev 与构建都能直接取到 |
+| 分享长图 | 「生成分享图」用 canvas 现画一张海报(站点名、标题、摘录、内容概览、日期、阅读时长、标签、二维码、页脚),可直接下载或长按保存;配色跟随当前主题,二维码指向文章地址。文章有 `cover` 时封面通栏铺在标题上方,高度随封面与摘录行数自适应。二维码库按需加载(独立 23 KB chunk),不点就不下载 |
 
 ## 项目脚本
 
@@ -174,11 +176,21 @@ music:
 npm run new -- "文章标题"   # 新建文章模板(见「如何写文章」)
 npm run images              # 扫描 public/images/,生成 webp 变体与清单(构建前会自动跑)
 npm run covers              # 生成/刷新自动封面(构建前会自动跑;加 -- --force 全部重画)
+npm run fonts               # 按站内用到的字符把中文像素字体裁成子集(构建前会自动跑)
+npm test                    # 纯函数单测(node 内置 test runner,零额外依赖)
+npm run check               # 内容体检:frontmatter / 标题层级 / 站内死链 / 图片 alt
 npm run build               # 类型检查 + 构建 + 生成分享图 / feed / sitemap / 预渲染 HTML
 ```
 
 `dist/` 里的 `feed.xml` / `atom.xml` / `sitemap.xml` / `robots.txt` / `post/<slug>.html` / `og/*.png`
 都由构建期脚本生成,不需要手动维护;文章增删后重新构建即可。
+
+### 首屏与字体
+
+- 首页只加载「选中的那套主题首页组件」:`virtual:site-home` 在构建期注入,`src/views/Home.tsx` 不再 import 十套;
+- 文章页走路由懒加载,marked + highlight.js 不进首屏(实测首屏 JS 476.7 KB → 331 KB,gzip 149.6 → 105 KB);
+- 中文像素字体按「站内实际用到的字符」构建期子集化(588 KB → 47 KB,8.1%),单独成 `fonts-*.css` 异步加载;
+- 构建收尾会删掉 `dist` 里永远不会被下载的 woff/ttf 老格式字体(每次约 1 MB)。
 
 ## 主题
 

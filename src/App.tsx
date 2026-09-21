@@ -8,12 +8,13 @@ import KeyboardShortcuts from './components/KeyboardShortcuts';
 import { site } from './data/site';
 import About from './views/About';
 import Home from './views/Home';
-import Post from './views/Post';
 import Tags from './views/Tags';
 
 // 音乐挂件(APlayer)是个固定层,单独切一个 chunk:首屏 JS 不受它影响,
 // 挂件本身在首帧之后异步补上(固定层的东西,晚一点出现不占位、不闪)
 const MusicDock = lazy(() => import('./components/MusicDock'));
+// 文章页把 marked + highlight.js(约 100KB+)也一起带走:首页/标签页不再为它们买单
+const Post = lazy(() => import('./views/Post'));
 const Search = lazy(() => import('./views/Search'));
 const Categories = lazy(() => import('./views/Categories'));
 const Category = lazy(() => import('./views/Category'));
@@ -112,6 +113,14 @@ export default function App() {
 
         <footer className="footer">
           <div className="container">
+            <p className="footer-links">
+              {/* 订阅入口放页脚:feed.xml / atom.xml 是构建期产物,直接静态链接即可 */}
+              <a href={`${import.meta.env.BASE_URL}feed.xml`}>RSS</a>
+              <span aria-hidden="true">·</span>
+              <a href={`${import.meta.env.BASE_URL}atom.xml`}>Atom</a>
+              <span aria-hidden="true">·</span>
+              <a href={`${import.meta.env.BASE_URL}sitemap.xml`}>Sitemap</a>
+            </p>
             <p className="footer-en pixel-en">
               © {site.since} {site.author} · POWERED BY REACT × VITE · HOSTED ON
               GITHUB PAGES <span className="heart">♥</span>

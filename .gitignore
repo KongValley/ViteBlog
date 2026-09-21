@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# 构建期生成的中文字体子集与静态资源(scripts/subset-fonts.mjs 会自动重建)
+public/fonts
+src/themes/pixel/fonts
+
 # 构建期生成的自动封面(scripts/build-covers.mjs,predev/prebuild 会自动重建)
 public/covers
 

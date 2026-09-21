@@ -1,9 +1,11 @@
 // 构建期静态产物:feed.xml / atom.xml / sitemap.xml / robots.txt,
-// 外加每篇文章一份带正确 <head> 的 dist/post/<slug>.html。
+// 外加每篇文章一份 dist/post/<slug>.html,以及首页/标签/分类/归档/搜索/关于
+// 各自一份 <路径>/index.html。
 //
 // 站点是纯 SPA,页面 meta 全靠 React 在运行时写;微信、Twitter 这类抓取器
 // 不跑 JS,搜索引擎也拿不到标题和摘要。所以构建后在这里补一份静态文件:
 // script 标签原样保留,用户打开时仍然是 React 接管,只是抓取器先读到 meta。
+// 静态页必须真的落盘(而不只是写进 sitemap),否则线上 /tags 这种地址直接 404。
 //
 //   node scripts/build-static.mjs      # 需要先有 dist/index.html(npm run build)
 //
@@ -343,36 +345,196 @@ function defaultShareImage() {
   return urls.page('/favicon.svg');
 }
 
-// 只改 <head>:<title> / description / og:* / canonical。
-// 模板里若已经写死了 og 或 canonical,先摘掉再写本次的,避免出现两份。
-function renderPostHtml(template, post) {
-  const url = urls.post(post.slug);
-  const title = post.title.includes(site.name)
-    ? post.title
-    : `${post.title} · ${site.name}`;
-  const description = post.excerpt || site.tagline;
-  const image = ogImageFor(post.slug);
+// ------------------------------------------------------------ 结构化数据
 
-  const head = [
+// JSON-LD 用 JSON.stringify 生成,不手拼字符串(转义交给它);
+// 摘要里若混进 </script> 会把 script 标签提前截断,所以 < 一律写成 \u003c ——
+// 仍是合法 JSON,解析出来的值不变。
+function jsonLdScript(data) {
+  const json = JSON.stringify(data).replace(/</g, '\\u003c');
+  return `    <script type="application/ld+json">${json}</script>`;
+}
+
+// 作者 / 发布者节点:姓名与主页都取自 site.yml,不编造
+function personNode() {
+  return {
+    '@type': 'Person',
+    name: site.author,
+    ...(site.github ? { url: site.github } : {}),
+  };
+}
+
+// 订阅发现:抓取器(以及浏览器地址栏的订阅图标)靠这两个 link 找 feed,
+// 地址用绝对路径,feed 阅读器在第三方域名下也能解析
+function feedAlternateLinks() {
+  return [
+    ['application/rss+xml', 'RSS', 'feed.xml'],
+    ['application/atom+xml', 'Atom', 'atom.xml'],
+  ].map(
+    ([type, label, file]) =>
+      `    <link rel="alternate" type="${type}" title="${escapeText(`${site.name} ${label}`)}" href="${escapeText(`${urls.home}${file}`)}" />`,
+  );
+}
+
+// 每页 head 的增量:canonical / og 四件套 / 订阅发现 / JSON-LD
+function renderHead({ url, title, description, type, image, jsonLd }) {
+  return [
     `    <link rel="canonical" href="${escapeText(url)}" />`,
     `    <meta property="og:title" content="${escapeText(title)}" />`,
     `    <meta property="og:description" content="${escapeText(description)}" />`,
     `    <meta property="og:url" content="${escapeText(url)}" />`,
-    '    <meta property="og:type" content="article" />',
-    `    <meta property="og:image" content="${escapeText(image.url)}" />`,
+    `    <meta property="og:type" content="${type}" />`,
+    `    <meta property="og:image" content="${escapeText(image)}" />`,
+    ...feedAlternateLinks(),
+    jsonLdScript(jsonLd),
   ].join('\n');
+}
 
-  const html = template
-    .replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeText(title)}</title>`)
+// 幂等:首页是就地改写,模板可能是上一次跑出来的 dist/index.html(里面已经
+// 带了注入的 head)。先把上次注入的 canonical / og / 订阅 link / JSON-LD 摘掉,
+// 再写本次的,免得重复执行后 head 里堆两份。
+function stripInjectedHead(html) {
+  return html
+    .replace(/\s*<meta\s+[^>]*property="og:[^"]*"[^>]*>/gi, '')
+    .replace(/\s*<link\s+[^>]*rel="canonical"[^>]*>/gi, '')
+    .replace(
+      /\s*<link\s+[^>]*rel="alternate"[^>]*(?:rss|atom)\+xml[^>]*>/gi,
+      '',
+    )
+    .replace(
+      /\s*<script\s+type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/gi,
+      '',
+    );
+}
+
+// 只改 <head>:<title> / description / canonical / og:* / 订阅 link / JSON-LD。
+// script 标签原样保留:线上打开时由 React 接管,静态 head 只是给抓取器看的。
+function renderPageHtml(template, page) {
+  const head = renderHead(page);
+  return stripInjectedHead(template)
+    .replace(
+      /<title>[\s\S]*?<\/title>/,
+      `<title>${escapeText(page.title)}</title>`,
+    )
     .replace(
       /<meta\s+name="description"[^>]*>/i,
-      `<meta name="description" content="${escapeText(description)}" />`,
+      `<meta name="description" content="${escapeText(page.description)}" />`,
     )
-    .replace(/\s*<meta\s+[^>]*property="og:[^"]*"[^>]*>/gi, '')
-    .replace(/\s*<link\s+[^>]*rel="canonical"[^>]*>/gi, '');
+    .replace(/\s*<\/head>/, `\n${head}\n  </head>`);
+}
 
-  // script 标签原样保留:线上打开时由 React 接管,静态 head 只是给抓取器看的
-  return html.replace(/\s*<\/head>/, `\n${head}\n  </head>`);
+// 文章页:head 与 BlogPosting 的字段全部来自 frontmatter 与 site.yml
+function postPageRecord(post) {
+  const date = postDate(post);
+  const url = urls.post(post.slug);
+  const description = post.excerpt || site.tagline;
+  const image = ogImageFor(post.slug).url;
+
+  return {
+    file: join(DIST, 'post', `${post.slug}.html`),
+    url,
+    title: post.title.includes(site.name)
+      ? post.title
+      : `${post.title} · ${site.name}`,
+    description,
+    type: 'article',
+    image,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description,
+      ...(date ? { datePublished: iso(date) } : {}),
+      author: personNode(),
+      publisher: personNode(),
+      mainEntityOfPage: url,
+      image,
+    },
+  };
+}
+
+// 静态页文案与 src/views/*.tsx 里 usePageMeta 的写法一一对应(改那边时这里
+// 一起改,否则标签页/分享卡片里的字和正文页对不上);路径与 sitemap 完全一致
+function staticPageRecords(posts, categories) {
+  const tagCount = new Set(posts.flatMap((post) => post.tags)).size;
+  // 归档页的年份跨度:与 src/data/posts.ts 的 archive() 同规则(取 date 里的年,
+  // 文章已按日期倒序,首尾就是最新与最早)
+  const years = posts.map((post) => (post.date || '').split(/[- ]/)[0] ?? '');
+  const newest = years[0];
+  const oldest = years.at(-1);
+  const span =
+    newest && oldest
+      ? newest === oldest
+        ? newest
+        : `${oldest} — ${newest}`
+      : '';
+  const countOf = (name) =>
+    posts.filter((post) => post.categories.includes(name)).length;
+
+  return [
+    {
+      path: '/',
+      title: `${site.name} · ${site.tagline}`,
+      description: site.tagline,
+    },
+    {
+      path: '/tags',
+      title: '全部标签',
+      description: `共 ${tagCount} 个标签,按使用次数排序,可切换排序方式或按分类过滤。`,
+    },
+    {
+      path: '/categories',
+      title: '分类',
+      description: `按分类浏览 ${posts.length} 篇文章,共 ${categories.length} 个分类。`,
+    },
+    {
+      path: '/archive',
+      title: '归档',
+      description: `按时间浏览 ${posts.length} 篇文章${span ? `(${span})` : ''}。`,
+    },
+    { path: '/search', title: '搜索', description: '站内文章搜索' },
+    {
+      path: '/about',
+      title: '关于本站',
+      description: `${site.name} —— ${site.tagline}`,
+    },
+    ...categories.map((name) => ({
+      path: `/categories/${name}`,
+      title: `${name} · 分类`,
+      description: `分类「${name}」下的 ${countOf(name)} 篇文章。`,
+    })),
+  ];
+}
+
+// 静态页落盘位置:目录 + index.html,GH Pages 才会把 /tags 当 200 而不是 404。
+// 分类名里的空格 / 中文在 sitemap 里是 %XX 形式,文件系统上是原样字符 ——
+// GH Pages 查文件前会先解码 URL,两边正好对得上,这里不要再编一次码。
+function staticFileFor(path) {
+  if (path === '/') return INDEX_HTML;
+  return join(DIST, ...path.split('/').filter(Boolean), 'index.html');
+}
+
+// 静态页:WebSite + Person(站点没有独立作者页,作者与发布者共用同一个节点)
+function staticPageRecord(page) {
+  return {
+    file: staticFileFor(page.path),
+    url: urls.page(page.path),
+    title: page.title.includes(site.name)
+      ? page.title
+      : `${page.title} · ${site.name}`,
+    description: page.description,
+    type: 'website',
+    image: defaultShareImage(),
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: site.name,
+      url: urls.home,
+      description: site.tagline,
+      author: personNode(),
+      publisher: personNode(),
+    },
+  };
 }
 
 // ---------------------------------------------------------------- 主流程
@@ -392,6 +554,7 @@ const categories = [
   ...new Set(posts.flatMap((post) => post.categories)),
 ].sort();
 
+const started = Date.now();
 const template = readFileSync(INDEX_HTML, 'utf8');
 mkdirSync(DIST, { recursive: true });
 
@@ -404,14 +567,30 @@ writeFileSync(
 );
 writeFileSync(join(DIST, 'robots.txt'), renderRobots(urls), 'utf8');
 
-for (const post of posts) {
-  const file = join(DIST, 'post', `${post.slug}.html`);
-  mkdirSync(dirname(file), { recursive: true }); // slug 带子目录时要先建目录
-  writeFileSync(file, renderPostHtml(template, post), 'utf8');
+// 静态页(含首页,就地改写 dist/index.html)与文章页走同一段落盘逻辑
+const pages = [
+  ...staticPageRecords(posts, categories).map(staticPageRecord),
+  ...posts.map(postPageRecord),
+];
+
+let failed = 0;
+for (const page of pages) {
+  try {
+    // slug / 分类名带子目录时要先建目录
+    mkdirSync(dirname(page.file), { recursive: true });
+    writeFileSync(page.file, renderPageHtml(template, page), 'utf8');
+  } catch (err) {
+    // 不吞错误:报出是哪一页失败,收尾时整体置非零退出码,让 CI 直接红
+    failed += 1;
+    console.error(`[build-static] 生成失败 ${page.url}:${err.message}`);
+  }
 }
 
 const fallback = posts.filter((post) => !ogImageFor(post.slug).fromOg).length;
 const addressCount = STATIC_PAGES.length + categories.length + posts.length;
+const pageCount = pages.length - posts.length;
+const seconds = ((Date.now() - started) / 1000).toFixed(2);
+
 console.log(`[build-static] 站点地址 ${urls.home}`);
 console.log(
   `[build-static] feed.xml / atom.xml 各 ${Math.min(posts.length, FEED_SIZE)} 篇`,
@@ -419,6 +598,15 @@ console.log(
 console.log(`[build-static] sitemap.xml ${addressCount} 个地址`);
 console.log('[build-static] robots.txt');
 console.log(
-  `[build-static] 预渲染 ${posts.length} 篇文章 → dist/post/<slug>.html` +
+  `[build-static] 静态页 ${pageCount} 个(含首页,head 带 JSON-LD 与订阅 link)→ dist/<路径>/index.html`,
+);
+console.log(
+  `[build-static] 文章 ${posts.length} 篇 → dist/post/<slug>.html` +
     (fallback > 0 ? `(其中 ${fallback} 篇没有 og 图,用默认分享图)` : ''),
 );
+console.log(`[build-static] 用时 ${seconds}s`);
+
+if (failed > 0) {
+  console.error(`[build-static] ${failed} 个页面生成失败,产物不完整`);
+  process.exitCode = 1;
+}

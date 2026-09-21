@@ -15,3 +15,29 @@
   flex-wrap: wrap;
   row-gap: 6px;
 }
+
+/* 页脚订阅入口(RSS / Atom / Sitemap)。
+   只定版面:字号间距在这,配色交给各主题自己的 .footer a 规则。 */
+:where(.footer-links) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--muted, #7a6f58);
+}
+
+/* 订阅链接:主题只给 .footer 上了颜色,没管里面的 a,会被全局 a{color:var(--blue)} 抢走,
+   这里显式用页脚的弱化色,悬停才变主色 —— 和主题里其它页脚链接一致 */
+.footer-links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--red, #e43b44);
+  text-decoration: none;
+}

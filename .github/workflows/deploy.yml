@@ -33,8 +33,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # 以下三项都很便宜,放在构建前面:格式 / 单测 / 内容问题在最快的地方暴露
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Content check(死链 / 标题层级 / frontmatter)
+        run: npm run check
+
       - name: Build
         run: npm run build
+
+      # 主题隔离自检:当前 dist 只含选中主题的样式,没混进别的主题
+      - name: Theme isolation
+        run: node design-preview/check-isolation.mjs
 
       # SPA 兜底:访问不存在的路径时返回 index.html,交给前端路由处理
       - name: Create SPA 404 fallback
