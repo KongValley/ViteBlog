@@ -12,11 +12,13 @@
 // 脚本只读 src/ 与 dist/index.html,产物全部落在 dist/ 下,可以重复执行。
 
 import {
+  copyFileSync,
   existsSync,
   mkdirSync,
   readdirSync,
   readFileSync,
-  writeFileSync, copyFileSync } from 'node:fs';
+  writeFileSync,
+} from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
