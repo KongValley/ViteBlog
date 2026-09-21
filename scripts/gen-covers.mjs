@@ -286,17 +286,18 @@ const SCENES = (() => {
 function buildPrompt(postSlug, meta) {
   const topic = SCENES[postSlug] || topicOf(postSlug, meta) || 'programming';
   return [
-    'Retro pixel art cover illustration for a tech blog article, 8-bit / 16-bit game style.',
-    // 这个模型很爱把提示词里的主题原样画成标题字 —— 所以主题只给英文关键词,
-    // 并且把「不要任何文字」放在开头、结尾和 negative_prompt 三处一起压。
-    'Purely pictorial scene: the subject is shown as objects, characters or scenery only.',
-    'ABSOLUTELY NO TEXT: no letters, no characters, no words, no numbers, no captions,',
-    'no titles, no labels, no signage, no interface panels, no code blocks.',
+    // 方向:像素游戏「场景」而不是居中徽章 —— 有远近层次、有地面、有小角色在做事
+    'Retro 16-bit pixel art game scene, like a screenshot of a SNES-era platformer or RPG.',
+    'A full scene with depth: a far background layer of pixel scenery, a mid layer of objects,',
+    'and a ground or platform layer across the foreground; one or two small chunky pixel',
+    'characters acting in the middle of the scene with a few props around them.',
     'Chunky visible pixels, hard edges, no anti-aliasing, limited retro palette:',
     'deep navy background (#0f0e17), NES red (#e43d44), warm gold (#f8b800), cyan accents (#22d3ee).',
-    'Simple bold centered composition with generous negative space, one clear focal subject,',
-    'subtle dark texture blocks in the background, generous margins so nothing touches the edges.',
-    `Subject (illustrate it as a wordless scene): ${topic}.`,
+    'Wide horizontal composition, camera slightly above the ground, empty space near the edges',
+    'so the middle of the picture reads clearly when it is cropped into a small card.',
+    'ABSOLUTELY NO TEXT: no letters, no characters, no words, no numbers, no captions, no titles,',
+    'no labels, no signage, no interface panels, no code blocks, no HUD, no health bars, no menus.',
+    `Scene (depict it as a wordless pixel game scene): ${topic}.`,
     style,
   ]
     .filter(Boolean)
