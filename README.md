@@ -68,13 +68,16 @@ avatar: https://github.com/KongValley.png?size=60 # 头像(可省略,默认 GitH
 ```yaml
 music:
   server: tencent                 # tencent(QQ音乐)/ netease(网易云)/ kugou / kuwo / baidu
-  id: 003qYzA508Z2yF              # 歌曲 ID:QQ 音乐歌曲页 URL 里 songDetail/ 后面那串
+  type: song                      # song(单曲)/ playlist(歌单)
+  id: 003qYzA508Z2yF              # 单曲填歌曲 id;歌单填歌单 id(纯数字直接写,不用加引号)
   api: https://api.injahow.cn/meting/?server=:server&type=:type&id=:id
 ```
 
 - 三个占位符 `:server` / `:type` / `:id` 必须保留,组件会按需替换;写错会回退到默认公共实例并在控制台提示。
+- **歌单**:`type: playlist` 后,播放器右下角多一个列表按钮,点开是整张歌单(默认收起,列表出现在控制条上方,不会把控制条顶走)。
+- **能不能播取决于平台**:实测网易云的歌单基本都能播;QQ 音乐对大部分歌曲有会员/版权限制,代理拿不到播放地址(播放器会提示 audio error 并自动跳下一首),自选的单曲一般没问题。
 - 公共实例偶尔不可用,此时挂件里显示一行失败提示(不影响页面其它部分)。想稳一点可以按 [Meting-API](https://github.com/metowolf/Meting-API) 自建后改 `api`。
-- 整段删除(或留空 `id`)则不渲染挂件,`id` 目前只支持单曲。
+- 整段删除(或留空 `id`)则不渲染挂件。
 - 挂件挂在 `App` 上而不是某个页面:固定层的东西跟路由走的话,切页面音乐就断了。
 - 播放器只能手动点播放(浏览器不允许自动播放),且音频地址由第三方接口提供,能否播放取决于对方服务。
 

@@ -40,10 +40,11 @@ function readStoredMini(): boolean {
 }
 
 // 把 api 模板里的 :server / :type / :id 换成配置值
-function metingUrl(music: MusicConfig, type: 'song'): string {
+// (type=song 返回一首,type=playlist 返回整张歌单)
+function metingUrl(music: MusicConfig): string {
   return music.api
     .replaceAll(':server', music.server)
-    .replaceAll(':type', type)
+    .replaceAll(':type', music.type)
     .replaceAll(':id', music.id);
 }
 
@@ -73,7 +74,7 @@ export default function MusicDock() {
 
     void (async () => {
       try {
-        const response = await fetch(metingUrl(music, 'song'), {
+        const response = await fetch(metingUrl(music), {
           signal: abort.signal,
         });
         if (!response.ok) {
@@ -102,6 +103,8 @@ export default function MusicDock() {
           loop: 'all',
           preload: 'none', // 不点播放就不下载音频
           mutex: true,
+          // 歌单默认收起来:挂件保持一条控制条的高度,点列表图标再展开
+          listFolded: true,
           listMaxHeight: '180px',
           storageName: 'viteblog-music',
         });

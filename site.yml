@@ -60,8 +60,13 @@ social:
 music:
   # 平台:tencent(QQ音乐)/ netease(网易云)/ kugou / kuwo / baidu
   server: tencent
-  # 歌曲 ID:QQ 音乐歌曲页 https://y.qq.com/n/ryqq_v2/songDetail/003qYzA508Z2yF
-  #         里 songDetail/ 后面那串就是(只支持单曲)
+  # 类型:song(单曲)/ playlist(歌单)
+  #   song     → id 填歌曲 id:QQ 音乐歌曲页 https://y.qq.com/n/ryqq_v2/songDetail/003qYzA508Z2yF
+  #              里 songDetail/ 后面那串
+  #   playlist → id 填歌单 id:QQ 音乐歌单页 https://y.qq.com/n/ryqq/playlist/3011946123
+  #              里 playlist/ 后面那串(播放器会出现一个列表按钮,点开是歌单)
+  #              注意:QQ 音乐大部分歌要会员/版权限制,代理拿不到播放地址;网易云的歌单基本都能播
+  type: song
   id: 003qYzA508Z2yF
   # Meting 接口地址,:server / :type / :id 三个占位符必须保留,会被自动替换
   # 公共实例偶尔会挂;想稳一点可以按 https://github.com/metowolf/Meting-API 自建后改这里

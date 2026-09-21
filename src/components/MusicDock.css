@@ -96,7 +96,11 @@
 }
 
 /* ---------- APlayer 本体:接到主题变量上 ---------- */
+/* 单曲时没有列表;歌单时 APlayer 会把列表挂在控制条后面 —— 挂件是贴着屏幕底边的,
+   列表往下长会把控制条顶上去,所以翻转成"列表在上、控制条在下",控制条位置不动 */
 .music-dock .aplayer {
+  display: flex;
+  flex-direction: column;
   margin: 0;
   background: var(--music-bg, var(--surface, #fff));
   color: var(--music-ink, var(--ink, #222));
@@ -104,6 +108,16 @@
   box-shadow: none;
   font-family: var(--music-font, var(--font-body, inherit));
   overflow: hidden;
+}
+
+.music-dock .aplayer .aplayer-list {
+  order: -1;
+  /* 列表翻到控制条上面后,分隔线要补在列表下沿 */
+  border-bottom: 1px solid var(--music-line, var(--line, #e9e9e9));
+}
+
+.music-dock .aplayer .aplayer-list.aplayer-list-hide {
+  border-bottom: none;
 }
 
 .music-dock .aplayer.aplayer-withlist .aplayer-info {

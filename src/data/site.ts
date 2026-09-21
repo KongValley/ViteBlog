@@ -24,11 +24,13 @@ export interface SocialLink {
   url: string;
 }
 
-// 「关于本站」页的音乐卡片(site.yml 的 music 段;不填就不显示播放器)
+// 音乐挂件(site.yml 的 music 段;不填就不显示播放器)
 export interface MusicConfig {
   /** 平台:tencent(QQ音乐)/ netease(网易云)/ kugou / kuwo / baidu … */
   server: string;
-  /** 歌曲 ID:QQ 音乐歌曲页 URL 里 songDetail/ 后面那串 */
+  /** 取歌方式:song(单曲)/ playlist(歌单) */
+  type: string;
+  /** song 填歌曲 ID,playlist 填歌单 ID(QQ 音乐页面 URL 里那串) */
   id: string;
   /** Meting API 模板,必须带 :server / :type / :id 三个占位符 */
   api: string;
@@ -94,24 +96,35 @@ function normalizeMusic(raw: unknown): MusicConfig | undefined {
   if (typeof raw !== 'object' || raw === null) return undefined;
   const item = raw as Record<string, unknown>;
 
-  const id = typeof item.id === 'string' ? item.id.trim() : '';
+  // 歌单 id 全是数字,YAML 会把它解析成 number(用户不会特意加引号),所以两种都收
+  const id =
+    typeof item.id === 'number'
+      ? String(item.id)
+      : typeof item.id === 'string'
+        ? item.id.trim()
+        : '';
   if (!id) return undefined;
 
   const server =
     typeof item.server === 'string' && item.server.trim() !== ''
       ? item.server.trim()
       : 'tencent';
+  // 目前只支持单曲和歌单两种取法,写别的按单曲处理(接口也只认这两类)
+  const type =
+    typeof item.type === 'string' && item.type.trim() === 'playlist'
+      ? 'playlist'
+      : 'song';
   const api = typeof item.api === 'string' ? item.api.trim() : '';
-  if (!api) return { server, id, api: DEFAULT_METING_API };
+  if (!api) return { server, type, id, api: DEFAULT_METING_API };
 
   const placeholders = [':server', ':type', ':id'];
   if (placeholders.some((placeholder) => !api.includes(placeholder))) {
     console.warn(
       `[site.yml] music.api 缺少 ${placeholders.join(' / ')} 占位符,已回退到默认 Meting 接口`,
     );
-    return { server, id, api: DEFAULT_METING_API };
+    return { server, type, id, api: DEFAULT_METING_API };
   }
-  return { server, id, api };
+  return { server, type, id, api };
 }
 
 export const site: Site = {
