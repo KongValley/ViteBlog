@@ -1,6 +1,7 @@
 ---
 title: JavaScript 入门（二）：函数、作用域与闭包
 date: 2026-09-18 10:15:00
+cover: /ViteBlog/images/covers/js-02-functions-scope-closures.jpg
 tags:
   - JavaScript
   - 入门

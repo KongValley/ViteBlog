@@ -175,6 +175,7 @@ const PAGES = [
       article: !!document.querySelector('.markdown-body'),
       headings: document.querySelectorAll('.markdown-body h2, .markdown-body h3').length,
       coverAlt: document.querySelector('.post-cover')?.getAttribute('alt') ?? null,
+      coverLoaded: (document.querySelector('.post-cover')?.naturalWidth ?? 0) > 0,
       share: document.querySelectorAll('.share-btn').length,
       text: document.body.innerText.length,
     })`,
@@ -182,6 +183,10 @@ const PAGES = [
       [data.article, '文章正文渲染出来了'],
       [data.headings >= 2, `文章有小标题(实际 ${data.headings})`],
       [!!data.coverAlt, '文章头图有 alt'],
+      [
+        data.coverLoaded,
+        '文章头图真的加载出来了 —— 回归过:frontmatter 的 cover 没带部署 base,<img src> 404 成了空白',
+      ],
       [data.share >= 4, `分享条四个按钮在(实际 ${data.share})`],
       [data.text > 500, `文章页有实际内容(正文 ${data.text} 字)`],
     ],

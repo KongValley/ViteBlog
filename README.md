@@ -160,6 +160,7 @@ music:
 | 阅读进度 / 目录 | 文章页顶部进度条;窄屏右下有悬浮目录按钮(宽屏用左侧卷轴目录) |
 | 键盘快捷键 | 按 `?` 查看全部;`/` 搜索、`h/t/a/c` 跳转、`←/→` 上下篇、`b` 回顶、`Esc` 关闭 |
 | 图片 | 懒加载、点击放大(灯箱);本地图构建期生成 webp 变体与 `srcset`(老文的 27 张外链图已全部本地化到 `public/images/`,不再依赖图床) |
+| 封面来源 | 没写 `cover` 用构建期生成的像素封面;**想要真实照片**用 `npm run cover -- <slug> "关键词"`:从 Openverse 搜 CC0/公有领域图,裁成 1200×630 落进 `public/images/covers/`,自动写好 frontmatter(详见「封面与图片来源」) |
 | 公式 / 图表 | KaTeX 与 Mermaid,按需加载(正文没用到就不下载)。实测 51 篇里 0 篇用到,依赖保留备用 —— 它们只在文章页需要的 chunk 里,不影响首屏 |
 | 彩蛋 | 首页游戏机卡片上的点击粒子;输入 Konami 码(↑↑↓↓←→←→BA)有惊喜 |
 | 订阅与收录 | 构建期生成 `feed.xml`、`atom.xml`、`sitemap.xml`、`robots.txt`;页脚也有 RSS / Atom / Sitemap 入口 |
@@ -185,6 +186,7 @@ npm run check:themes        # 主题契约:通用变量别名是否齐全 / 是�
 npm run check:dist          # 构建产物自检:head 标签、本地资源、预渲染与图片数量
 npm run smoke               # 真站点冒烟:无头 Chrome 打开首页/文章页/标签页/友链页,查渲染与控制台报错
 npm run import:images       # 把正文里的远程图片抓到 public/images/ 并改写链接(带 --dry-run)
+npm run cover -- <slug> "关键词"   # 给某篇文章找一张 CC0 真实照片当封面(带 --dry-run / --index / --license)
 npm run build               # 类型检查 + 构建 + 生成分享图 / feed / sitemap / 预渲染 HTML
 ```
 
@@ -204,6 +206,28 @@ CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` 
 - 文章页走路由懒加载,marked + highlight.js 不进首屏(实测首屏 JS 476.7 KB → 331 KB,gzip 149.6 → 105 KB);
 - 中文像素字体按「站内实际用到的字符」构建期子集化(588 KB → 47 KB,8.1%),单独成 `fonts-*.css` 异步加载;
 - 构建收尾会删掉 `dist` 里永远不会被下载的 woff/ttf 老格式字体(每次约 1 MB)。
+
+## 封面与图片来源
+
+文章的封面有三条路,按「省事 → 讲究」排:
+
+1. **不写 `cover`** —— 构建期自动生成一张 1200×630 的像素风封面(`scripts/build-covers.mjs`,图案取自该文在首页的图标);
+2. **`npm run cover -- <slug> "关键词"`** —— 从 [Openverse](https://openverse.org) 的公开 API 搜图(免密钥),
+   默认只收 **CC0 / 公有领域**,下载后裁成 1200×630 写进 `public/images/covers/`,并把 `cover:` 写进 frontmatter。
+   `--dry-run` 先看候选,`--index 2` 换一张,`--license cc0,pdm,by` 放宽到需要署名的图(那样请自行在正文注明作者与许可)。
+3. **自己找图** —— 丢进 `public/images/`,在 frontmatter 写 `cover: <带部署 base 的路径>`(例如 `/ViteBlog/images/covers/xxx.jpg`)。
+
+三个来源都能用,但**一定要落在 `public/images/` 里**:
+
+- 构建期的 webp 变体 + `srcset` + 宽高只在清单收录的本地图上生效(远程图会被跳过);
+- 「生成分享图」用 canvas 现画,跨域图会把画布标脏、导不出来 —— 本地同源图没这个问题;
+- 老文原来挂在阿里云 OSS 上的图已经用 `npm run import:images` 全部抓回本地。
+
+其它免费图源(都支持下载后自托管):[Unsplash](https://unsplash.com)(免费、不强制署名)、
+[Pexels](https://www.pexels.com) / [Pixabay](https://pixabay.com)(CC0 类似条款)、
+[Wikimedia Commons](https://commons.wikimedia.org)(多为 CC-BY-SA,需署名)、
+[unDraw](https://undraw.co) / [OpenPeeps](https://www.openpeeps.com)(开源插画风,技术文很搭),
+以及 [Wallhaven](https://wallhaven.cc)(你老文里那批 `wallhaven-*.jpg` 就是它)。
 
 ## 主题
 
