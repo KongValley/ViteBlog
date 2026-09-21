@@ -1499,8 +1499,9 @@ body::after {
 }
 
 /* ---------- 宽屏自适应放大 ----------
-   内容列宽是写死的(容器 max-width 1080px),2K/4K 屏上两侧会空掉一大片;这里按视口
-   宽度分档给整页做等比放大(zoom),内容和留白一起吃回去,版面比例与字号关系不变。
+   内容列宽是写死的(容器 max-width 1080px),2K/4K 屏上两侧会空掉一大片;这里从 1800px
+   起按视口宽度分档给整页做等比放大(zoom),内容占比稳定在 60% 出头 —— 笔记本宽度
+   (≤1799px)完全不动,大屏上才逐步放大,不会一上来就把内容顶满。
    倍率按「容器宽 × 倍率 ≤ 该档起点视口宽」定,任何宽度都不会横向滚动;窄屏倍率是 1。
    注意:固定层小控件(.back-top / .music-dock)挂在 .page 外面,不参与放大。 */
 .page {
@@ -1510,44 +1511,38 @@ body::after {
   min-height: calc(100vh / var(--page-zoom));
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 2000px) {
   .page {
-    --page-zoom: 1.16;
-  }
-}
-
-@media (min-width: 1680px) {
-  .page {
-    --page-zoom: 1.29;
-  }
-}
-
-@media (min-width: 1920px) {
-  .page {
-    --page-zoom: 1.44;
+    --page-zoom: 1.15;
   }
 }
 
 @media (min-width: 2240px) {
   .page {
-    --page-zoom: 1.6;
+    --page-zoom: 1.29;
   }
 }
 
 @media (min-width: 2560px) {
   .page {
-    --page-zoom: 1.77;
+    --page-zoom: 1.47;
   }
 }
 
 @media (min-width: 3000px) {
   .page {
-    --page-zoom: 1.93;
+    --page-zoom: 1.72;
   }
 }
 
 @media (min-width: 3600px) {
   .page {
-    --page-zoom: 2.12;
+    --page-zoom: 2.07;
+  }
+}
+
+@media (min-width: 4200px) {
+  .page {
+    --page-zoom: 2.2;
   }
 }
