@@ -70,7 +70,12 @@ export default function ShareBar({
   return (
     <div className="share-bar">
       <span className="share-label">分享</span>
-      <button type="button" className="share-btn" onClick={copy}>
+      <button
+        type="button"
+        className="share-btn"
+        data-state={copied === 'idle' ? undefined : copied}
+        onClick={copy}
+      >
         {copied === 'done'
           ? '已复制'
           : copied === 'failed'

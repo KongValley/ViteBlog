@@ -25,27 +25,58 @@
   align-items: center;
   justify-content: center;
   /* 文案长短不一(「X」和「生成分享图」),统一 min-width 让几个按钮一样宽 */
-  min-width: 96px;
-  min-height: 28px;
-  padding: 3px 12px;
-  border: 1px solid var(--line, #1a1a1a);
+  min-width: 108px;
+  min-height: 40px;
+  padding: 8px 18px;
+  border: 2px solid var(--line, #1a1a1a);
+  /* 硬阴影是像素风按钮的招牌(主题里的按钮也是这么做的),按下时缩回去;
+     阴影色优先用主题的 --shadow,没定义就退回描边色 */
+  box-shadow: 2px 2px 0 var(--shadow, var(--line, #1a1a1a));
   background: var(--surface, #fff);
   color: var(--ink, #222);
   font-family: var(--font-body, inherit);
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: 0.02em;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
+  transition:
+    color 0.12s ease,
+    background-color 0.12s ease,
+    border-color 0.12s ease,
+    box-shadow 0.12s ease,
+    transform 0.06s ease;
 }
 
 .share-btn:hover {
   border-color: var(--red, #e43b44);
+  box-shadow: 2px 2px 0 var(--red, #e43b44);
   color: var(--red, #e43b44);
   /* 主题的 a:hover 会补下划线,这里再声明一次 */
   text-decoration: none;
+}
+
+/* 按下去像真的按了一下:影子收掉、按钮挪到影子的位置 */
+.share-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--shadow, var(--line, #1a1a1a));
+}
+
+/* 复制成功 / 失败沿用代码块「复制」按钮的配色 */
+.share-btn[data-state="done"] {
+  border-color: var(--green, #00a844);
+  box-shadow: 2px 2px 0 var(--green, #00a844);
+  color: var(--green, #00a844);
+}
+
+.share-btn[data-state="failed"] {
+  border-color: var(--red, #e43b44);
+  box-shadow: 2px 2px 0 var(--red, #e43b44);
+  color: var(--red, #e43b44);
 }
 
 :where(.share-btn) {
