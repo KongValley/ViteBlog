@@ -1,5 +1,7 @@
 import PlayerScreen from '../components/PlayerScreen';
+import SiteStatsCard from '../components/SiteStatsCard';
 import { SocialIcon } from '../components/SocialIcon';
+import { usePageMeta } from '../data/pageMeta';
 import { type SocialLink, site } from '../data/site';
 
 // 终端风格小卡片(仿 open source 项目卡)
@@ -81,6 +83,12 @@ function ContactCard() {
 }
 
 export default function About() {
+  usePageMeta({
+    title: '关于本站',
+    description: `${site.name} —— ${site.tagline}`,
+    path: '/about',
+  });
+
   return (
     <section className="about">
       <h1 className="section-title">关于本站</h1>
@@ -108,6 +116,7 @@ export default function About() {
           改一个字段就能换掉整套风格, 构建时只会打包选中的那一套。
         </p>
       </div>
+      <SiteStatsCard />
       <ContactCard />
     </section>
   );

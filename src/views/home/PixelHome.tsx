@@ -100,6 +100,16 @@ export default function PixelHome({
         <section className="post-list">
           {visiblePosts.map((post) => (
             <article key={post.slug} className="post-card">
+              {post.cover && (
+                <img
+                  className="post-card-cover"
+                  src={post.cover}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  data-no-zoom="true"
+                />
+              )}
               <Link to={`/post/${post.slug}`} className="post-card-link">
                 <h2 className="post-card-title">
                   <span className="post-card-icon" aria-hidden="true">

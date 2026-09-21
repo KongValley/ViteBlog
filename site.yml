@@ -71,3 +71,14 @@ music:
   # Meting 接口地址,:server / :type / :id 三个占位符必须保留,会被自动替换
   # 公共实例偶尔会挂;想稳一点可以按 https://github.com/metowolf/Meting-API 自建后改这里
   api: https://api.injahow.cn/meting/?server=:server&type=:type&id=:id
+
+# ============================================================
+#  访问统计(三样都留空 = 完全不加载任何统计脚本,默认如此)
+#  GoatCounter:轻量、无 cookie,填站点代码(https://<代码>.goatcounter.com 里的那段)
+#  自建 Umami:填脚本地址与网站 ID
+# ============================================================
+
+analytics:
+  goatcounter: ''
+  umamiSrc: ''
+  umamiId: ''

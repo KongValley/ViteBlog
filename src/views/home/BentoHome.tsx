@@ -146,6 +146,17 @@ export default function BentoHome({
           </span>
           {visiblePosts.map((post) => (
             <Link key={post.slug} className="row" to={`/post/${post.slug}`}>
+              {/* 封面:只有带 cover 的文章才在行首顶一张头图,没有就还是原来的一行字 */}
+              {post.cover && (
+                <img
+                  className="post-card-cover"
+                  src={post.cover}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  data-no-zoom="true"
+                />
+              )}
               <span className="t">{post.title}</span>
               <span className="d">{formatDateCompact(post.date).slice(5)}</span>
             </Link>

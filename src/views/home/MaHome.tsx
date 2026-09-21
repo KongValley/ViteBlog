@@ -100,6 +100,17 @@ export default function MaHome({
       <section className="ma-list">
         {visiblePosts.map((post, index) => (
           <Link key={post.slug} className="ma-row" to={`/post/${post.slug}`}>
+            {/* 封面:有 cover 才在行首插一张头图,没有就保持原来的细线一行 */}
+            {post.cover && (
+              <img
+                className="post-card-cover"
+                src={post.cover}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                data-no-zoom="true"
+              />
+            )}
             <span className="ma-idx">
               {KANJI[(page - 1) * 10 + index] ?? index + 1}
             </span>

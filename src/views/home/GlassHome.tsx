@@ -79,6 +79,17 @@ export default function GlassHome({
         <div className="gl-cards">
           {visiblePosts.map((post) => (
             <Link key={post.slug} className="gl-card" to={`/post/${post.slug}`}>
+              {/* 有封面就贴顶显示头图,没有则整段不渲染 */}
+              {post.cover && (
+                <img
+                  className="post-card-cover"
+                  src={post.cover}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  data-no-zoom="true"
+                />
+              )}
               <span className="gl-tags">
                 {post.tags.map((tag) => (
                   <span key={tag} className="gl-chip">

@@ -109,6 +109,17 @@ export default function BrutalistHome({
 
         {visiblePosts.map((post, index) => (
           <Link key={post.slug} className="br-post" to={`/post/${post.slug}`}>
+            {/* 有封面时在卡片顶部补一张头图,没封面就什么都不多渲染 */}
+            {post.cover && (
+              <img
+                className="post-card-cover"
+                src={post.cover}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                data-no-zoom="true"
+              />
+            )}
             <span className="br-no">
               {String((page - 1) * PAGE_SIZE + index + 1).padStart(2, '0')}
             </span>

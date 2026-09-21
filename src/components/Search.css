@@ -1,0 +1,265 @@
+/* ============================================================
+   搜索页(src/views/Search.tsx):顶部输入框 + 实时结果列表
+   ------------------------------------------------------------
+   同 .music-dock / .back-top 的做法:只"使用"主题变量、不"声明"变量,
+   每个变量都带兜底值(没主题也能看)。外观规则一律用 :where() 包起来
+   (优先级 0),主题想改样式时写同选择器即可覆盖,不用跟打包顺序较劲。
+
+   用到:--surface --ink --ink-strong --muted --line --bg --red --gold
+         --font-body --font-code --shadow
+   ============================================================ */
+
+:where(.search-page) {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 0 56px;
+}
+
+:where(.search-title) {
+  margin: 0 0 16px;
+  color: var(--ink-strong, var(--ink, #111));
+  font-family: var(--font-body, inherit);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 搜索框 ---------- */
+:where(.search-box) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.14));
+  border-radius: 10px;
+  background: var(--surface, #fff);
+  box-shadow: var(--shadow, none);
+  transition: border-color 0.15s ease;
+}
+
+:where(.search-box:focus-within) {
+  border-color: var(--red, #d63b3b);
+}
+
+:where(.search-box-icon) {
+  flex: none;
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-code, monospace);
+  font-size: 16px;
+  line-height: 1;
+}
+
+:where(.search-input) {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+  font-size: 16px;
+  line-height: 1.5;
+  outline: none;
+}
+
+:where(.search-input::placeholder) {
+  color: var(--muted, #9a9a9a);
+}
+
+/* 清空统一走右侧按钮,去掉浏览器给 type=search 的原生清除叉 */
+:where(.search-input)::-webkit-search-cancel-button {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+:where(.search-clear) {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-body, inherit);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+:where(.search-clear:hover) {
+  color: var(--ink-strong, var(--ink, #111));
+}
+
+:where(.search-hint) {
+  margin: 8px 2px 0;
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-body, inherit);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ---------- 空查询时的热门标签入口 ---------- */
+:where(.search-hot) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+:where(.search-hot-label) {
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-body, inherit);
+  font-size: 12px;
+}
+
+:where(.search-hot-tag) {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.14));
+  border-radius: 999px;
+  background: var(--bg, transparent);
+  color: var(--ink, #333);
+  font-family: var(--font-body, inherit);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+:where(.search-hot-tag:hover) {
+  border-color: var(--red, #d63b3b);
+  color: var(--red, #d63b3b);
+}
+
+:where(.search-hot-count) {
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-code, monospace);
+  font-size: 11px;
+}
+
+/* ---------- 结果计数 / 空结果 ---------- */
+:where(.search-count) {
+  margin: 20px 2px 10px;
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-body, inherit);
+  font-size: 12px;
+}
+
+:where(.search-empty) {
+  margin: 28px 2px;
+  padding: 24px 16px;
+  border: 1px dashed var(--line, rgba(0, 0, 0, 0.16));
+  border-radius: 10px;
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-body, inherit);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ---------- 结果列表 ---------- */
+:where(.search-results) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* 键盘上下移动时不要带着整个页面滚 */
+  max-height: min(70vh, 720px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+:where(.search-hit) {
+  display: block;
+  padding: 14px 14px 15px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease;
+}
+
+:where(.search-hit:hover) {
+  background: var(--bg, rgba(0, 0, 0, 0.03));
+}
+
+/* 键盘/鼠标当前指向的那一条 */
+:where(.search-hit--active) {
+  border-color: var(--line, rgba(0, 0, 0, 0.14));
+  background: var(--bg, rgba(0, 0, 0, 0.04));
+}
+
+:where(.search-hit-title) {
+  margin: 0;
+  color: var(--ink-strong, var(--ink, #111));
+  font-family: var(--font-body, inherit);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+:where(.search-hit--active .search-hit-title) {
+  color: var(--red, #d63b3b);
+}
+
+:where(.search-hit-meta) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-code, monospace);
+  font-size: 11px;
+}
+
+:where(.search-hit-sep) {
+  color: var(--line, rgba(0, 0, 0, 0.2));
+}
+
+:where(.search-hit-tags) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 0;
+}
+
+:where(.search-hit-tag) {
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+:where(.search-hit-excerpt) {
+  margin: 8px 0 0;
+  color: var(--muted, #777);
+  font-family: var(--font-body, inherit);
+  font-size: 13px;
+  line-height: 1.7;
+  /* 摘要只露两行,列表密度才稳 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  :where(.search-title) {
+    font-size: 21px;
+  }
+
+  :where(.search-hit) {
+    padding: 12px 10px 13px;
+  }
+
+  :where(.search-hit-title) {
+    font-size: 16px;
+  }
+
+  :where(.search-results) {
+    max-height: none;
+  }
+}

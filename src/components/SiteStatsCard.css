@@ -1,0 +1,196 @@
+/* ============================================================
+   关于页「本站数据」卡片:一块只读仪表板(状态栏 + 数字格 + 标签/分类胶囊)
+   ------------------------------------------------------------
+   结构由 SiteStatsCard.tsx 给出,视觉只依赖主题变量(带兜底),深浅色由主题
+   自动翻转。主题想改这块的外观,可以在自己的 style.css 里写同名选择器,
+   也可以用下面这些中间变量(不定义就用括号里的兜底,一样能跑):
+
+     --stats-bg      卡片底色(默认 --surface)
+     --stats-grid-bg 数字格底色(默认 --bg)
+     --stats-ink     正文色(默认 --ink)
+     --stats-strong  数字色(默认 --ink-strong)
+     --stats-muted   次要文字色(默认 --muted)
+     --stats-line    描边、分隔线(默认 --line)
+     --stats-accent  状态灯与悬停色(默认 --red)
+     --stats-shadow  卡片投影(默认取 --shadow;主题没定义 --shadow 时不投影)
+     --stats-radius  圆角(默认 10px,像素风/瑞士风会在全局压成 0)
+     --stats-font    正文字体(默认 --font-body)
+     --stats-mono    数字与年份(默认 --font-code)
+
+   这里的规则一律用 :where() 包住外层类名,把优先级压到 0 —— 主题写同选择器
+   就一定能覆盖,不用跟打包顺序较劲(同 MusicDock.css 的做法)。
+   注意:这里只"使用"变量、不"声明"变量,声明会压掉主题在 :root 上的值。
+   ============================================================ */
+
+/* ---------- 卡片外壳:与「终端卡」「联系卡」同一种硬边框 + 硬阴影 ---------- */
+:where(.site-stats) {
+  margin-top: 40px;
+  padding: 20px 24px;
+  border: 1px solid var(--stats-line, var(--line, rgba(0, 0, 0, 0.14)));
+  border-radius: var(--stats-radius, 10px);
+  background: var(--stats-bg, var(--surface, #fff));
+  color: var(--stats-ink, var(--ink, #222));
+  font-family: var(--stats-font, var(--font-body, system-ui, sans-serif));
+  /* 只有定义 --shadow 的主题才投影(其余主题靠描边撑卡片,免得柔光主题里
+     冒出一块硬邦邦的黑影);像素风与关于页另两张卡片同样是 6px 硬阴影 */
+  box-shadow: var(--stats-shadow, 6px 6px 0 var(--shadow, transparent));
+}
+
+/* ---------- 状态栏式标题行:左边标题(带状态灯)+ 右边起始年份 ---------- */
+:where(.site-stats) .site-stats-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--stats-line, var(--line, rgba(0, 0, 0, 0.14)));
+}
+
+:where(.site-stats) .site-stats-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--stats-strong, var(--ink-strong, var(--ink, #111)));
+}
+
+/* 标题前的方点 = 一块小小的"运行中"指示灯 */
+:where(.site-stats) .site-stats-title::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 9px;
+  background: var(--stats-accent, var(--red, #d63b3b));
+}
+
+:where(.site-stats) .site-stats-since {
+  margin-left: auto;
+  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--stats-muted, var(--muted, #8a8a8a));
+}
+
+/* ---------- 数字格:四格等分,竖线分隔 ---------- */
+:where(.site-stats) .site-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 16px;
+  border: 1px solid var(--stats-line, var(--line, rgba(0, 0, 0, 0.14)));
+  background: var(--stats-grid-bg, var(--bg, rgba(0, 0, 0, 0.03)));
+}
+
+:where(.site-stats) .site-stats-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 14px;
+  border-right: 1px solid var(--stats-line, var(--line, rgba(0, 0, 0, 0.14)));
+}
+
+:where(.site-stats) .site-stats-cell:last-child {
+  border-right: none;
+}
+
+:where(.site-stats) .site-stats-num {
+  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--stats-strong, var(--ink-strong, var(--ink, #111)));
+}
+
+:where(.site-stats) .site-stats-unit {
+  font-size: 12px;
+  color: var(--stats-muted, var(--muted, #8a8a8a));
+}
+
+/* ---------- 胶囊行:左边小标签,右边一排胶囊(带篇数) ---------- */
+:where(.site-stats) .site-stats-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+:where(.site-stats) .site-stats-label {
+  flex: none;
+  min-width: 2.6em;
+  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--stats-muted, var(--muted, #8a8a8a));
+}
+
+:where(.site-stats) .site-stats-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.site-stats) .site-stats-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid var(--stats-line, var(--line, rgba(0, 0, 0, 0.14)));
+  background: var(--stats-grid-bg, var(--bg, rgba(0, 0, 0, 0.03)));
+  color: var(--stats-ink, var(--ink, #222));
+  font-size: 13px;
+  text-decoration: none;
+}
+
+:where(.site-stats) .site-stats-chip:hover {
+  border-color: var(--stats-accent, var(--red, #d63b3b));
+  color: var(--stats-accent, var(--red, #d63b3b));
+  text-decoration: none;
+}
+
+:where(.site-stats) .site-stats-count {
+  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-size: 11px;
+  color: var(--stats-muted, var(--muted, #8a8a8a));
+}
+
+:where(.site-stats) .site-stats-chip:hover .site-stats-count {
+  color: inherit;
+}
+
+/* ---------- 脚注:说明这块面板是构建期算好的,不占任何运行时请求 ---------- */
+:where(.site-stats) .site-stats-foot {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--stats-muted, var(--muted, #8a8a8a));
+}
+
+/* ---------- 窄屏:四格拆成两行,胶囊行改成上下排 ---------- */
+@media (max-width: 640px) {
+  :where(.site-stats) {
+    padding: 16px 16px;
+  }
+
+  :where(.site-stats) .site-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 两列布局下,每行的第二格去掉右竖线,第一行两格补下横线 */
+  :where(.site-stats) .site-stats-cell:nth-child(2n) {
+    border-right: none;
+  }
+
+  :where(.site-stats) .site-stats-cell:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--stats-line, var(--line, rgba(0, 0, 0, 0.14)));
+  }
+
+  :where(.site-stats) .site-stats-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  :where(.site-stats) .site-stats-since {
+    margin-left: 0;
+  }
+}

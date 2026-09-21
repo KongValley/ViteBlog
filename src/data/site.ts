@@ -36,6 +36,16 @@ export interface MusicConfig {
   api: string;
 }
 
+// 访问统计(site.yml 的 analytics 段;三样都空着就不加载任何统计脚本)
+export interface AnalyticsConfig {
+  /** GoatCounter 站点代码,如 my-blog(对应 https://my-blog.goatcounter.com) */
+  goatcounter: string;
+  /** 自建 Umami 的脚本地址,如 https://umami.example.com/script.js */
+  umamiSrc: string;
+  /** Umami 网站 ID */
+  umamiId: string;
+}
+
 export interface Site {
   name: string;
   tagline: string;
@@ -47,6 +57,7 @@ export interface Site {
   theme: ThemeName;
   social: SocialLink[];
   music?: MusicConfig;
+  analytics: AnalyticsConfig;
 }
 
 const defaults: Site = {
@@ -59,6 +70,7 @@ const defaults: Site = {
   avatar: '',
   theme: 'pixel',
   social: [],
+  analytics: { goatcounter: '', umamiSrc: '', umamiId: '' },
 };
 
 // yml 里写错主题名时兜底回像素风(vite 插件在构建期也会给出明确报错)
@@ -127,12 +139,27 @@ function normalizeMusic(raw: unknown): MusicConfig | undefined {
   return { server, type, id, api };
 }
 
+// yml 里的统计配置:三个字段都当字符串收,空着就是没配
+function normalizeAnalytics(raw: unknown): AnalyticsConfig {
+  const empty: AnalyticsConfig = { goatcounter: '', umamiSrc: '', umamiId: '' };
+  if (typeof raw !== 'object' || raw === null) return empty;
+  const item = raw as Record<string, unknown>;
+  const text = (key: 'goatcounter' | 'umamiSrc' | 'umamiId') =>
+    typeof item[key] === 'string' ? (item[key] as string).trim() : '';
+  return {
+    goatcounter: text('goatcounter'),
+    umamiSrc: text('umamiSrc'),
+    umamiId: text('umamiId'),
+  };
+}
+
 export const site: Site = {
   ...defaults,
   ...config,
   theme: normalizeTheme(config.theme),
   social: normalizeSocial(config.social),
   music: normalizeMusic(config.music),
+  analytics: normalizeAnalytics(config.analytics),
 };
 
 // 未配置仓库地址时,用 GitHub 用户名拼一个

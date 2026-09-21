@@ -1,4 +1,10 @@
-// Markdown 渲染器:marked + highlight.js 语法高亮
+// Markdown 渲染:marked + highlight.js,外加几层仓库自用的语法扩展
+//   1. ::: note 提示块        → <div class="callout callout-note">
+//   2. $$公式$$ / $行内公式$   → 占位元素,交给 ContentEnhancer 用 KaTeX 渲染(默认不进首屏)
+//   3. ```mermaid 代码块       → 占位元素,交给 ContentEnhancer 用 Mermaid 渲染
+//   4. [^脚注]                → 脚注区(marked 本身不支持 GFM 脚注)
+//   5. 代码块                 → 带语言标签与复制按钮的外壳、逐行包裹(行号 + 指定行高亮)
+//   6. 图片 / 外链            → 懒加载、图注、外链新窗口打开
 // 按需注册语言,控制打包体积;写新文章用到别的语言时在这里加一行即可
 
 import hljs from 'highlight.js/lib/core';
@@ -13,7 +19,7 @@ import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
 import yaml from 'highlight.js/lib/languages/yaml';
 import { Marked } from 'marked';
-import { markedHighlight } from 'marked-highlight';
+import { variantsFor } from './images';
 
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('js', javascript);
@@ -33,45 +39,257 @@ hljs.registerLanguage('py', python);
 hljs.registerLanguage('typescript', typescript);
 hljs.registerLanguage('ts', typescript);
 
-export const marked = new Marked(
-  markedHighlight({
-    emptyLangClass: 'hljs',
-    langPrefix: 'hljs language-',
-    highlight(code, lang) {
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code, { language }).value;
+const CALLOUT_LABEL: Record<string, string> = {
+  note: '说明',
+  tip: '提示',
+  warning: '注意',
+  danger: '警告',
+  info: '信息',
+};
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ```ts {2,5-7} —— 指定要高亮的行
+function parseHighlightRanges(spec: string): Set<number> {
+  const lines = new Set<number>();
+  const body = spec.trim().replace(/^\{|\}$/g, '');
+  if (!body) return lines;
+  for (const part of body.split(/[,，]/)) {
+    const [from, to] = part.split('-').map((value) => Number(value.trim()));
+    if (!Number.isFinite(from)) continue;
+    const end = Number.isFinite(to) ? to : from;
+    for (let n = from; n <= end; n += 1) lines.add(n);
+  }
+  return lines;
+}
+
+function renderCodeBlock(code: string, lang: string): string {
+  const info = lang.trim();
+  const [language = '', highlightSpec = ''] = info.split(/\s+/);
+
+  if (language === 'mermaid') {
+    return `<div class="mermaid" data-source="${escapeHtml(code)}"><pre class="mermaid-source">${escapeHtml(code)}</pre></div>`;
+  }
+
+  const highlighted = hljs.getLanguage(language)
+    ? hljs.highlight(code, { language }).value
+    : escapeHtml(code);
+  const highlightedLines = parseHighlightRanges(highlightSpec);
+  const body = highlighted
+    .replace(/\n$/, '')
+    .split('\n')
+    .map((line, index) => {
+      const number = index + 1;
+      const classes = highlightedLines.has(number)
+        ? 'code-line code-line-hl'
+        : 'code-line';
+      return `<span class="${classes}" data-line="${number}">${line || ' '}</span>`;
+    })
+    .join('\n');
+
+  const label = language || 'text';
+  return [
+    `<div class="code-block" data-lang="${escapeHtml(label)}">`,
+    `<div class="code-bar"><span class="code-lang">${escapeHtml(label)}</span>`,
+    '<button type="button" class="code-copy" data-copied="false">复制</button></div>',
+    `<pre class="hljs"><code class="language-${escapeHtml(label)}">${body}</code></pre>`,
+    '</div>',
+  ].join('');
+}
+
+const marked = new Marked({
+  gfm: true,
+  renderer: {
+    code({ text, lang }) {
+      return renderCodeBlock(text, lang ?? '');
     },
-  }),
-);
+    heading({ tokens, depth }) {
+      const text = this.parser.parseInline(tokens);
+      return `<h${depth}>${text}</h${depth}>`;
+    },
+  },
+});
 
 // CommonMark 的强调规则对中文标点不友好：闭 ** 前面是中文标点、后面紧跟文字时
 // （如「**……首选。**个人版」）会被判定为无法闭合，** 原样输出。
 // 解析前把星号内的句末中文标点移到星号外，渲染结果几乎不变，绕开这条规则。
-// 限定条件避免误伤：开 ** 前不能是字母/数字/星号（排除把闭 ** 当开 ** 的跨段
-// 误配），内容不能以空白开头，且只在闭 ** 后紧跟文字（真正无法闭合）时才改写。
 const CJK_PUNCT = '。，、；：！？」』）】》';
 
 function fixCjkStrong(source: string): string {
+  return source.replace(
+    new RegExp(
+      `(?<![\\p{L}\\p{N}*])\\*\\*(?!\\s)([^*\\n]*?)([${CJK_PUNCT}])\\*\\*(?=[^\\s*${CJK_PUNCT}"'（）【】《》()\\[\\]{}.,!?;:-])`,
+      'gu',
+    ),
+    '**$1**$2',
+  );
+}
+
+// 把源码切成“代码段 / 普通文本”交替的片段,扩展语法只在普通文本里生效,
+// 免得代码块里的 ::: 或 $ 被误伤。
+//   fencedOnly=true 时只避开围栏代码块 —— 提示块是块级语法,里面可以写行内代码,
+//   若按行内代码切分,`::: note` 到闭合 `:::` 之间含反引号就会被拆成两段而匹配不上
+function mapOutsideCode(
+  source: string,
+  transform: (text: string) => string,
+  fencedOnly = false,
+) {
+  const pattern = fencedOnly
+    ? /(```[\s\S]*?(?:```|$))/g
+    : /(```[\s\S]*?(?:```|$)|`[^`\n]*`)/g;
   return source
-    .split(/(```[\s\S]*?(?:```|$)|`[^`\n]*`)/g)
-    .map((part, i) =>
-      i % 2 === 1
-        ? part
-        : part.replace(
-            new RegExp(
-              `(?<![\\p{L}\\p{N}*])\\*\\*(?!\\s)([^*\\n]*?)([${CJK_PUNCT}])\\*\\*(?=[^\\s*${CJK_PUNCT}"'（）【】《》()\\[\\]{}.,!?;:-])`,
-              'gu',
-            ),
-            '**$1**$2',
-          ),
-    )
+    .split(pattern)
+    .map((part, index) => (index % 2 === 1 ? part : transform(part)))
     .join('');
 }
 
-export function renderMarkdown(source: string): string {
-  const html = marked.parse(fixCjkStrong(source)) as string;
-  // 站内链接(/post/...)补上部署 base,否则在 GitHub Pages 的 /ViteBlog/ 子路径下会 404
-  return html.replace(/href="\/(?!\/)([^"]*)"/g, (_match, path: string) => {
-    return `href="${import.meta.env.BASE_URL}${path}"`;
+// ::: note 标题 … :::  → 提示块
+function expandCallouts(source: string): string {
+  return mapOutsideCode(
+    source,
+    (text) =>
+      text.replace(
+        /^:::[ \t]*([a-zA-Z]+)[ \t]*([^\n]*)\n([\s\S]*?)\n:::[ \t]*$/gm,
+        (_match, rawKind: string, rawTitle: string, body: string) => {
+          const kind = rawKind.toLowerCase();
+          const label = CALLOUT_LABEL[kind] ?? rawKind;
+          const title = rawTitle.trim() || label;
+          const inner = marked.parse(body.trim()) as string;
+          return `<div class="callout callout-${escapeHtml(kind)}"><p class="callout-title">${escapeHtml(title)}</p><div class="callout-body">${inner}</div></div>`;
+        },
+      ),
+    true,
+  );
+}
+
+// $$公式$$ / $行内公式$ → 占位元素(具体渲染交给 ContentEnhancer,KaTeX 不进首屏)
+function hideMath(source: string): string {
+  return mapOutsideCode(source, (text) =>
+    text
+      .replace(/\$\$([\s\S]+?)\$\$/g, (_m, tex: string) => {
+        return `<span class="math-block" data-tex="${escapeHtml(tex.trim())}"></span>`;
+      })
+      .replace(
+        // 行内公式:两侧不能是空白或数字,避免把价格 $5 / $10 当成公式
+        /(?<![\w$])\$(?!\s)([^$\n]+?)(?<!\s)\$(?![\d\w$])/g,
+        (_m, tex: string) =>
+          `<span class="math-inline" data-tex="${escapeHtml(tex.trim())}"></span>`,
+      ),
+  );
+}
+
+// [^1] 引用 + [^1]: 定义 → 文末脚注区(marked 不认 GFM 脚注,自己拼)
+function expandFootnotes(source: string): string {
+  const definitions = new Map<string, string>();
+  const withoutDefs = mapOutsideCode(source, (text) =>
+    text
+      .split('\n')
+      .filter((line) => {
+        const match = line.match(/^\[\^([^\]]+)\]:\s*(.+)$/);
+        if (!match) return true;
+        definitions.set(match[1], match[2].trim());
+        return false;
+      })
+      .join('\n'),
+  );
+
+  if (definitions.size === 0) return withoutDefs;
+
+  const order: string[] = [];
+  const withRefs = mapOutsideCode(withoutDefs, (text) =>
+    text.replace(/\[\^([^\]]+)\]/g, (_match, id: string) => {
+      if (!definitions.has(id)) return _match;
+      if (!order.includes(id)) order.push(id);
+      const number = order.indexOf(id) + 1;
+      return `<sup class="footnote-ref" id="fnref-${escapeHtml(id)}"><a href="#fn-${escapeHtml(id)}">${number}</a></sup>`;
+    }),
+  );
+
+  const items = order
+    .map((id, index) => {
+      const body = marked.parseInline(definitions.get(id) ?? '') as string;
+      return `<li id="fn-${escapeHtml(id)}"><span class="footnote-index">${index + 1}</span><span class="footnote-body">${body}</span> <a class="footnote-back" href="#fnref-${escapeHtml(id)}" aria-label="回到正文">↩</a></li>`;
+    })
+    .join('');
+
+  return `${withRefs}\n\n<section class="footnotes"><p class="footnotes-title">脚注</p><ol>${items}</ol></section>\n`;
+}
+
+// 图片:统一懒加载 + 有 title 的包成图注;本地图若构建期生成了 webp 变体,升级成 <picture>
+function decorateImages(html: string): string {
+  return html.replace(/<img\b[^>]*>/g, (tag) => {
+    let next = tag;
+    const src = next.match(/\bsrc="([^"]+)"/)?.[1] ?? '';
+    const entry = src ? variantsFor(src) : undefined;
+
+    if (!/\bloading=/.test(next)) {
+      next = next.replace(/<img\b/, '<img loading="lazy"');
+    }
+    if (!/\bdecoding=/.test(next)) {
+      next = next.replace(/<img\b/, '<img decoding="async"');
+    }
+    if (!/\bclass=/.test(next)) {
+      next = next.replace(/<img\b/, '<img class="post-image"');
+    }
+
+    if (entry) {
+      // width/height 写出来是为了避免加载时布局抖动
+      next = next.replace(
+        /<img\b/,
+        `<img width="${entry.width}" height="${entry.height}"`,
+      );
+      const srcset = entry.variants
+        .map((variant) => `${variant.src} ${variant.w}w`)
+        .join(', ');
+      return `<picture><source type="image/webp" srcset="${srcset}" sizes="(max-width: 900px) 100vw, 880px">${next}</picture>`;
+    }
+    return next;
   });
 }
+
+function decorateFigures(html: string): string {
+  // <p><img alt title="图注"></p> → <figure>…<figcaption>图注</figcaption></figure>
+  return html.replace(
+    /<p>\s*(<img\b[^>]*\btitle="([^"]*)"[^>]*>)\s*<\/p>/g,
+    (_match, tag: string, caption: string) =>
+      `<figure class="post-figure">${tag}<figcaption>${caption}</figcaption></figure>`,
+  );
+}
+
+// 正文里的外链一律新窗口打开(站内链接由 Post 页拦截走 SPA 跳转)
+function decorateLinks(html: string): string {
+  return html.replace(
+    /<a\b([^>]*href="https?:\/\/[^"]*"[^>]*)>/g,
+    (tag, attrs: string) => {
+      if (/target=/.test(attrs)) return tag;
+      return `<a${attrs} target="_blank" rel="noopener noreferrer">`;
+    },
+  );
+}
+
+export function renderMarkdown(source: string): string {
+  const prepared = expandFootnotes(
+    hideMath(expandCallouts(fixCjkStrong(source))),
+  );
+  const html = marked.parse(prepared) as string;
+  return (
+    decorateLinks(decorateFigures(decorateImages(html)))
+      // 站内链接与本地图片都要补上部署 base,否则在 GitHub Pages 的 /ViteBlog/ 子路径下会 404
+      .replace(
+        /href="\/(?!\/)([^"]*)"/g,
+        (_match, path: string) => `href="${import.meta.env.BASE_URL}${path}"`,
+      )
+      .replace(
+        /src="\/(?!\/)([^"]*)"/g,
+        (_match, path: string) => `src="${import.meta.env.BASE_URL}${path}"`,
+      )
+  );
+}
+
+export { escapeHtml };

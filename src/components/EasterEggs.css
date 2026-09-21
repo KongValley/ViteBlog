@@ -1,0 +1,122 @@
+/* ============================================================
+   全局彩蛋:Konami 码撒彩纸 + 游戏机卡片点击迸粒子
+   ------------------------------------------------------------
+   动画层是 fixed 全屏空层:pointer-events 关掉,不参与布局也不拦点击,
+   z-index 50 卡在中间 —— 正文与页头最高到 40,音乐挂件 55、返回顶部 60。
+
+   彩纸配色与提示条外观属于「主题可能想重画」的部分,只提供兜底并用
+   :where() 包起来(优先级 0),主题在 style.css 里写同选择器就必赢 ——
+   与 .music-dock 同一套做法。这里只声明自己的 --eg-* 变量,绝不声明主题变量。
+   ============================================================ */
+
+.eg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  pointer-events: none;
+  /* 动画只在这层里展开,别让方块把整页拖进重绘 */
+  contain: paint;
+}
+
+/* 兜底配色:深浅色都靠主题变量自动翻转,主题可用 --eg-c* 换成自己的色板 */
+:where(.eg-layer) {
+  --eg-c1: var(--red, #d82800);
+  --eg-c2: var(--gold, #f8b800);
+  --eg-c3: var(--ink-strong, #141414);
+}
+
+/* ---------- 像素方块 ---------- */
+/* 起点写 left/top,位移用动画做:动画期间只碰合成属性,不触发布局 */
+.eg-bit {
+  --eg-x: 0px;
+  --eg-y: 0px;
+  --eg-dx: 0px;
+  --eg-dy: 0px;
+  --eg-size: 8px;
+  --eg-life: 600ms;
+  --eg-delay: 0ms;
+  --eg-spin: 0deg;
+  --eg-color: var(--gold, #f8b800);
+  position: absolute;
+  left: var(--eg-x);
+  top: var(--eg-y);
+  width: var(--eg-size);
+  height: var(--eg-size);
+  display: block;
+  background: var(--eg-color);
+  translate: 0 0;
+  rotate: 0deg;
+  animation: eg-fly var(--eg-life) ease-out var(--eg-delay) forwards;
+}
+
+@keyframes eg-fly {
+  to {
+    translate: var(--eg-dx) var(--eg-dy);
+    rotate: var(--eg-spin);
+    /* 到点前淡出,方块落定即消失(节点由 animationend 移除) */
+    opacity: 0;
+  }
+}
+
+/* ---------- 提示条:贴着屏幕下方,像素风硬边框 ---------- */
+.eg-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 44px;
+  translate: -50% 0;
+  display: block;
+  animation: eg-pop 180ms steps(4, end) both;
+}
+
+/* 像素风:整块跳出来,不做平滑缩放 */
+@keyframes eg-pop {
+  from {
+    translate: -50% 14px;
+    scale: 0.9;
+    opacity: 0;
+  }
+
+  to {
+    translate: -50% 0;
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+:where(.eg-toast) {
+  padding: 10px 18px 9px;
+  background: var(--surface, #fdf6e3);
+  color: var(--ink-strong, #141414);
+  border: 3px solid var(--line, #1a1a1a);
+  box-shadow: 5px 5px 0 var(--shadow, rgb(0 0 0 / 45%));
+  font-family: var(--font-body, ui-monospace, monospace);
+  text-align: center;
+}
+
+:where(.eg-toast-main) {
+  display: block;
+  font-size: 14px;
+  letter-spacing: 3px;
+}
+
+:where(.eg-toast-sub) {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted, #7a6f58);
+}
+
+/* ---------- 无障碍:减少动效时只留提示 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  /* 正常情况下 JS 判断过偏好就根本不发方块;这里是页面开着时偏好被改的兜底,
+     被 display:none 掐掉的动画不会触发 animationend,靠 JS 的兜底定时器收尾 */
+  .eg-bit {
+    display: none;
+  }
+
+  .eg-toast {
+    animation: none;
+  }
+}

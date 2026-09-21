@@ -102,6 +102,17 @@ export default function TerminalHome({
               className="tm-log-row"
               to={`/post/${post.slug}`}
             >
+              {/* 有封面的文章在日志行首多铺一张头图,没有 cover 就一行 DOM 都不多 */}
+              {post.cover && (
+                <img
+                  className="post-card-cover"
+                  src={post.cover}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  data-no-zoom="true"
+                />
+              )}
               <span className="tm-hash">{commitHash(post.slug)}</span>
               <span className="tm-msg">
                 <span className="tm-scope">

@@ -1640,3 +1640,31 @@ a {
     --page-zoom: 2.2;
   }
 }
+
+/* ---------- 首页卡片封面:有封面时横跨整行贴在歌单行行首(黑底上保持清晰,不加霓虹辉光) ---------- */
+.nr-item .post-card-cover {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border: 1px solid var(--nr-line);
+  background: color-mix(in srgb, var(--nr-ink) 4%, transparent);
+}
+
+/* ---------- 通用变量别名 ----------
+   新增的共享小组件(搜索 / 分类 / 归档 / 404 / 数据面板 / 正文工具条等)统一读
+   --surface / --ink / --ink-strong / --muted / --line / --red / --font-body / --font-code
+   这套通用名字;这里把本主题自己的变量接过去即可 —— 别名是对本主题变量的引用,
+   深浅色切换时会跟着本主题的 [data-theme="dark"] 段自动翻转,不用维护第二份色板。 */
+:root {
+  --bg: var(--nr-bg);
+  --surface: var(--nr-panel);
+  --ink: var(--nr-ink);
+  --ink-strong: var(--nr-ink);
+  --muted: var(--nr-mut);
+  --line: var(--nr-line);
+  --red: var(--nr-neon);
+  --blue: var(--nr-blue);
+  --font-body: var(--nr-body);
+  --font-code: var(--nr-mono);
+}

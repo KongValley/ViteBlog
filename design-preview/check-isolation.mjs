@@ -14,7 +14,7 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 // 每套主题的"指纹":两个只出现在该主题样式里的字符串
 // (多数主题用「类名 + 变量前缀」,pixel 的变量不带前缀,改用专有字体名与变量名)
 const FINGERPRINTS = {
-  pixel: ['--surface:', 'Fusion Pixel'],
+  pixel: ['--pixel-outline:', 'Fusion Pixel'],
   brutalist: ['.br-post', '--br-'],
   bento: ['.be-kicker', '--be-'],
   terminal: ['.tm-log-row', '--tm-'],
@@ -45,15 +45,19 @@ function readDirAssets(dir) {
     .filter((f) => f.startsWith('index-') && f.endsWith('.css'))
     .map((f) => readFileSync(join(assets, f), 'utf8'))
     .join('\n');
+  const html = existsSync(join(dir, 'index.html'))
+    ? readFileSync(join(dir, 'index.html'), 'utf8')
+    : '';
+  // 入口 JS 以 index.html 引用的为准:路由级代码分割后 assets 里堆了一堆 chunk,
+  // 按文件名排序取第一个已经不可靠(Archive-*.js 之类会排在 index-*.js 前面)
+  const entry = html.match(/assets\/(index-[A-Za-z0-9_-]+\.js)/)?.[1];
   return {
     dir,
     files,
     css,
     fontsChunk: files.find((f) => f.startsWith('fonts-') && f.endsWith('.css')),
-    html: existsSync(join(dir, 'index.html'))
-      ? readFileSync(join(dir, 'index.html'), 'utf8')
-      : '',
-    mainJs: files.find((f) => f.endsWith('.js')),
+    html,
+    mainJs: entry ?? files.find((f) => f.endsWith('.js')),
   };
 }
 

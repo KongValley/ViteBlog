@@ -1,0 +1,220 @@
+/* 404「GAME OVER」页:像素游戏机风,图形全靠 CSS 画(不用图片)
+   骨架沿用各主题已经写好的 404 类(.empty-block / .game-over / .empty / .back-home),
+   这里只补新增的几块 + 像素装饰。
+
+   优先级故意分两档:
+   · 自己的类写成 `.nf-page :where(...)` —— 一个类 + :where(0) 的权重,
+     刚好压得住主题里的元素级规则(pixel 主题的 a{color} 之类),主题将来点名覆盖也好写;
+   · 主题自己拥有的 .game-over / .back-home 一律 `:where(...)`(权重 0),
+     主题写了的属性都归主题 —— 只有「按钮对齐」一处例外,在那条规则上单独说明。
+
+   颜色只走主题变量 + 兜底;兜底给 transparent / currentColor,
+   这样在没提供这套变量的主题里会退回主题自己的字色和底色,深浅色都不会糊成一片。 */
+
+:where(.nf-page) {
+  --nf-line: var(--line, currentColor);
+  --nf-surface: var(--surface, transparent);
+  --nf-ink: var(--ink-strong, currentColor);
+  --nf-muted: var(--muted, currentColor);
+  --nf-red: var(--red, #e43b44);
+  --nf-shadow: var(--shadow, transparent);
+  --nf-font: var(--font-code, ui-monospace, Consolas, monospace);
+}
+
+/* 状态行:游戏机画面顶部那种 PLAYER 1 小字 */
+.nf-page :where(.nf-badge) {
+  margin: 0 0 10px;
+  font-family: var(--nf-font);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--nf-muted);
+}
+
+/* GAME OVER 的红字补一记硬阴影:主题自己写了 text-shadow(如暗夜霓虹)就不会被覆盖 */
+:where(.nf-page .game-over) {
+  text-shadow: 3px 3px 0 var(--nf-shadow);
+}
+
+/* 大号 404:等宽字 + 红色硬阴影,凑出点阵屏的味道 */
+.nf-page :where(.nf-code) {
+  margin: 4px 0 0;
+  font-family: var(--nf-font);
+  font-size: clamp(56px, 15vw, 88px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--nf-ink);
+  text-shadow: 4px 4px 0 var(--nf-red);
+  user-select: none;
+}
+
+/* 出口:两个按钮横排,窄屏自动换行 */
+.nf-page :where(.nf-actions) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+/* 「随便看一篇」:像素按键 —— 硬边、硬阴影,按下去整体压进阴影里 */
+.nf-page :where(.nf-btn) {
+  display: inline-block;
+  padding: 12px 22px;
+  border: 2px solid var(--nf-line);
+  background: var(--nf-surface);
+  color: var(--nf-ink);
+  font-family: var(--nf-font);
+  font-size: 13px;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--nf-shadow);
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+.nf-page :where(.nf-btn:hover) {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--nf-shadow);
+}
+
+.nf-page :where(.nf-btn:active) {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+/* 主题的「回到首页」大多是圆角胶囊或纯链接,这里只补它没写的部分(边框、按键手感),
+   权重 0 —— 主题写了 padding / 背景 / 圆角的地方,依旧是主题说了算 */
+:where(.nf-page .back-home) {
+  padding: 12px 22px;
+  border: 2px solid var(--nf-line);
+  font-family: var(--nf-font);
+  font-size: 13px;
+  box-shadow: 3px 3px 0 var(--nf-shadow);
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+
+:where(.nf-page .back-home:hover) {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 var(--nf-shadow);
+}
+
+:where(.nf-page .back-home:active) {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+/* 主题给 .back-home 留的 margin-top(它原本是正文下面孤零零一个链接),
+   并排成按钮后会把「回到首页」压低半格 —— 在自己的按钮行里清零,
+   间距统一交给 .nf-actions 管 */
+.nf-page .nf-actions .back-home {
+  margin-top: 0;
+}
+
+/* 按钮形状的链接不要下划线:主题自带的 a:hover 下划线权重比 :where(0) 高,
+   这两个选择器带 .nf-page 才压得住(也顺便让两枚按钮的悬停表现一致) */
+.nf-page :where(.nf-btn, .back-home):hover,
+.nf-page :where(.nf-btn, .back-home):active {
+  text-decoration: none;
+}
+
+/* ---------- 「从这几篇继续」:像素菜单 ---------- */
+.nf-page :where(.nf-recent) {
+  margin-top: 44px;
+  padding-top: 24px;
+  border-top: 2px dashed var(--nf-line);
+}
+
+.nf-page :where(.nf-recent-head) {
+  margin: 0 0 14px;
+  font-family: var(--nf-font);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--nf-muted);
+}
+
+/* 光标方块:一闪一闪,提示"还能继续" */
+.nf-page :where(.nf-cursor) {
+  margin-left: 8px;
+  color: var(--nf-red);
+  animation: nf-blink 1.1s steps(1, end) infinite;
+}
+
+.nf-page :where(.nf-recent-list) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+  border: 2px solid var(--nf-line);
+  background: var(--nf-surface);
+  box-shadow: 4px 4px 0 var(--nf-shadow);
+}
+
+.nf-page :where(.nf-recent-item) {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 2px solid var(--nf-line);
+}
+
+.nf-page :where(.nf-recent-item:last-child) {
+  border-bottom: none;
+}
+
+.nf-page :where(.nf-recent-link) {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--nf-ink);
+  font-size: 14.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nf-page :where(.nf-recent-link:hover) {
+  color: var(--nf-red);
+}
+
+.nf-page :where(.nf-recent-date) {
+  flex: none;
+  color: var(--nf-muted);
+  font-family: var(--nf-font);
+  font-size: 11.5px;
+}
+
+/* 闪烁:用 steps 跳变,不做渐变,才像像素画面 */
+@keyframes nf-blink {
+  0%,
+  60% {
+    opacity: 1;
+  }
+
+  61%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-page :where(.nf-cursor) {
+    animation: none;
+  }
+
+  .nf-page :where(.nf-btn),
+  :where(.nf-page .back-home) {
+    transition: none;
+  }
+}
+
+/* 窄屏:列表条目改成两行,标题不再被日期挤没 */
+@media (max-width: 560px) {
+  .nf-page :where(.nf-recent-item) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

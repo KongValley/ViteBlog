@@ -72,6 +72,17 @@ export default function NoirHome({
       <section className="nr-list">
         {visiblePosts.map((post, index) => (
           <Link key={post.slug} className="nr-item" to={`/post/${post.slug}`}>
+            {/* 有封面就在行首横跨整行贴一张头图,没有则整段不渲染 */}
+            {post.cover && (
+              <img
+                className="post-card-cover"
+                src={post.cover}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                data-no-zoom="true"
+              />
+            )}
             <span className="nr-no">
               {String((page - 1) * 10 + index + 1).padStart(2, '0')}
             </span>

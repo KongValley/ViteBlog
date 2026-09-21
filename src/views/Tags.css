@@ -1,0 +1,55 @@
+/* 标签页新增部件:工具栏(分类过滤 + 排序)、标签云字号分档。
+   与 MarkdownBody.css 同思路:只用主题变量 + 兜底,主题可覆盖处用 :where()。 */
+
+:where(.tags-toolbar) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+:where(.tags-filter),
+:where(.tags-sort) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+:where(.tag-toggle) {
+  padding: 3px 10px;
+  border: 1px solid var(--line, #1a1a1a);
+  border-radius: 3px;
+  background: var(--surface, #fff);
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+:where(.tag-toggle:hover) {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+}
+
+:where(.tag-toggle.is-active) {
+  border-color: var(--ink-strong, var(--ink, #222));
+  background: var(--ink-strong, var(--ink, #222));
+  color: var(--surface, #fff);
+}
+
+:where(.tag-toggle .tag-count) {
+  margin-left: 6px;
+  opacity: 0.7;
+}
+
+/* 标签云字号分档:用得越多的标签越大 */
+:where(.tag-cloud-md) {
+  font-size: 1.15em;
+}
+
+:where(.tag-cloud-lg) {
+  font-size: 1.35em;
+  font-weight: 700;
+}

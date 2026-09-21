@@ -1591,3 +1591,44 @@ a {
     --page-zoom: 2.2;
   }
 }
+
+/* ---------- 首页:文章头图(只有文章带 cover 时才渲染) ----------
+   落在零件表"名称"栏的最前面、标题上方:1px 细线框 + 外扩一圈虚线标注线,
+   像贴在图纸上的照片样张。没有封面的那一行一行 DOM 都不多。 */
+.bp-table .name .post-card-cover {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: 160px;
+  margin: 0 0 10px;
+  object-fit: cover; /* 任意比例都裁成同高头图,不把表格撑歪 */
+  background: var(--bp-panel); /* 没加载完时不留白洞 */
+  border: 1px solid var(--bp-line);
+  outline: 1px dashed var(--bp-line-2);
+  outline-offset: 4px;
+}
+
+/* 窄屏只剩编号 / 名称 / 日期三栏,头图同步收一档,保持同样的裁切比例 */
+@media (max-width: 720px) {
+  .bp-table .name .post-card-cover {
+    height: 140px;
+  }
+}
+
+/* ---------- 通用变量别名 ----------
+   新增的共享小组件(搜索 / 分类 / 归档 / 404 / 数据面板 / 正文工具条等)统一读
+   --surface / --ink / --ink-strong / --muted / --line / --red / --font-body / --font-code
+   这套通用名字;这里把本主题自己的变量接过去即可 —— 别名是对本主题变量的引用,
+   深浅色切换时会跟着本主题的 [data-theme="dark"] 段自动翻转,不用维护第二份色板。 */
+:root {
+  --bg: var(--bp-bg);
+  --surface: var(--bp-panel);
+  --ink: var(--bp-ink);
+  --ink-strong: var(--bp-ink);
+  --muted: var(--bp-mut);
+  --line: var(--bp-line);
+  --red: var(--bp-mark);
+  --gold: var(--bp-mark);
+  --font-body: var(--bp-sans);
+  --font-code: var(--bp-mono);
+}

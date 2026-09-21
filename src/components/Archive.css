@@ -1,0 +1,369 @@
+/* ============================================================
+   分类总览 / 分类详情 / 归档 三个页面共用的"档案索引"样式
+   ------------------------------------------------------------
+   这三页本质是同一种东西:一串目录式的条目,所以合并成一份样式,
+   由 Categories / Category / Archive 各自 import(打包器会去重)。
+
+   规则一律用 :where() 包起来(优先级 0):主题要按自己的设计语言
+   改某一页时,写同选择器就能覆盖,不用跟打包顺序较劲 ——
+   与 .music-dock / .back-top 同款做法(MusicDock.css 里有详细说明)。
+
+   这里只"使用"主题变量、不"声明"变量;兜底值对没定义这些变量的主题
+   仍然可读(浅色底 + 深色字),深色主题请按需覆盖或提供同名字典。
+   ============================================================ */
+
+/* ---------- 页头:三页共用 ---------- */
+:where(.archive-page) {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 72px 0 32px;
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+}
+
+:where(.archive-head) {
+  margin: 0 0 34px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line, #e5e5e5);
+}
+
+:where(.archive-title) {
+  margin: 0;
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink-strong, var(--ink, #111));
+}
+
+/* 副标题走等宽字体:档案索引的"标签行"感 */
+:where(.archive-sub) {
+  margin: 10px 0 0;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--muted, #6b7280);
+}
+
+:where(.archive-count) {
+  font-weight: 700;
+  color: var(--red, #e43b44);
+}
+
+:where(.archive-empty) {
+  margin: 0;
+  padding: 28px 20px;
+  border: 1px dashed var(--line, #e5e5e5);
+  color: var(--muted, #6b7280);
+  font-size: 14px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+:where(.archive-back) {
+  display: inline-block;
+  margin: 0 0 22px;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 12.5px;
+  color: var(--muted, #6b7280);
+  text-decoration: none;
+}
+
+:where(.archive-back:hover) {
+  color: var(--red, #e43b44);
+}
+
+/* 空状态里的返回链接:单独起一行、居中 */
+:where(.archive-empty-back) {
+  display: block;
+  margin: 12px 0 0;
+}
+
+:where(.archive-page a:focus-visible) {
+  outline: 2px solid var(--red, #e43b44);
+  outline-offset: 2px;
+}
+
+/* ---------- 分类总览:两列索引卡 ---------- */
+:where(.archive-cats) {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 760px) {
+  :where(.archive-cats) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+:where(.archive-cat) {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--line, #e5e5e5);
+  background: var(--surface, #fff);
+}
+
+:where(.archive-cat-head) {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+/* 卡号:01 / 02…,纯装饰,读屏时不念 */
+:where(.archive-cat-index) {
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--gold, #f8b800);
+}
+
+:where(.archive-cat-name) {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink-strong, var(--ink, #111));
+  text-decoration: none;
+}
+
+:where(.archive-cat-name:hover) {
+  color: var(--red, #e43b44);
+}
+
+:where(.archive-cat-count) {
+  margin-left: auto;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+}
+
+:where(.archive-cat-preview) {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.archive-preview-link) {
+  display: block;
+  overflow: hidden;
+  color: var(--ink, #222);
+  font-size: 14px;
+  line-height: 1.6;
+  text-decoration: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+:where(.archive-preview-link::before) {
+  content: "· ";
+  color: var(--red, #e43b44);
+}
+
+:where(.archive-preview-link:hover) {
+  color: var(--red, #e43b44);
+}
+
+:where(.archive-cat-more) {
+  align-self: flex-start;
+  margin-top: auto;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 12.5px;
+  color: var(--muted, #6b7280);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+:where(.archive-cat-more:hover) {
+  color: var(--red, #e43b44);
+  border-bottom-color: currentColor;
+}
+
+/* ---------- 分类详情:文章条目列表 ---------- */
+:where(.archive-list) {
+  display: grid;
+  gap: 26px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.archive-item) {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line, #e5e5e5);
+}
+
+:where(.archive-item:last-child) {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+:where(.archive-item-title) {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+:where(.archive-item-title a) {
+  color: var(--ink-strong, var(--ink, #111));
+  text-decoration: none;
+}
+
+:where(.archive-item-title a:hover) {
+  color: var(--red, #e43b44);
+}
+
+:where(.archive-item-meta) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 0;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+}
+
+:where(.archive-tags) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.archive-tag) {
+  padding: 2px 8px;
+  border: 1px solid var(--line, #e5e5e5);
+  color: var(--muted, #6b7280);
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 11.5px;
+  text-decoration: none;
+}
+
+:where(.archive-tag:hover) {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+}
+
+:where(.archive-item-excerpt) {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted, #6b7280);
+}
+
+/* ---------- 归档:年 / 月两级时间线 ---------- */
+:where(.archive-timeline) {
+  display: grid;
+  gap: 34px;
+}
+
+:where(.archive-year) {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line, #e5e5e5);
+}
+
+/* 年份跟着滚动:长列表里始终知道自己在哪一年 */
+:where(.archive-year-label) {
+  position: sticky;
+  top: 12px;
+  align-self: start;
+  margin: 0;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink-strong, var(--ink, #111));
+}
+
+:where(.archive-year-count) {
+  display: block;
+  margin-top: 6px;
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--muted, #6b7280);
+}
+
+:where(.archive-months) {
+  display: grid;
+  gap: 22px;
+}
+
+:where(.archive-month) {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 14px;
+}
+
+:where(.archive-month-label) {
+  margin: 0;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold, #f8b800);
+}
+
+:where(.archive-month-posts) {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.archive-entry a) {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  color: var(--ink, #222);
+  font-size: 14.5px;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+:where(.archive-entry a:hover) {
+  color: var(--red, #e43b44);
+}
+
+:where(.archive-entry-day) {
+  flex: none;
+  font-family: var(--font-code, ui-monospace, Consolas, monospace);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted, #6b7280);
+}
+
+:where(.archive-entry a:hover .archive-entry-day) {
+  color: inherit;
+}
+
+/* 窄屏:年、月标签各占一行,别再挤压标题 */
+@media (max-width: 620px) {
+  :where(.archive-page) {
+    padding-top: 56px;
+  }
+
+  :where(.archive-year) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  :where(.archive-year-label) {
+    position: static;
+  }
+
+  :where(.archive-month) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+}

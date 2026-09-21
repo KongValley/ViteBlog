@@ -164,6 +164,17 @@ export default function BlueprintHome({
                 </Link>
               </td>
               <td className="name">
+                {/* 封面:有 cover 才在标题前插一张头图,没有就保持原来的零件表一行 */}
+                {post.cover && (
+                  <img
+                    className="post-card-cover"
+                    src={post.cover}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    data-no-zoom="true"
+                  />
+                )}
                 <Link to={`/post/${post.slug}`}>{post.title}</Link>
               </td>
               <td className="spec">{post.tags.join(' · ')}</td>

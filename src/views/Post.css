@@ -1,0 +1,58 @@
+/* 文章页新增部件的样式:封面图、阅读统计、正文加载态、相关文章。
+   与 MarkdownBody.css 同思路 —— 只用主题变量(带兜底),主题可以盖过的地方用 :where()。 */
+
+:where(.post-cover) {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  margin: 0 0 18px;
+  border: 1px solid var(--line, #1a1a1a);
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+:where(.post-stat) {
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 12px;
+  color: var(--muted, #7a6f58);
+}
+
+:where(.post-loading) {
+  margin: 2em 0;
+  color: var(--muted, #7a6f58);
+  font-size: 14px;
+}
+
+:where(.post-related) {
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 1px solid var(--line, #ddd);
+}
+
+:where(.post-related-title) {
+  margin: 0 0 10px;
+  font-weight: 700;
+  color: var(--ink-strong, var(--ink, #222));
+}
+
+:where(.post-related-list) {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.post-related-list li) {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:where(.post-related-meta) {
+  flex: none;
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 12px;
+  color: var(--muted, #7a6f58);
+}

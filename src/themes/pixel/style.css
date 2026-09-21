@@ -1732,3 +1732,14 @@ a.tag:active {
     --page-zoom: 2.2;
   }
 }
+
+/* ---------- 卡片封面图(游戏卡带贴纸) ---------- */
+/* 与卡片同宽、贴住 4px 硬外框,底部补 3px 硬分隔线,保持像素直角 */
+.post-card-cover {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover; /* 任意比例都裁成同高头图,不变形 */
+  border-bottom: 3px solid var(--line);
+  background: var(--surface); /* 未加载完时不留白洞 */
+}

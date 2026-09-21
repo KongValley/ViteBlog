@@ -1509,3 +1509,47 @@ a {
     --page-zoom: 2.2;
   }
 }
+
+/* ---------- 首页:文章头图(只有文章带 cover 时才渲染) ----------
+   落在细线行的最前面、跨满整行,序号 / 标题 / 日期顺势下移一行,没封面的行一行 DOM 都不多。
+   和纸上一道发丝细边 + 2px 方角(呼应朱印),颜色压一档,不让图片抢了字。 */
+.ma-row .post-card-cover {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border: 1px solid var(--ma-hair);
+  border-radius: 2px;
+  background: var(--ma-code-bg);
+  filter: saturate(0.86);
+}
+
+/* 墨夜:底色本就暗,图片再压一点亮度,免得从纸里跳出来 */
+[data-theme="dark"] .ma-row .post-card-cover {
+  border-color: var(--ma-hair-2);
+  filter: saturate(0.86) brightness(0.9);
+}
+
+/* 窄屏行更矮,头图同步收一档,留白比例不变 */
+@media (max-width: 860px) {
+  .ma-row .post-card-cover {
+    height: 140px;
+  }
+}
+
+/* ---------- 通用变量别名 ----------
+   新增的共享小组件(搜索 / 分类 / 归档 / 404 / 数据面板 / 正文工具条等)统一读
+   --surface / --ink / --ink-strong / --muted / --line / --red / --font-body / --font-code
+   这套通用名字;这里把本主题自己的变量接过去即可 —— 别名是对本主题变量的引用,
+   深浅色切换时会跟着本主题的 [data-theme="dark"] 段自动翻转,不用维护第二份色板。 */
+:root {
+  --bg: var(--ma-bg);
+  --surface: var(--ma-panel);
+  --ink: var(--ma-ink);
+  --ink-strong: var(--ma-ink);
+  --muted: var(--ma-mut);
+  --line: var(--ma-hair);
+  --red: var(--ma-shu);
+  --font-body: var(--ma-serif);
+  --font-code: var(--ma-mono);
+}

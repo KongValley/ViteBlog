@@ -5,9 +5,19 @@ import {
   useState,
 } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import MarkdownBody from '../components/MarkdownBody';
+import MobileToc from '../components/MobileToc';
+import ReadingProgress from '../components/ReadingProgress';
 import { formatDate } from '../data/format';
 import { renderMarkdown } from '../data/markdown';
-import { adjacentPosts, getPostBySlug } from '../data/posts';
+import { usePageMeta } from '../data/pageMeta';
+import {
+  adjacentPosts,
+  getPostBySlug,
+  loadPostContent,
+  relatedPosts,
+} from '../data/posts';
+import './Post.css';
 
 type TocItem = { id: string; text: string; level: 2 | 3 };
 
@@ -16,13 +26,13 @@ function buildToc(content: string): { toc: TocItem[]; ids: string[] } {
   const toc: TocItem[] = [];
   const ids: string[] = [];
   for (const line of content.split(/\r?\n/)) {
-    const match = line.match(/^(#{2,3})\s+(.+?)\s*#*$/);
+    const match = line.match(/^(#{2,3})\s+(.*)$/);
     if (!match) continue;
     const id = `toc-${ids.length}`;
     ids.push(id);
     toc.push({
       id,
-      text: match[2].replace(/[`*]/g, ''),
+      text: match[2].replace(/[*`]/g, '').trim(),
       level: match[1].length as 2 | 3,
     });
   }
@@ -32,17 +42,37 @@ function buildToc(content: string): { toc: TocItem[]; ids: string[] } {
 // 按出现顺序给渲染结果里的 h2/h3 注入同样的 id
 function injectHeadingIds(html: string, ids: string[]): string {
   let index = 0;
-  return html.replace(/<h([23])>/g, (match, level: string) => {
-    const id = ids[index++];
-    return id ? `<h${level} id="${id}">` : match;
+  return html.replace(/<h([23])>/g, (_match, level: string) => {
+    const id = ids[index] ?? `toc-${index}`;
+    index += 1;
+    return `<h${level} id="${id}">`;
   });
 }
 
 export default function Post() {
-  const slug = useParams()['*'];
+  const slug = useParams()['*'] ?? '';
   const navigate = useNavigate();
-  const post = getPostBySlug(slug ?? '');
-  const { prev, next } = adjacentPosts(slug ?? '');
+  const post = getPostBySlug(slug);
+  const { prev, next } = adjacentPosts(slug);
+  const related = useMemo(() => relatedPosts(slug, 3), [slug]);
+
+  // 正文是按需拉取的:首页与列表页不需要它,这里进文章页才加载
+  const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setContent('');
+    void loadPostContent(slug).then((text) => {
+      if (cancelled) return;
+      setContent(text);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
   // 正文里的站内链接已带上部署 base,拦截下来走 SPA 跳转,免去整页刷新;
   // 外链、锚点、修饰键点击(新标签打开)一概放行
@@ -61,15 +91,11 @@ export default function Post() {
 
   // 所有 Hook 必须在提前 return 之前调用(React Hooks 规则),
   // 否则从有效文章跳到不存在文章时,Hook 数量变化会直接报错。
-  // post 不存在时这里算出空结果,真正的 GAME OVER 分支放在 Hook 之后。
   const { html, toc } = useMemo(() => {
-    if (!post) return { html: '', toc: [] as TocItem[] };
-    const { toc, ids } = buildToc(post.content);
-    return {
-      html: injectHeadingIds(renderMarkdown(post.content), ids),
-      toc,
-    };
-  }, [post]);
+    if (!content) return { html: '', toc: [] as TocItem[] };
+    const { toc: items, ids } = buildToc(content);
+    return { html: injectHeadingIds(renderMarkdown(content), ids), toc: items };
+  }, [content]);
 
   const [activeId, setActiveId] = useState('');
 
@@ -87,6 +113,13 @@ export default function Post() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, [toc]);
+
+  usePageMeta({
+    title: post?.title ?? '文章不存在',
+    description: post?.excerpt || undefined,
+    image: post?.cover || `/og/${slug.replace(/\//g, '__')}.png`,
+    path: `/post/${slug}`,
+  });
 
   const jumpTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -106,6 +139,8 @@ export default function Post() {
 
   return (
     <article className="post">
+      <ReadingProgress />
+
       {toc.length > 0 && (
         <aside className="toc-wrap" aria-label="文章目录">
           <div className="toc-rod" />
@@ -137,11 +172,35 @@ export default function Post() {
         </aside>
       )}
 
+      {toc.length > 0 && <MobileToc toc={toc} activeId={activeId} />}
+
       <div className="post-body">
         <header className="post-header">
+          {post.cover && (
+            <img
+              className="post-cover"
+              src={post.cover}
+              alt=""
+              data-no-zoom="true"
+              loading="eager"
+              decoding="async"
+            />
+          )}
           <h1 className="post-title">{post.title}</h1>
           <div className="post-meta">
             <time>{formatDate(post.date)}</time>
+            <span className="post-stat">
+              {post.minutes} 分钟 · {post.words} 字
+            </span>
+            {post.categories.map((category) => (
+              <Link
+                key={category}
+                className="tag tag-small"
+                to={`/categories/${encodeURIComponent(category)}`}
+              >
+                {category}
+              </Link>
+            ))}
             {post.tags.map((tag) => (
               <span key={tag} className="tag tag-small">
                 {tag}
@@ -150,14 +209,27 @@ export default function Post() {
           </div>
         </header>
 
-        {/* biome-ignore lint/a11y/noStaticElementInteractions: 事件代理只拦截正文里的站内链接做 SPA 跳转,链接本身天然可键盘访问 */}
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: 键盘 Enter 触发链接的原生 click 同样会冒泡到这里,无需单独的 keydown */}
-        <div
-          className="post-content markdown-body"
-          onClick={handleContentClick}
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: 正文是仓库内自己写的 Markdown,来源可控
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        {loading ? (
+          <p className="post-loading">正文加载中…</p>
+        ) : (
+          <MarkdownBody html={html} onClick={handleContentClick} />
+        )}
+
+        {related.length > 0 && (
+          <section className="post-related" aria-label="相关文章">
+            <p className="post-related-title">相关文章</p>
+            <ul className="post-related-list">
+              {related.map((item) => (
+                <li key={item.slug}>
+                  <Link to={`/post/${item.slug}`}>{item.title}</Link>
+                  <span className="post-related-meta">
+                    {formatDate(item.date)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <nav className="post-adjacent">
           {next ? (

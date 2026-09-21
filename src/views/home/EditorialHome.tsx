@@ -104,6 +104,17 @@ export default function EditorialHome({
 
         {visiblePosts.map((post, index) => (
           <Link key={post.slug} className="ed-row" to={`/post/${post.slug}`}>
+            {/* 有封面图就在条目顶部放一张头图,没有则整行保持原样 */}
+            {post.cover && (
+              <img
+                className="post-card-cover"
+                src={post.cover}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                data-no-zoom="true"
+              />
+            )}
             <span className="ed-idx">
               {String((page - 1) * PAGE_SIZE + index + 1).padStart(2, '0')}
             </span>

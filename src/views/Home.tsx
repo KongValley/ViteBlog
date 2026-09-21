@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { usePageMeta } from '../data/pageMeta';
 import { posts } from '../data/posts';
 import { site } from '../data/site';
 import BentoHome from './home/BentoHome';
@@ -44,6 +45,14 @@ export default function Home() {
     if (activeTag && !top.includes(activeTag)) top.push(activeTag);
     return top;
   }, [sortedTags, activeTag]);
+
+  usePageMeta({
+    title: activeTag ? `标签:${activeTag}` : `${site.name} · ${site.tagline}`,
+    description: activeTag
+      ? `${site.name} 里「${activeTag}」标签下的全部文章。`
+      : site.tagline,
+    path: activeTag ? `/?tag=${encodeURIComponent(activeTag)}` : '/',
+  });
 
   const filtered = activeTag
     ? posts.filter((p) => p.tags.includes(activeTag))

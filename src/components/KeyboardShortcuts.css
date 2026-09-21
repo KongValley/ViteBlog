@@ -1,0 +1,144 @@
+/* ============================================================
+   键盘快捷键速查面板(按 ? 浮出)
+   ------------------------------------------------------------
+   组件平时没有常驻 UI,只有这一层弹层。配色只「使用」主题变量、不声明变量,
+   所有规则都用 :where() 把优先级压成 0 —— 主题自己写同名的 .kbd-help-*
+   规则就一定能覆盖,不用跟打包顺序较劲(同 MusicDock.css 的做法)。
+
+   面板不做焦点陷阱:Tab 照常走出面板,遮罩也不占 Tab 位置。
+   ============================================================ */
+
+/* 铺满全屏的遮罩:点一下关闭 */
+:where(.kbd-help-backdrop) {
+  position: fixed;
+  inset: 0;
+  z-index: 80; /* 盖住正文、音乐挂件(55)和回到顶部按钮(60) */
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: var(--shadow, #1a1a1a);
+  opacity: 0.32;
+  cursor: default;
+}
+
+/* 居中容器:本身不吃点击,空白处的点击落到底下的遮罩上 */
+:where(.kbd-help) {
+  position: fixed;
+  inset: 0;
+  z-index: 81;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: none;
+}
+
+:where(.kbd-help-panel) {
+  pointer-events: auto;
+  width: min(430px, 100%);
+  max-height: min(80vh, 560px);
+  overflow: auto;
+  padding: 18px 20px 16px;
+  background: var(--surface, #fff);
+  color: var(--ink, #222);
+  border: 1px solid var(--line, #d8d8d8);
+  border-radius: 10px;
+  box-shadow: 0 18px 60px -22px var(--shadow, #000);
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+:where(.kbd-help-head) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+:where(.kbd-help-title) {
+  margin: 0;
+  color: var(--ink-strong, #111);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+:where(.kbd-help-close) {
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--line, #d8d8d8);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted, #8a8a8a);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+:where(.kbd-help-close:hover) {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+}
+
+:where(.kbd-help-list) {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.kbd-help-row) {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+/* 键位列固定宽度,右边的说明才能对齐成一栏 */
+:where(.kbd-help-keys) {
+  display: inline-flex;
+  flex: 0 0 92px;
+  gap: 4px;
+}
+
+:where(.kbd-help-key) {
+  min-width: 22px;
+  padding: 1px 6px;
+  border: 1px solid var(--line, #d8d8d8);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--bg, #f6f6f6);
+  color: var(--ink-strong, #111);
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+:where(.kbd-help-text) {
+  color: var(--muted, #6f6f6f);
+}
+
+:where(.kbd-help-hint) {
+  margin: 14px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line, #d8d8d8);
+  color: var(--muted, #8a8a8a);
+  font-size: 12px;
+}
+
+/* 窄屏:面板铺满整行,键位列收窄一点,给说明留出可读宽度 */
+@media (max-width: 480px) {
+  :where(.kbd-help) {
+    padding: 16px;
+  }
+
+  :where(.kbd-help-keys) {
+    flex-basis: 78px;
+  }
+}

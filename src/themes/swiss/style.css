@@ -1644,3 +1644,45 @@ a.tag:hover {
     --page-zoom: 2.03;
   }
 }
+
+/* ---------- 首页卡片头图(有 cover 才渲染,见 SwissHome.tsx) ----------
+   瑞士风里它是一整幅硬边矩形:与卡片同宽贴在上沿,下沿一根 1px 硬线收口,
+   零圆角、无阴影,底色与线色都走 --sw-*,深色模式下自动翻成黑底白线。 */
+.post-card-cover {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: var(--sw-surface);
+  border-bottom: 1px solid var(--sw-line-strong);
+}
+
+/* 悬停整卡反色时(见上方 .post-card:hover),下沿那根线跟着换成反色墨,
+   否则浅色模式里黑线落在黑底上会断掉 */
+.post-card:hover .post-card-cover {
+  border-bottom-color: var(--sw-inv-ink);
+}
+
+/* 窄屏(卡片内边距收窄的那一档)头图压一档高度,别让一张图吃掉半屏 */
+@media (max-width: 640px) {
+  .post-card-cover {
+    height: 140px;
+  }
+}
+
+/* ---------- 通用变量别名 ----------
+   新增的共享小组件(搜索 / 分类 / 归档 / 404 / 数据面板 / 正文工具条等)统一读
+   --surface / --ink / --ink-strong / --muted / --line / --red / --font-body / --font-code
+   这套通用名字;这里把本主题自己的变量接过去即可 —— 别名是对本主题变量的引用,
+   深浅色切换时会跟着本主题的 [data-theme="dark"] 段自动翻转,不用维护第二份色板。 */
+:root {
+  --bg: var(--sw-bg);
+  --surface: var(--sw-surface);
+  --ink: var(--sw-ink);
+  --ink-strong: var(--sw-ink);
+  --muted: var(--sw-mut);
+  --line: var(--sw-line);
+  --red: var(--sw-red);
+  --font-body: var(--sw-sans);
+  --font-code: var(--sw-mono);
+}

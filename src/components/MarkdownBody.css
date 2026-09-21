@@ -1,0 +1,221 @@
+/* ============================================================
+   正文里由渲染器生成的部件:代码块工具条、提示块、脚注、图注、
+   公式 / 图表容器、图片灯箱。
+   配色一律走主题变量(带兜底),主题可能想覆盖的地方用 :where() 压成 0 优先级,
+   这样各主题的 style.css 写同选择器就一定能盖过这里。
+   ============================================================ */
+
+/* ---------- 代码块:语言标签 + 复制按钮(工具条浮在代码块上方,不干扰主题原有的 pre 样式) ---------- */
+.code-block {
+  position: relative;
+}
+
+.code-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 0 0 4px;
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 12px;
+  color: var(--muted, #7a6f58);
+}
+
+.code-lang {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.code-copy {
+  padding: 2px 8px;
+  border: 1px solid var(--line, #1a1a1a);
+  border-radius: 3px;
+  background: var(--surface, #fff);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.code-copy:hover {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+}
+
+.code-copy[data-copied="true"] {
+  border-color: var(--green, #00a844);
+  color: var(--green, #00a844);
+}
+
+/* 逐行包裹:行号用 CSS 生成,指定行高亮用背景色 */
+.code-line {
+  display: block;
+}
+
+.code-line::before {
+  content: attr(data-line);
+  display: inline-block;
+  width: 2.2em;
+  margin-right: 1em;
+  text-align: right;
+  opacity: 0.45;
+  user-select: none;
+}
+
+.code-line-hl {
+  background: color-mix(in srgb, var(--red, #e43b44) 16%, transparent);
+  box-shadow: inset 2px 0 0 var(--red, #e43b44);
+}
+
+/* ---------- 提示块 ::: note / tip / warning / danger ---------- */
+.callout {
+  margin: 1.5em 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--red, #e43b44);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--red, #e43b44) 8%, transparent);
+}
+
+.callout-title {
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: var(--ink-strong, var(--ink, #222));
+}
+
+.callout-body > :first-child {
+  margin-top: 0;
+}
+
+.callout-body > :last-child {
+  margin-bottom: 0;
+}
+
+.callout-tip,
+.callout-info {
+  border-left-color: var(--blue, var(--gold, #0058f8));
+  background: color-mix(in srgb, var(--blue, #0058f8) 8%, transparent);
+}
+
+.callout-warning {
+  border-left-color: var(--gold, #f8b800);
+  background: color-mix(in srgb, var(--gold, #f8b800) 14%, transparent);
+}
+
+.callout-danger {
+  border-left-color: var(--red, #e43b44);
+  background: color-mix(in srgb, var(--red, #e43b44) 14%, transparent);
+}
+
+/* ---------- 脚注 ---------- */
+.footnote-ref a {
+  text-decoration: none;
+  padding: 0 1px;
+}
+
+.footnotes {
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 1px solid var(--line, #ddd);
+  font-size: 0.9em;
+  color: var(--muted, #666);
+}
+
+.footnotes-title {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--ink-strong, var(--ink, #222));
+}
+
+.footnotes ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.footnotes li {
+  margin: 4px 0;
+}
+
+.footnote-index {
+  margin-right: 6px;
+  font-family: var(--font-code, monospace);
+  opacity: 0.7;
+}
+
+.footnote-back {
+  text-decoration: none;
+  opacity: 0.7;
+}
+
+/* ---------- 图注 ---------- */
+.post-figure {
+  margin: 1.6em 0;
+  text-align: center;
+}
+
+.post-figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-figure figcaption {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--muted, #666);
+}
+
+.post-image {
+  cursor: zoom-in;
+}
+
+/* ---------- 公式 / 图表容器 ---------- */
+.math-block {
+  display: block;
+  margin: 1.4em 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 1.6em 0;
+  overflow-x: auto;
+}
+
+.mermaid:not(.mermaid-rendered) .mermaid-source {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- 图片灯箱 ---------- */
+:where(.image-zoom) {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  border: none;
+  background: rgba(8, 8, 12, 0.88);
+  cursor: zoom-out;
+}
+
+:where(.image-zoom img) {
+  max-width: min(1200px, 94vw);
+  max-height: 84vh;
+  object-fit: contain;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+:where(.image-zoom-hint) {
+  margin: 0;
+  font-size: 13px;
+  color: #d8d8e0;
+}

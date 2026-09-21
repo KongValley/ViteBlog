@@ -94,6 +94,17 @@ export default function SwissHome({
       <section className="post-list" id="post-list">
         {visiblePosts.map((post, index) => (
           <article key={post.slug} className="post-card">
+            {/* 有封面时在卡片最前面补一张整幅头图,没有则一行都不多渲染 */}
+            {post.cover && (
+              <img
+                className="post-card-cover"
+                src={post.cover}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                data-no-zoom="true"
+              />
+            )}
             <Link to={`/post/${post.slug}`} className="post-card-link">
               <span className="post-index">
                 {String((page - 1) * PAGE_SIZE + index + 1).padStart(2, '0')}
