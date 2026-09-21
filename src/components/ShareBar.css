@@ -18,22 +18,38 @@
   color: var(--muted, #7a6f58);
 }
 
-:where(.share-btn) {
+/* 按钮的文字与尺寸自己说了算:主题里有一条 a{color:var(--blue)},而 :where() 的优先级是 0,
+   压不住元素选择器 —— 微博 / X 两个链接之前就是这样变成蓝色的。只有圆角留给主题覆盖。 */
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 文案长短不一(「X」和「生成分享图」),统一 min-width 让几个按钮一样宽 */
+  min-width: 96px;
+  min-height: 28px;
   padding: 3px 12px;
   border: 1px solid var(--line, #1a1a1a);
-  border-radius: 3px;
   background: var(--surface, #fff);
   color: var(--ink, #222);
   font-family: var(--font-body, inherit);
   font-size: 13px;
+  line-height: 1.2;
+  text-align: center;
   text-decoration: none;
   cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-:where(.share-btn:hover) {
+.share-btn:hover {
   border-color: var(--red, #e43b44);
   color: var(--red, #e43b44);
+  /* 主题的 a:hover 会补下划线,这里再声明一次 */
   text-decoration: none;
+}
+
+:where(.share-btn) {
+  border-radius: 3px;
 }
 
 :where(.share-url) {
