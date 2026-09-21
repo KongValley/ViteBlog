@@ -10,10 +10,22 @@
   color: var(--muted, #7a6f58);
 }
 
-/* 导航项变多(搜索/分类/归档)后,窄屏允许换行而不是撑破头部 */
+/* 导航项变多(搜索/分类/归档)后,窄屏改成「单行 + 横向滑动」而不是换行。
+   换行曾经会撑破头部:各主题的 .header-inner 都是写死高度(pixel 56px、terminal 46px…),
+   换行后导航高 78px,居中时上下各溢出 11px,第二行直接压在 logo 上(手机上实测)。
+   单行滑动任何主题都不会溢出;能放下时不滚动,桌面端无变化。
+   padding-block 是为了给像素主题那种硬阴影留出空间 —— overflow 会自动裁掉溢出的阴影。 */
 :where(.nav) {
-  flex-wrap: wrap;
-  row-gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-block: 6px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+:where(.nav)::-webkit-scrollbar {
+  display: none;
 }
 
 /* 页脚订阅入口(RSS / Atom / Sitemap)。

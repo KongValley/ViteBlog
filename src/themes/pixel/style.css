@@ -1390,16 +1390,35 @@ button.tag:hover,
 /* ---------- 移动端适配 ---------- */
 @media (max-width: 560px) {
   .header-inner {
-    height: 56px;
+    /* 原来写死 56px:导航一换行就是 78px 高,居中后上下各溢出 11px,
+       第二行直接压住左边的 logo(手机上实测)。改成 min-height,
+       内容撑高时头部跟着长,不会再溢出。 */
+    height: auto;
+    min-height: 56px;
+    gap: 8px;
+  }
+
+  /* 导航那一行现在是「单行 + 横向滑动」(规则在 App.css,所有主题共用),
+     这里只做手机上的尺寸微调:留出滑动余量,滑到最后一个入口时不贴边被裁。 */
+  .nav {
+    margin-right: -6px;
+    padding-right: 6px;
   }
 
   .nav-link {
-    padding: 4px 6px;
-    font-size: 14px;
+    padding: 4px 7px;
+    font-size: 13px;
   }
 
   .theme-toggle {
     padding: 3px 8px;
+    font-size: 13px;
+  }
+
+  /* 掌机名片:629px 高,手机上几乎占满一屏(实测 390×844 下只剩一条缝)。
+     整体缩到 0.86,和内容按比例一起缩,不用逐个改内部尺寸。 */
+  .player-card {
+    zoom: 0.86;
   }
 
   .hero-title {
@@ -1432,6 +1451,23 @@ button.tag:hover,
 
   .brand {
     font-size: 14px;
+  }
+
+  /* 音乐挂件是固定定位的浮层,手机上展开约 92px 高 —— 不给页面留出这段高度的话,
+     滚到底时页脚会被它压住一块。挂件存在时才加(没配置音乐就不留空白)。 */
+  body:has(.music-dock) {
+    padding-bottom: 124px;
+  }
+}
+
+/* 更窄的机器(iPhone SE 320-375):导航一行放不下就滑,卡片再收一点 */
+@media (max-width: 380px) {
+  .player-card {
+    zoom: 0.78;
+  }
+
+  .brand {
+    font-size: 13px;
   }
 }
 

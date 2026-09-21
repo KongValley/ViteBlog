@@ -123,6 +123,15 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 
 ### 修复
 
+- **手机端头部导航压住 logo**:各主题的 `.header-inner` 都是写死高度(pixel 56px、terminal 46px),
+  导航换行后高 78px,居中时上下各溢出 11px,第二行直接压在 logo 上。改成「单行 + 横向滑动」
+  (规则在 App.css,所有主题共用),能放下就不滚动,桌面端无变化。
+- **手机上掌机名片占满整屏**:629px 高的名片在 390×844 屏上只剩一条缝,缩到 `zoom: .86`
+  (≤380px 再降到 .78),整块按比例一起缩。
+- **固定音乐挂件压住页脚**:展开时约 92px 高的浮层会盖住页面底部,给 body 加上
+  124px 底部内边距(用 `:has(.music-dock)` 限定,没配置音乐就不留空白)。
+
+
 - `npm run cover:ai` 的 `DASHSCOPE_BASE_URL` 现在**认各种填法**:只填 WorkspaceId(`ws-xxxx`)会自动补成
   `https://ws-xxxx.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`(地域可用 `DASHSCOPE_REGION` 覆盖),
   只填域名会补 `https://` 与 `/compatible-mode/v1`,自定义中转的地址原样不动 —— 之前必须一字不差地写全,
