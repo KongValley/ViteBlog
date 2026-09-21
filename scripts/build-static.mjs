@@ -1,5 +1,5 @@
-// 构建期静态产物:feed.xml / atom.xml / sitemap.xml / robots.txt,
-// 外加每篇文章一份 dist/post/<slug>.html,以及首页/标签/分类/归档/搜索/关于
+// 构建期静态产物:feed.xml / atom.xml / feed.json / sitemap.xml / robots.txt,
+// 外加每篇文章一份 dist/post/<slug>.html,以及首页/标签/分类/归档/搜索/关于/友链
 // 各自一份 <路径>/index.html。
 //
 // 站点是纯 SPA,页面 meta 全靠 React 在运行时写;微信、Twitter 这类抓取器
@@ -16,12 +16,13 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
-  writeFileSync,
-} from 'node:fs';
+  writeFileSync, copyFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'yaml';
 import { countWords, parseFrontmatter } from '../src/data/frontmatter.ts';
+// 分享卡(build-og.mjs)与自动封面(build-covers.mjs)的统一尺寸:og:image 要报给抓取器
+import { HEIGHT as SHARE_HEIGHT, WIDTH as SHARE_WIDTH } from './lib/cards.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST = join(ROOT, 'dist');
@@ -40,6 +41,7 @@ const STATIC_PAGES = [
   '/archive',
   '/search',
   '/about',
+  '/links',
 ];
 
 // ---------------------------------------------------------------- 基础工具
@@ -151,6 +153,7 @@ function readPosts() {
       slug: relative(POSTS_DIR, file).replace(/\\/g, '/').replace(/\.md$/, ''),
       title: meta.title ?? '未命名文章',
       date: meta.date ?? '',
+      updated: meta.updated ?? '',
       tags: meta.tags ?? [],
       categories: meta.categories ?? [],
       excerpt: meta.excerpt ?? '',
@@ -269,6 +272,44 @@ function renderAtom(posts, site, urls) {
     .join('\n');
 }
 
+// JSON Feed 1.1(https://www.jsonfeed.org/version/1.1/):与 feed.xml / atom.xml
+// 同源同一批文章(最新 FEED_SIZE 篇),只是给只认 JSON 的阅读器;
+// 字段名按规范走 snake_case,不跟着站点的驼峰
+function renderJsonFeed(posts, site, urls) {
+  const items = posts.slice(0, FEED_SIZE).map((post) => {
+    const date = postDate(post);
+    const url = urls.post(post.slug);
+    return {
+      id: url,
+      url,
+      title: post.title,
+      ...(date ? { date_published: iso(date) } : {}),
+      summary: post.excerpt,
+      tags: post.tags,
+    };
+  });
+
+  return `${JSON.stringify(
+    {
+      version: 'https://jsonfeed.org/version/1.1',
+      title: site.name,
+      home_page_url: urls.home,
+      feed_url: `${urls.home}feed.json`,
+      description: site.tagline,
+      language: 'zh-CN',
+      authors: [
+        {
+          name: site.author,
+          ...(site.github ? { url: site.github } : {}),
+        },
+      ],
+      items,
+    },
+    null,
+    2,
+  )}\n`;
+}
+
 // sitemap 里的 lastmod 用文章自己的日期(静态页用最新一篇的日期)
 function renderSitemap(posts, urls, categories) {
   const newest = postDate(posts[0] ?? {}) ?? null;
@@ -364,41 +405,52 @@ function personNode() {
   };
 }
 
-// 订阅发现:抓取器(以及浏览器地址栏的订阅图标)靠这两个 link 找 feed,
+// 订阅发现:抓取器(以及浏览器地址栏的订阅图标)靠这几个 link 找 feed,
 // 地址用绝对路径,feed 阅读器在第三方域名下也能解析
 function feedAlternateLinks() {
   return [
     ['application/rss+xml', 'RSS', 'feed.xml'],
     ['application/atom+xml', 'Atom', 'atom.xml'],
+    ['application/feed+json', 'JSON Feed', 'feed.json'],
   ].map(
     ([type, label, file]) =>
       `    <link rel="alternate" type="${type}" title="${escapeText(`${site.name} ${label}`)}" href="${escapeText(`${urls.home}${file}`)}" />`,
   );
 }
 
-// 每页 head 的增量:canonical / og 四件套 / 订阅发现 / JSON-LD
+// 每页 head 的增量:canonical / og 全套 / twitter 卡片 / 订阅发现 / JSON-LD
 function renderHead({ url, title, description, type, image, jsonLd }) {
   return [
     `    <link rel="canonical" href="${escapeText(url)}" />`,
+    `    <meta property="og:site_name" content="${escapeText(site.name)}" />`,
     `    <meta property="og:title" content="${escapeText(title)}" />`,
     `    <meta property="og:description" content="${escapeText(description)}" />`,
     `    <meta property="og:url" content="${escapeText(url)}" />`,
     `    <meta property="og:type" content="${type}" />`,
     `    <meta property="og:image" content="${escapeText(image)}" />`,
+    // 分享卡与自动封面都是 1200×630,先报尺寸,抓取器排版时不用等图下载完
+    `    <meta property="og:image:width" content="${SHARE_WIDTH}" />`,
+    `    <meta property="og:image:height" content="${SHARE_HEIGHT}" />`,
+    // Twitter/X 不读 og:*,卡片的四件套要自己写一份(twitter:image 与 og:image 同源)
+    '    <meta name="twitter:card" content="summary_large_image" />',
+    `    <meta name="twitter:title" content="${escapeText(title)}" />`,
+    `    <meta name="twitter:description" content="${escapeText(description)}" />`,
+    `    <meta name="twitter:image" content="${escapeText(image)}" />`,
     ...feedAlternateLinks(),
     jsonLdScript(jsonLd),
   ].join('\n');
 }
 
 // 幂等:首页是就地改写,模板可能是上一次跑出来的 dist/index.html(里面已经
-// 带了注入的 head)。先把上次注入的 canonical / og / 订阅 link / JSON-LD 摘掉,
-// 再写本次的,免得重复执行后 head 里堆两份。
+// 带了注入的 head)。先把上次注入的 canonical / og / twitter / 订阅 link / JSON-LD
+// 摘掉,再写本次的,免得重复执行后 head 里堆两份。
 function stripInjectedHead(html) {
   return html
     .replace(/\s*<meta\s+[^>]*property="og:[^"]*"[^>]*>/gi, '')
+    .replace(/\s*<meta\s+[^>]*name="twitter:[^"]*"[^>]*>/gi, '')
     .replace(/\s*<link\s+[^>]*rel="canonical"[^>]*>/gi, '')
     .replace(
-      /\s*<link\s+[^>]*rel="alternate"[^>]*(?:rss|atom)\+xml[^>]*>/gi,
+      /\s*<link\s+[^>]*rel="alternate"[^>]*(?:rss|atom|feed)\+(?:xml|json)[^>]*>/gi,
       '',
     )
     .replace(
@@ -426,6 +478,8 @@ function renderPageHtml(template, page) {
 // 文章页:head 与 BlogPosting 的字段全部来自 frontmatter 与 site.yml
 function postPageRecord(post) {
   const date = postDate(post);
+  // 最后更新日期:frontmatter 的 updated(可省)优先,没写就与发布日期相同
+  const modified = postDate({ date: post.updated }) ?? date;
   const url = urls.post(post.slug);
   const description = post.excerpt || site.tagline;
   const image = ogImageFor(post.slug).url;
@@ -445,6 +499,7 @@ function postPageRecord(post) {
       headline: post.title,
       description,
       ...(date ? { datePublished: iso(date) } : {}),
+      ...(modified ? { dateModified: iso(modified) } : {}),
       author: personNode(),
       publisher: personNode(),
       mainEntityOfPage: url,
@@ -497,6 +552,12 @@ function staticPageRecords(posts, categories) {
       path: '/about',
       title: '关于本站',
       description: `${site.name} —— ${site.tagline}`,
+    },
+    {
+      // 文案与 src/views/Links.tsx 的 usePageMeta 保持一致(改那边时这里一起改)
+      path: '/links',
+      title: '友情链接',
+      description: '友情链接 —— 记录一些常读的博客与朋友,欢迎交换友链。',
     },
     ...categories.map((name) => ({
       path: `/categories/${name}`,
@@ -561,6 +622,11 @@ mkdirSync(DIST, { recursive: true });
 writeFileSync(join(DIST, 'feed.xml'), renderRss(posts, site, urls), 'utf8');
 writeFileSync(join(DIST, 'atom.xml'), renderAtom(posts, site, urls), 'utf8');
 writeFileSync(
+  join(DIST, 'feed.json'),
+  renderJsonFeed(posts, site, urls),
+  'utf8',
+);
+writeFileSync(
   join(DIST, 'sitemap.xml'),
   renderSitemap(posts, urls, categories),
   'utf8',
@@ -586,6 +652,10 @@ for (const page of pages) {
   }
 }
 
+// SPA 兜底:GitHub Pages 对不存在的路径会返回 404.html,让前端路由接管。
+// 放在这里(而不是流水线里 cp 一下),本地 build 出来的 dist 也是完整的。
+copyFileSync(join(DIST, 'index.html'), join(DIST, '404.html'));
+
 const fallback = posts.filter((post) => !ogImageFor(post.slug).fromOg).length;
 const addressCount = STATIC_PAGES.length + categories.length + posts.length;
 const pageCount = pages.length - posts.length;
@@ -593,10 +663,11 @@ const seconds = ((Date.now() - started) / 1000).toFixed(2);
 
 console.log(`[build-static] 站点地址 ${urls.home}`);
 console.log(
-  `[build-static] feed.xml / atom.xml 各 ${Math.min(posts.length, FEED_SIZE)} 篇`,
+  `[build-static] feed.xml / atom.xml / feed.json 各 ${Math.min(posts.length, FEED_SIZE)} 篇`,
 );
 console.log(`[build-static] sitemap.xml ${addressCount} 个地址`);
 console.log('[build-static] robots.txt');
+console.log('[build-static] 404.html(SPA 兜底)');
 console.log(
   `[build-static] 静态页 ${pageCount} 个(含首页,head 带 JSON-LD 与订阅 link)→ dist/<路径>/index.html`,
 );

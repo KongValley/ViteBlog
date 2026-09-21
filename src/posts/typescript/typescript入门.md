@@ -1,13 +1,14 @@
 ---
 title: 🦄TypeScript入门
 date: 2020-01-09 0:30:20
+updated: 2026-09-21
 tags:
   - TypeScript Basic
 categories:
   - TypeScript
 ---
 ## 简介
-![TypeScript 在 npm 上的下载量增长曲线](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/TypeScript%E5%85%A5%E9%97%A8/Snipaste_2020-04-19_20-31-20.png)
+![TypeScript 在 npm 上的下载量增长曲线](/images/typescript/typescript入门/Snipaste_2020-04-19_20-31-20.png)
 从 npm 包的下载量就可以看出 TypeScript 已经逐渐成为前端必不可少的工具了，都2020年了，再不学，就只能2021年学了🤣
 ## Quick Start
 - [🦄TypeScript 入门](/post/typescript/typescript入门)
@@ -70,8 +71,8 @@ tsc --init
 
 在终端下拉菜单中选择运行任务
 
-![VS Code 终端下拉菜单里的「运行任务」](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/TypeScript%E5%85%A5%E9%97%A8/ts-1.png)
+![VS Code 终端下拉菜单里的「运行任务」](/images/typescript/typescript入门/ts-1.png)
 
 选择`tsc:监视`（当你的文件发生改动时会自动编译）
 
-![任务列表里选择 tsc:监视](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/TypeScript%E5%85%A5%E9%97%A8/ts-2.png)
+![任务列表里选择 tsc:监视](/images/typescript/typescript入门/ts-2.png)

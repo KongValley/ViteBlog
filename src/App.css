@@ -41,3 +41,23 @@
   color: var(--red, #e43b44);
   text-decoration: none;
 }
+
+/* 跳到正文:平时移出视口,键盘聚焦时才出现(主题配色走变量 + 兜底) */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 300;
+  padding: 8px 14px;
+  border: 2px solid var(--red, #e43b44);
+  background: var(--surface, #fff);
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+  font-size: 13px;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}

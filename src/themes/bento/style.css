@@ -1596,4 +1596,8 @@ a {
   --gold: var(--be-amber);
   --green: var(--be-green);
   --shadow: var(--be-shadow);
+  /* 正文/等宽字体:共享组件(分享条、分享图面板、代码块工具条等)读的是这两个通用名字,
+     漏了就会退回 inherit / monospace,和本主题其它地方不一致 */
+  --font-body: var(--be-sans);
+  --font-code: var(--be-mono);
 }

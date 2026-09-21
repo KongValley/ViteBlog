@@ -24,6 +24,18 @@ export interface SocialLink {
   url: string;
 }
 
+// 友链(/links 页面的卡片墙用)
+export interface FriendLink {
+  /** 站点名(必填) */
+  name: string;
+  /** 站点地址(必填) */
+  url: string;
+  /** 头像图片地址(可省;以 / 开头取 public/ 下的文件,留空则卡片用名称首字占位) */
+  avatar: string;
+  /** 一句话介绍(可省;留空则不显示) */
+  desc: string;
+}
+
 // 音乐挂件(site.yml 的 music 段;不填就不显示播放器)
 export interface MusicConfig {
   /** 平台:tencent(QQ音乐)/ netease(网易云)/ kugou / kuwo / baidu … */
@@ -56,6 +68,7 @@ export interface Site {
   avatar: string;
   theme: ThemeName;
   social: SocialLink[];
+  friends: FriendLink[];
   music?: MusicConfig;
   analytics: AnalyticsConfig;
 }
@@ -70,6 +83,7 @@ const defaults: Site = {
   avatar: '',
   theme: 'pixel',
   social: [],
+  friends: [],
   analytics: { goatcounter: '', umamiSrc: '', umamiId: '' },
 };
 
@@ -93,6 +107,24 @@ function normalizeSocial(raw: unknown): SocialLink[] {
       name: typeof item.name === 'string' ? item.name.trim() : '',
       handle: typeof item.handle === 'string' ? item.handle.trim() : '',
       url: typeof item.url === 'string' ? item.url.trim() : '',
+    }))
+    .filter((item) => item.name !== '' && item.url !== '');
+}
+
+// yml 里的友链列表:丢掉 name 或 url 没填的项,顺序即展示顺序;
+// avatar 与 desc 可省,缺了就是空串(Links 页据此决定画不画头像、写不写描述)
+function normalizeFriends(raw: unknown): FriendLink[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter(
+      (item): item is Record<string, unknown> =>
+        typeof item === 'object' && item !== null,
+    )
+    .map((item) => ({
+      name: typeof item.name === 'string' ? item.name.trim() : '',
+      url: typeof item.url === 'string' ? item.url.trim() : '',
+      avatar: typeof item.avatar === 'string' ? item.avatar.trim() : '',
+      desc: typeof item.desc === 'string' ? item.desc.trim() : '',
     }))
     .filter((item) => item.name !== '' && item.url !== '');
 }
@@ -158,6 +190,7 @@ export const site: Site = {
   ...config,
   theme: normalizeTheme(config.theme),
   social: normalizeSocial(config.social),
+  friends: normalizeFriends(config.friends),
   music: normalizeMusic(config.music),
   analytics: normalizeAnalytics(config.analytics),
 };
@@ -175,4 +208,11 @@ if (!site.avatar && site.githubUser) {
 // 以 / 开头的本地头像路径(public/ 目录下的文件)自动补全站点子路径(base)
 if (site.avatar.startsWith('/')) {
   site.avatar = import.meta.env.BASE_URL.replace(/\/$/, '') + site.avatar;
+}
+
+// 友链头像同理:填本地文件时也要带上站点子路径,GitHub Pages 下才找得到
+for (const friend of site.friends) {
+  if (friend.avatar.startsWith('/')) {
+    friend.avatar = import.meta.env.BASE_URL.replace(/\/$/, '') + friend.avatar;
+  }
 }

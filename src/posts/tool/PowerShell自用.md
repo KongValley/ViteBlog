@@ -1,6 +1,7 @@
 ---
 title: 🚀PowerShell自用
 date: 2020-01-17 15:34:36
+updated: 2026-09-21
 tags:
   - PowerShell
 categories:
@@ -26,7 +27,7 @@ Install-Module oh-my-posh -Scope CurrentUser
 
 ## 写入到配置文件
 先获取文件路径
-![PowerShell 里获取配置文件路径的命令与输出](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/powershell%E8%87%AA%E7%94%A8/1.png)
+![PowerShell 里获取配置文件路径的命令与输出](/images/tool/PowerShell自用/1.png)
 
 这个文件不存在的话就新建一个，写入以下内容：
 ```powershell

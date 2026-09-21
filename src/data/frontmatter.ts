@@ -4,6 +4,8 @@
 export interface PostMeta {
   title?: string;
   date?: string;
+  /** 最后更新日期(可选):和 date 不同天才在文章页显示「更新于」 */
+  updated?: string;
   tags?: string[];
   categories?: string[];
   excerpt?: string;
@@ -48,6 +50,8 @@ export function parseFrontmatter(raw: string): {
       meta.title = value;
     } else if (key === 'date') {
       meta.date = value;
+    } else if (key === 'updated') {
+      meta.updated = value;
     } else if (key === 'excerpt') {
       meta.excerpt = value;
     } else if (key === 'cover') {

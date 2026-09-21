@@ -1,0 +1,26 @@
+/* ============================================================
+   搜索页的全文搜索增量样式(src/views/Search.tsx)
+   ------------------------------------------------------------
+   基础外观在 src/components/Search.css;这里只补全文搜索新增的两样东西:
+   结果里的命中片段高亮、索引加载中的提示。
+   同那边的做法:只"使用"主题变量、不"声明"变量,每个变量都带兜底值,
+   外观规则一律用 :where() 包起来(优先级 0),主题想改样式时写同选择器即可覆盖。
+
+   用到:--red --muted --font-body
+   ============================================================ */
+
+/* 命中词:<mark> 自带一版黄底,这里换成主题红字,和标题选中态同一套语言 */
+:where(.search-hit-mark) {
+  background: transparent;
+  color: var(--red, #d63b3b);
+  font-family: inherit;
+  font-weight: 600;
+}
+
+/* 索引还在路上:压在结果计数上方的一行小字 */
+:where(.search-loading) {
+  margin: 10px 2px 0;
+  color: var(--muted, #8a8a8a);
+  font-family: var(--font-body, inherit);
+  font-size: 12px;
+}

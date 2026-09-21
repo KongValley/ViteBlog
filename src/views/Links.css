@@ -1,0 +1,143 @@
+/* ============================================================
+   友链页(src/views/Links.tsx):头像 + 名称 + 描述的卡片墙
+   ------------------------------------------------------------
+   同 .music-dock / .search-page 的做法:只"使用"主题变量、不"声明"主题变量,
+   每个变量都带兜底值(没有主题也能看)。版面规则一律用 :where() 包住(优先级 0),
+   主题想改样式时写同选择器就能覆盖,不用跟打包顺序较劲。
+
+   例外是卡片本身:.links-card 是个 <a>,主题里有全局的 a { color: ... } 以及
+   a:hover { text-decoration: ... },:where() 压不住,所以卡片那几条显式声明
+   (同 ShareBar.css 的按钮)。
+
+   用到:--surface --ink --muted --line --red --font-body --font-code
+   ============================================================ */
+
+:where(.links-page) {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 8px 0 56px;
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+}
+
+:where(.links-head) {
+  margin: 0 0 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line, #e5e5e5);
+}
+
+:where(.links-title) {
+  margin: 0;
+  color: var(--ink, #222);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* 副标题走等宽字体:和归档页的统计行同一副腔调 */
+:where(.links-sub) {
+  margin: 8px 0 0;
+  color: var(--muted, #7a6f58);
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+}
+
+:where(.links-count) {
+  color: var(--red, #e43b44);
+}
+
+/* 空态:与归档页的 .archive-empty 同一种语气(虚线框 + 弱化文字) */
+:where(.links-empty) {
+  margin: 0;
+  padding: 28px 20px;
+  border: 1px dashed var(--line, #e5e5e5);
+  color: var(--muted, #7a6f58);
+  font-size: 14px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+/* 空态里提到的 site.yml / friends:用正文代码块那套行内样式 */
+:where(.links-empty code) {
+  padding: 1px 5px;
+  border: 1px solid color-mix(in srgb, var(--line, #e5e5e5) 40%, transparent);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--surface, #fff) 74%, transparent);
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 0.92em;
+}
+
+/* ---------- 卡片墙:窄屏一列,宽屏自动铺开 ---------- */
+:where(.links-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line, #e5e5e5);
+  background: var(--surface, #fff);
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+  text-decoration: none;
+}
+
+.links-card:hover {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+  /* 主题的 a:hover 会补下划线,这里再声明一次 */
+  text-decoration: none;
+}
+
+.links-card:focus-visible {
+  outline: 2px solid var(--red, #e43b44);
+  outline-offset: 2px;
+}
+
+:where(.links-avatar) {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line, #e5e5e5);
+  object-fit: cover;
+}
+
+/* 没填头像时的占位:名称首字的方块 */
+:where(.links-avatar-fallback) {
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--ink, #222) 6%, transparent);
+  color: var(--muted, #7a6f58);
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 16px;
+  line-height: 1;
+}
+
+:where(.links-info) {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+:where(.links-name) {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+:where(.links-desc) {
+  color: var(--muted, #7a6f58);
+  font-size: 12.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}

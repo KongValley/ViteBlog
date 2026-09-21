@@ -1,0 +1,39 @@
+# 依赖更新策略:每周一次 PR,分组提交,避免一堆零散 PR 淹没仓库。
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    groups:
+      # 构建工具与类型定义一起升,冲突少
+      tooling:
+        patterns:
+          - vite
+          - '@vitejs/*'
+          - typescript
+          - '@biomejs/*'
+          - satori
+          - sharp
+          - yaml
+      # 运行时依赖分开,出问题好回滚
+      runtime:
+        patterns:
+          - react
+          - react-dom
+          - react-router-dom
+          - marked
+          - highlight.js
+          - katex
+          - mermaid
+          - qrcode
+          - aplayer
+          - '@fontsource*'
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

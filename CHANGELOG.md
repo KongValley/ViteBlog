@@ -7,6 +7,28 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 
 ### 新增
 
+- **真·全文搜索**:构建期扫全部文章生成 `public/search-index.json`(51 篇,171 KB,正文与代码块都进索引),
+  搜索页懒加载后才拉取,加载失败自动退回元信息搜索;结果按 标题 > 标签/分类 > 摘要 > 正文 打分,
+  正文命中给「命中词前后各 20 字」的片段并用高亮标出,支持多词全部命中。
+  此前 README 写着「全文搜索」但实现只搜元信息,名不副实。
+- **图片全部本地化**:正文与封面里 17 张阿里云 OSS 外链图已抓到 `public/images/`(1.6 MB)并改写为站内路径,
+  构建期的 webp 变体 + `srcset` 管线这才真正生效(此前 `public/images/` 不存在,管线一直在空转);
+  新增 `scripts/import-images.mjs`(幂等、带防盗链头、原图 403 才退回处理版、失败逐条列出并 exit 1)。
+- **友链页 `/links`**:卡片墙,数据来自 `site.yml` 的 `friends` 段,支持头像/描述,没配时显示空态;进了 sitemap 与预渲染。
+- **文章元信息**:支持 frontmatter `updated`(与 `date` 不同天时文章页显示「更新于 …」,JSON-LD 的 `dateModified` 也用它);
+  文末新增「编辑此页 / 报个错」直达 GitHub 源文件与新建 issue。
+- **代码高亮扩到 17 种语言**:新增 go / rust / java / kotlin / swift / c / cpp / php / ruby / sql / dockerfile /
+  nginx / powershell / ini(toml)/ scss / lua / diff,并补了 tsx / jsx 别名。
+- **主题契约可执行化**:新增 `docs/theme-contract.md`(变量契约、优先级规则、新增主题清单、已知的坑)与
+  `npm run check:themes`;顺带查出并修好 bento / brutalist 漏定义 `--font-body`、`--font-code` 的漂移。
+- **真站点冒烟 `npm run smoke`**:无头 Chrome 打开首页/文章页/标签页/友链页,查渲染、关键元素与控制台报错,
+  截图作为 CI artifact;接进 deploy 前的流水线。
+- **CI 补齐**:`check:themes`(构建前)、`check:dist`(构建后,校验 head 标签/本地资源/预渲染与图片数量);
+  新增 Dependabot(每周分组更新)与 `engines.node >= 24`。
+- **社交与分发**:`twitter:card` 四件套、`og:site_name`、`og:image:width/height`、明暗两套 `theme-color`、
+  `apple-touch-icon`(构建期从 favicon.svg 光栅化)、`feed.json`(JSON Feed 1.1)。
+
+
 - **非文章页也预渲染**:`/tags`、`/categories`、`/categories/<分类>`、`/archive`、`/search`、`/about` 现在都有静态 HTML,
   线上返回 200(此前这几类路径是 404,而它们还都写在 sitemap 里);每页有自己的 title / description / canonical。
 - **结构化数据与订阅发现**:文章页注入 `BlogPosting`、站点页注入 `WebSite` / `Person` 的 JSON-LD;
@@ -63,6 +85,14 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
   固定层小控件(`.back-top` / 挂件)移出 `.page`,不参与宽屏放大。
 
 ### 修复
+
+- **无障碍**:默认主题 pixel 补上 `prefers-reduced-motion` 兜底(十套里唯一漏的一套,它有三处无限闪烁);
+  文章头图此前 `alt=""` 且无宽高(补 alt + 1200×630,消除布局抖动);新增「跳到正文」skip-link;
+  浅色主题的 `--muted`(4.25)与 `--green`(2.7,标签文字用)对比度不达标,分别调到 4.92 / 4.68;
+  代码块「复制」按钮命中区从 32×19 提到 ≥24px 高。
+- 图片本地化暴露出的一处拼接 bug:`pageMeta` 对已带 base 的封面路径会再拼一次,运行期 og:image 变成
+  `/ViteBlog/ViteBlog/images/…`;现在三种写法(http / 已带 base / 站内根路径)都能正确拼接。
+
 
 - 内容体检发现的存量问题:12 张图缺 alt 文字、`typescript入门` 里 3 条 Hexo 时代的站内死链(改成 `/post/typescript/…`)、
   `macd-1` 正文里多出来的一个一级标题(降为二级)。

@@ -1,6 +1,7 @@
 ---
 title: 🎵 Hexo 外链播放器
 date: 2020-01-06 22:49:39
+updated: 2026-09-21
 tags:
   - Hexo
   - Music Player
@@ -36,4 +37,4 @@ categories:
 </meting-js>
 ```
 页面上的显示效果
-![以QQ音乐为例](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/Hexo%E5%A4%96%E9%93%BE%E6%92%AD%E6%94%BE%E5%99%A8/1.png)
+![以QQ音乐为例](/images/tool/Hexo外链播放器/1.png)

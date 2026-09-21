@@ -9,12 +9,29 @@
 
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
+import c from 'highlight.js/lib/languages/c';
+import cpp from 'highlight.js/lib/languages/cpp';
 import css from 'highlight.js/lib/languages/css';
+import diff from 'highlight.js/lib/languages/diff';
+import dockerfile from 'highlight.js/lib/languages/dockerfile';
+import go from 'highlight.js/lib/languages/go';
+import ini from 'highlight.js/lib/languages/ini';
+import java from 'highlight.js/lib/languages/java';
 import javascript from 'highlight.js/lib/languages/javascript';
 import json from 'highlight.js/lib/languages/json';
+import kotlin from 'highlight.js/lib/languages/kotlin';
+import lua from 'highlight.js/lib/languages/lua';
 import markdown from 'highlight.js/lib/languages/markdown';
+import nginx from 'highlight.js/lib/languages/nginx';
+import php from 'highlight.js/lib/languages/php';
 import plaintext from 'highlight.js/lib/languages/plaintext';
+import powershell from 'highlight.js/lib/languages/powershell';
 import python from 'highlight.js/lib/languages/python';
+import ruby from 'highlight.js/lib/languages/ruby';
+import rust from 'highlight.js/lib/languages/rust';
+import scss from 'highlight.js/lib/languages/scss';
+import sql from 'highlight.js/lib/languages/sql';
+import swift from 'highlight.js/lib/languages/swift';
 import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
 import yaml from 'highlight.js/lib/languages/yaml';
@@ -38,6 +55,31 @@ hljs.registerLanguage('python', python);
 hljs.registerLanguage('py', python);
 hljs.registerLanguage('typescript', typescript);
 hljs.registerLanguage('ts', typescript);
+hljs.registerLanguage('tsx', typescript);
+hljs.registerLanguage('jsx', javascript);
+// 其余常用语言:每加一个,highlight.js 的体积也只多一点(整包仍在按需加载的文章页 chunk 里)。
+// 需要更多(比如 zig / elixir)再照着加一行 import + 一行 register 即可。
+for (const [names, language] of [
+  [['go', 'golang'], go],
+  [['rust', 'rs'], rust],
+  [['java'], java],
+  [['kotlin', 'kt'], kotlin],
+  [['swift'], swift],
+  [['c'], c],
+  [['cpp', 'c++', 'cc', 'h', 'hpp'], cpp],
+  [['php'], php],
+  [['ruby', 'rb'], ruby],
+  [['sql'], sql],
+  [['dockerfile', 'docker'], dockerfile],
+  [['nginx', 'conf'], nginx],
+  [['powershell', 'ps1', 'ps'], powershell],
+  [['ini', 'toml'], ini],
+  [['scss', 'sass'], scss],
+  [['lua'], lua],
+  [['diff', 'patch'], diff],
+] as const) {
+  for (const name of names) hljs.registerLanguage(name, language);
+}
 
 const CALLOUT_LABEL: Record<string, string> = {
   note: '说明',

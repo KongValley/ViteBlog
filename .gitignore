@@ -34,3 +34,11 @@ design-preview/shots
 *.sln
 *.sw?
 avator.jpeg
+
+# 构建期生成:全文搜索索引、iOS 图标
+public/search-index.json
+public/apple-touch-icon.png
+
+# 图片管线产物 —— 原图入库,webp 变体与清单每次构建重新生成
+public/images/**/*.webp
+public/images/images.manifest.json

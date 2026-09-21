@@ -1,12 +1,13 @@
 ---
 title: 💖Hexo+GitHub配置保姆版（二）
 date: 2020-01-06 17:53:45
+updated: 2026-09-21
 tags:
   - Hexo
   - GitHub Page
 categories:
   - Build Blog
-cover: https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/Blog-Cover-Image/wallhaven-28d8gm.jpg
+cover: /ViteBlog/images/how-to-build-a-blog-site/Hexo-GitHub-2/wallhaven-28d8gm.jpg
 ---
 Hexo官网里面有都文档说明，首先打开 Git Bash，先定位到你要放博客的文件夹，建议不要那种需要管理员权限才能新建文件的文件夹，我自己是在 `D:\My-blog` 里
 
@@ -18,7 +19,7 @@ Hexo官网里面有都文档说明，首先打开 Git Bash，先定位到你要�
 cd 文件夹
 ```
 
-![在 Git Bash 里 cd 到放博客的文件夹](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-1.png?x-oss-process=style/2333)
+![在 Git Bash 里 cd 到放博客的文件夹](/images/how-to-build-a-blog-site/Hexo-GitHub-2/2-1.png)
 
 这样就定为到了 `D:\My-blog`，然后开始安装 Hexo
 
@@ -34,7 +35,7 @@ hexo
 
 如果出现以下这图就说明你的 Hexo 安装成功
 
-![Hexo 安装成功的命令行输出](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-2.png?x-oss-process=style/2333)
+![Hexo 安装成功的命令行输出](/images/how-to-build-a-blog-site/Hexo-GitHub-2/2-2.png)
 
 <br>
 
@@ -51,7 +52,7 @@ npm install
 
 安装完成后，你的文件夹里就会变成这样
 
-![hexo init 之后的项目文件夹结构](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/hexo%E9%85%8D%E7%BD%AE/2-3.png?x-oss-process=style/2333)
+![hexo init 之后的项目文件夹结构](/images/how-to-build-a-blog-site/Hexo-GitHub-2/2-3.png)
 
 这里的 `_config.yml` 是你的站点配置文件，你可以打开它修改你的站点信息（每个：后面都有一个空格）
 

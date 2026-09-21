@@ -9,6 +9,8 @@ export interface Post {
   slug: string;
   title: string;
   date: string;
+  /** 最后更新日期(可选):与 date 不同天才显示「更新于」 */
+  updated: string;
   tags: string[];
   categories: string[];
   excerpt: string;

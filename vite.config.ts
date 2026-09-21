@@ -92,7 +92,7 @@ function siteConfig(): Plugin {
 }
 
 // 把 src/posts 下的文章元信息扫成虚拟模块:
-//   virtual:posts-index → [{ slug, title, date, tags, categories, excerpt, cover, coverExplicit, words, minutes }]
+//   virtual:posts-index → [{ slug, title, date, updated, tags, categories, excerpt, cover, coverExplicit, words, minutes }]
 // cover 是「实际要显示的封面」:frontmatter 写了就用写的,没写就兜底到构建期生成的
 // public/covers/<slug>.png(scripts/build-covers.mjs),于是每篇文章都有封面可用。
 // coverExplicit 记住这张封面是不是手填的 —— og:image 只在手填时用封面,否则用带标题的分享卡。
@@ -123,6 +123,7 @@ function postsIndex(): Plugin {
         slug,
         title: meta.title ?? '未命名文章',
         date: meta.date ?? '',
+        updated: meta.updated ?? '',
         tags: meta.tags ?? [],
         categories: meta.categories ?? [],
         excerpt: meta.excerpt ?? '',

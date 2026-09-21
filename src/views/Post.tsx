@@ -19,9 +19,27 @@ import {
   loadPostContent,
   relatedPosts,
 } from '../data/posts';
+import { site } from '../data/site';
 import './Post.css';
 
 type TocItem = { id: string; text: string; level: 2 | 3 };
+
+// 文章源文件在仓库里的地址:slug 就是 src/posts 下的相对路径(可能含 / 与中文,整体编码)
+function repoEditUrl(slug: string): string {
+  return `${site.github}/edit/main/${encodeURI(`src/posts/${slug}.md`)}`;
+}
+
+// 报错入口:标题预填文章名,正文预填文章链接,作者不用再问是哪一篇
+function repoIssueUrl(slug: string, title: string): string {
+  const base = import.meta.env.BASE_URL;
+  const origin = typeof location === 'undefined' ? '' : location.origin;
+  const articleUrl = `${origin}${base}post/${slug}`;
+  return (
+    `${site.github}/issues/new` +
+    `?title=${encodeURIComponent(title)}` +
+    `&body=${encodeURIComponent(articleUrl)}`
+  );
+}
 
 // 从 Markdown 源码里提取二、三级标题作为目录项,并生成对应顺序的 id 列表
 function buildToc(content: string): { toc: TocItem[]; ids: string[] } {
@@ -142,6 +160,10 @@ export default function Post() {
     );
   }
 
+  // 同一天内的改动不必重复报一次,只在「更新日期 ≠ 发布日期的日期部分」时显示
+  const showUpdated =
+    !!post.updated && post.updated.split(' ')[0] !== post.date.split(' ')[0];
+
   return (
     <article className="post">
       <ReadingProgress />
@@ -181,19 +203,29 @@ export default function Post() {
 
       <div className="post-body">
         <header className="post-header">
+          {/* 自动封面固定 1200×630(scripts/lib/cards.mjs),宽度写成属性让浏览器
+              提前占好位子,省掉图片加载完的那一下抖动;手填封面(coverExplicit)
+              比例未知,只靠 Post.css 里的 aspect-ratio 兜底 */}
           {post.cover && (
             <img
               className="post-cover"
               src={post.cover}
-              alt=""
+              alt={post.title}
               data-no-zoom="true"
               loading="eager"
               decoding="async"
+              width={post.coverExplicit ? undefined : 1200}
+              height={post.coverExplicit ? undefined : 630}
             />
           )}
           <h1 className="post-title">{post.title}</h1>
           <div className="post-meta">
             <time>{formatDate(post.date)}</time>
+            {showUpdated && (
+              <span className="post-updated">
+                更新于 {formatDate(post.updated)}
+              </span>
+            )}
             <span className="post-stat">
               {post.minutes} 分钟 · {post.words} 字
             </span>
@@ -211,6 +243,24 @@ export default function Post() {
                 {tag}
               </span>
             ))}
+            {site.github && (
+              <span className="post-actions">
+                <a
+                  href={repoEditUrl(slug)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  编辑此页
+                </a>
+                <a
+                  href={repoIssueUrl(slug, post.title)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  报个错
+                </a>
+              </span>
+            )}
           </div>
         </header>
 

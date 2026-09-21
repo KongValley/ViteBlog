@@ -1651,5 +1651,6 @@ a.tag:hover {
   --gold: var(--br-yellow);
   --blue: var(--br-blue);
   --shadow: var(--br-shadow);
+  --font-body: var(--br-disp);
   --font-code: var(--br-mono);
 }

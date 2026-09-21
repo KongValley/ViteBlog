@@ -152,17 +152,19 @@ music:
 
 | 功能 | 入口 |
 | --- | --- |
-| 全文搜索 | 导航「搜索」或按 `/`;支持 `?q=` 分享链接 |
+| 全文搜索 | 导航「搜索」或按 `/`;构建期生成 `public/search-index.json`(51 篇 / 171 KB,含正文与代码块),进搜索页才懒加载,加载失败自动退回元信息搜索;结果带命中片段与高亮。支持 `?q=` 分享链接、多词全部命中、↑↓/Enter/Esc |
 | 分类 / 归档 | 导航「分类」「归档」;分类详情 `/categories/<名字>` |
 | 标签总览 | 导航「标签」;可按分类过滤、按数量/名称排序、字号随热度分档 |
 | 随机一篇 | `/random`(404 页也有入口) |
 | 相关文章 | 文章底部按分类/标签相似度推荐 3 篇 |
 | 阅读进度 / 目录 | 文章页顶部进度条;窄屏右下有悬浮目录按钮(宽屏用左侧卷轴目录) |
 | 键盘快捷键 | 按 `?` 查看全部;`/` 搜索、`h/t/a/c` 跳转、`←/→` 上下篇、`b` 回顶、`Esc` 关闭 |
-| 图片 | 懒加载、点击放大(灯箱);本地图构建期还会生成 webp 变体与 srcset |
-| 公式 / 图表 | KaTeX 与 Mermaid,按需加载(正文没用到就不下载) |
+| 图片 | 懒加载、点击放大(灯箱);本地图构建期生成 webp 变体与 `srcset`(老文的 27 张外链图已全部本地化到 `public/images/`,不再依赖图床) |
+| 公式 / 图表 | KaTeX 与 Mermaid,按需加载(正文没用到就不下载)。实测 51 篇里 0 篇用到,依赖保留备用 —— 它们只在文章页需要的 chunk 里,不影响首屏 |
 | 彩蛋 | 首页游戏机卡片上的点击粒子;输入 Konami 码(↑↑↓↓←→←→BA)有惊喜 |
 | 订阅与收录 | 构建期生成 `feed.xml`、`atom.xml`、`sitemap.xml`、`robots.txt`;页脚也有 RSS / Atom / Sitemap 入口 |
+| 友链页 | `/links`,数据来自 `site.yml` 的 `friends` 段(name/url 必填,avatar/desc 可省);没配时显示空态;已进 sitemap 与预渲染 |
+| 文章元信息 | 日期旁显示「更新于 …」(frontmatter `updated` 与 `date` 不同天时);文末有「编辑此页 / 报个错」直达 GitHub |
 | 静态页预渲染 | 非文章页(`/tags`、`/categories/…`、`/archive`、`/search`、`/about`)也生成静态 HTML,线上直接 200,不再走 SPA 404 兜底 |
 | 结构化数据 | 文章页注入 `BlogPosting`、站点页注入 `WebSite` / `Person` 的 JSON-LD;所有页面 head 带 `rel=alternate` 订阅发现 |
 | 分享卡片 | 每篇文章构建期预渲染静态 HTML(独立 title/description/OG)并生成 1200×630 分享图 |
@@ -179,11 +181,22 @@ npm run covers              # 生成/刷新自动封面(构建前会自动跑;�
 npm run fonts               # 按站内用到的字符把中文像素字体裁成子集(构建前会自动跑)
 npm test                    # 纯函数单测(node 内置 test runner,零额外依赖)
 npm run check               # 内容体检:frontmatter / 标题层级 / 站内死链 / 图片 alt
+npm run check:themes        # 主题契约:通用变量别名是否齐全 / 是否尊重 prefers-reduced-motion
+npm run check:dist          # 构建产物自检:head 标签、本地资源、预渲染与图片数量
+npm run smoke               # 真站点冒烟:无头 Chrome 打开首页/文章页/标签页/友链页,查渲染与控制台报错
+npm run import:images       # 把正文里的远程图片抓到 public/images/ 并改写链接(带 --dry-run)
 npm run build               # 类型检查 + 构建 + 生成分享图 / feed / sitemap / 预渲染 HTML
 ```
 
 `dist/` 里的 `feed.xml` / `atom.xml` / `sitemap.xml` / `robots.txt` / `post/<slug>.html` / `og/*.png`
 都由构建期脚本生成,不需要手动维护;文章增删后重新构建即可。
+
+### 质量闸门
+
+CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` → `npm run check:themes`,
+构建后再跑主题隔离自检、`npm run check:dist` 与 `npm run smoke`(无头 Chrome 冒烟,截图作为 artifact 留档)。
+本机没装 Chrome/Edge 时冒烟会自动跳过,不会误报失败。
+依赖更新走 Dependabot(每周一次,npm 与 GitHub Actions 分组提交)。
 
 ### 首屏与字体
 
@@ -193,6 +206,10 @@ npm run build               # 类型检查 + 构建 + 生成分享图 / feed / s
 - 构建收尾会删掉 `dist` 里永远不会被下载的 woff/ttf 老格式字体(每次约 1 MB)。
 
 ## 主题
+
+主题与共享组件之间的边界(必须定义的 CSS 变量、优先级规则、新增一套主题要改哪些文件、
+以及几个踩过的坑)都写在 [docs/theme-contract.md](docs/theme-contract.md),
+`npm run check:themes` 会把其中的变量与动效要求变成可执行的检查。
 
 站点内置十套**完全独立**的主题,通过根目录 `site.yml` 里的 `theme` 字段指定(本地改完自动热更新,push 后自动重新部署):
 

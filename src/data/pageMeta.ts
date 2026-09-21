@@ -2,7 +2,7 @@
 //
 // 单测站点是 SPA,真正的 SEO 与分享卡片靠构建期预渲染写入静态 HTML
 // (scripts/build-static.mjs 会为每篇文章生成 dist/post/<slug>.html);
-// 这里负责**运行期**:路由切换时把 title / meta 更新成当前页面的,
+// 这里负责**运行期**:路由切换时把 title / meta(og:* 与 twitter:*)更新成当前页面的,
 // 免得 51 篇文章在标签页、分享面板里全长一个样。
 
 import { useEffect } from 'react';
@@ -11,7 +11,7 @@ import { site } from './site';
 type PageMeta = {
   /** 页面标题,会自动带上站点名后缀 */
   title: string;
-  /** 一句话描述,写入 description 与 og:description */
+  /** 一句话描述,写入 description、og:description 与 twitter:description */
   description?: string;
   /** 分享图(相对 public 的路径或绝对 URL) */
   image?: string;
@@ -50,10 +50,13 @@ export function usePageMeta({ title, description, image, path }: PageMeta) {
     document.title = fullTitle;
 
     const url = `${siteOrigin()}${(path ?? '').replace(/^\//, '')}`;
+    // 分享图:http(s) 绝对地址原样用;已经带站点子路径(BASE_URL)的要把这段摘掉,
+    // 否则下面再拼一次会变成 .../ViteBlog/ViteBlog/...(siteOrigin 里已经含 base)
+    const base = import.meta.env.BASE_URL;
     const shareImage = image
       ? image.startsWith('http')
         ? image
-        : `${siteOrigin()}${image.replace(/^\//, '')}`
+        : `${siteOrigin()}${(image.startsWith(base) ? image.slice(base.length) : image).replace(/^\//, '')}`
       : `${siteOrigin()}${site.avatar ? 'avatar.jpeg' : 'favicon.svg'}`;
 
     upsertMeta(
@@ -96,6 +99,34 @@ export function usePageMeta({ title, description, image, path }: PageMeta) {
       },
       (el) => el.setAttribute('content', shareImage),
     );
+    // Twitter/X 卡片:构建期已经写了一份,这里跟着路由更新,SPA 内跳转后分享卡片才对
+    upsertMeta(
+      'meta[name="twitter:card"]',
+      () => {
+        const el = document.createElement('meta');
+        el.setAttribute('name', 'twitter:card');
+        return el;
+      },
+      (el) => el.setAttribute('content', 'summary_large_image'),
+    );
+    upsertMeta(
+      'meta[name="twitter:title"]',
+      () => {
+        const el = document.createElement('meta');
+        el.setAttribute('name', 'twitter:title');
+        return el;
+      },
+      (el) => el.setAttribute('content', fullTitle),
+    );
+    upsertMeta(
+      'meta[name="twitter:image"]',
+      () => {
+        const el = document.createElement('meta');
+        el.setAttribute('name', 'twitter:image');
+        return el;
+      },
+      (el) => el.setAttribute('content', shareImage),
+    );
     if (description) {
       upsertMeta(
         'meta[name="description"]',
@@ -111,6 +142,15 @@ export function usePageMeta({ title, description, image, path }: PageMeta) {
         () => {
           const el = document.createElement('meta');
           el.setAttribute('property', 'og:description');
+          return el;
+        },
+        (el) => el.setAttribute('content', description),
+      );
+      upsertMeta(
+        'meta[name="twitter:description"]',
+        () => {
+          const el = document.createElement('meta');
+          el.setAttribute('name', 'twitter:description');
           return el;
         },
         (el) => el.setAttribute('content', description),

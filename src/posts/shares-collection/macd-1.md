@@ -1,12 +1,13 @@
 ---
 title: 🐹MACD指标入门（一）
 date: 2023-08-28 20:48:35
+updated: 2026-09-21
 tags:
   - 股票入门
   - MACD指标
 categories:
   - 股市基础技能
-cover: https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/shares/macd-1/wallhaven-ex9gwo.png?x-oss-process=style/4433
+cover: /ViteBlog/images/shares-collection/macd-1/wallhaven-ex9gwo.png
 ---
 
 ## 什么是 MACD

@@ -43,6 +43,9 @@ jobs:
       - name: Content check(死链 / 标题层级 / frontmatter)
         run: npm run check
 
+      - name: Theme contract
+        run: npm run check:themes
+
       - name: Build
         run: npm run build
 
@@ -50,9 +53,21 @@ jobs:
       - name: Theme isolation
         run: node design-preview/check-isolation.mjs
 
-      # SPA 兜底:访问不存在的路径时返回 index.html,交给前端路由处理
-      - name: Create SPA 404 fallback
-        run: cp dist/index.html dist/404.html
+      # 构建产物自检:head 标签齐全、本地资源都存在、产物数量对得上
+      - name: Dist check
+        run: npm run check:dist
+
+      # 真站点冒烟:无头 Chrome 打开首页/文章页/标签页/友链页,查渲染与控制台报错
+      - name: Smoke test
+        run: npm run smoke -- --shots
+
+      - name: Upload smoke screenshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: smoke-shots
+          path: design-preview/shots
+          if-no-files-found: ignore
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

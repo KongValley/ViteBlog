@@ -1,6 +1,7 @@
 ---
 title: 🤙Hexo引入Mermaid
 date: 2020-01-08 22:22:21
+updated: 2026-09-21
 tags:
   - Hexo
   - Mermaid
@@ -32,4 +33,4 @@ categories:
 ```
 
 这样就能愉快的使用 mermaid 了
-![渲染图](https://blog-chara-img.oss-cn-shanghai.aliyuncs.com/blog-img/Hexo%E5%BC%95%E5%85%A5Mermaid/1.png)
+![渲染图](/images/tool/Hexo引入mermaid/1.png)

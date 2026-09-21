@@ -34,9 +34,10 @@
   letter-spacing: 0.06em;
 }
 
-/* 按钮不再自己画框 —— 外面那层已经是工具条,这里只留字 */
+/* 按钮不再自己画框 —— 外面那层已经是工具条,这里只留字;
+   内边距给到 4px 是为了命中区 ≥24px(手指点得到),不是为了让字变大 */
 .code-copy {
-  padding: 1px 5px;
+  padding: 4px 8px;
   border: 0;
   border-radius: 2px;
   background: none;

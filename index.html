@@ -3,6 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <!-- iOS 主屏图标:180×180 的 PNG,由 scripts/build-icons.mjs 从 favicon.svg 光栅化生成 -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+    <!-- 浏览器地址栏 / 移动端状态栏配色:明暗各给一套,取主题的底色(换主题时改这两行) -->
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#f7edd5"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#0f0e17"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="一个基于 React + Vite 的个人博客,托管在 GitHub Pages" />
     <title>ViteBlog · 记录学习与生活</title>

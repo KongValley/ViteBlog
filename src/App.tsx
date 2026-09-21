@@ -21,6 +21,7 @@ const Category = lazy(() => import('./views/Category'));
 const Archive = lazy(() => import('./views/Archive'));
 const Random = lazy(() => import('./views/Random'));
 const NotFound = lazy(() => import('./views/NotFound'));
+const Links = lazy(() => import('./views/Links'));
 
 type Theme = 'light' | 'dark';
 
@@ -53,6 +54,10 @@ export default function App() {
   return (
     <>
       <div className="page">
+        {/* 跳转到正文:键盘 / 读屏用户不用把整个导航条 Tab 一遍 */}
+        <a className="skip-link" href="#main">
+          跳到正文
+        </a>
         <ScrollToTop />
 
         <header className="header">
@@ -92,7 +97,7 @@ export default function App() {
           </div>
         </header>
 
-        <main className="main">
+        <main className="main" id="main">
           <div className="container">
             <Suspense fallback={<p className="route-loading">LOADING…</p>}>
               <Routes>
@@ -105,6 +110,7 @@ export default function App() {
                 <Route path="/search" element={<Search />} />
                 <Route path="/random" element={<Random />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/links" element={<Links />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
@@ -120,6 +126,8 @@ export default function App() {
               <a href={`${import.meta.env.BASE_URL}atom.xml`}>Atom</a>
               <span aria-hidden="true">·</span>
               <a href={`${import.meta.env.BASE_URL}sitemap.xml`}>Sitemap</a>
+              <span aria-hidden="true">·</span>
+              <Link to="/links">友链</Link>
             </p>
             <p className="footer-en pixel-en">
               © {site.since} {site.author} · POWERED BY REACT × VITE · HOSTED ON

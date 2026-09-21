@@ -9,11 +9,11 @@
   --surface: #fdf6e3;
   --ink: #2a2a2a;
   --ink-strong: #141414;
-  --muted: #7a6f58;
+  --muted: #6f6553; /* 对比度 4.92(原 #7a6f58 只有 4.25,小字不达标) */
   --line: #1a1a1a;
   --shadow: #1a1a1a;
   --red: #d82800; /* 经典 NES 红 */
-  --green: #00a844; /* 经典 NES 绿 */
+  --green: #0f7a35; /* 经典 NES 绿压暗一档:标签文字用它,原 #00a844 在纸色底上只有 2.7 */
   --blue: #0058f8; /* 经典 NES 蓝 */
   --gold: #f8b800;
   --pixel-outline: #1a1c2c;
@@ -1432,6 +1432,20 @@ button.tag:hover,
 
   .brand {
     font-size: 14px;
+  }
+}
+
+/* ---------- 无障碍:尊重减少动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* 光标、品牌点、页脚心跳都是无限闪烁,关掉后元素保持常亮,既不闪也不影响可读性 */
+  .blink,
+  .brand-dot,
+  .footer-en .heart {
+    animation: none;
   }
 }
 
