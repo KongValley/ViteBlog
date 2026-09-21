@@ -14,6 +14,8 @@ type Props = {
   minutes: number;
   /** 标签,画在分享图上 */
   tags: string[];
+  /** 封面图,有就铺在分享图顶部 */
+  cover?: string;
 };
 
 // 把相对路径拼成可直接分享的绝对地址(与预渲染 HTML 里的 canonical 一致)
@@ -28,7 +30,14 @@ function absoluteUrl(path: string): string {
  * 额外给一个「系统分享」按钮。分享出去的是 SPA 路由地址,打开后由 GitHub Pages 的
  * /post/<slug>.html 预渲染文件返回正确的 title/description/OG 图。
  */
-export default function ShareBar({ title, path, date, minutes, tags }: Props) {
+export default function ShareBar({
+  title,
+  path,
+  date,
+  minutes,
+  tags,
+  cover,
+}: Props) {
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle');
   const [canNativeShare, setCanNativeShare] = useState(false);
   const url = absoluteUrl(path);
@@ -96,6 +105,7 @@ export default function ShareBar({ title, path, date, minutes, tags }: Props) {
       )}
       <SharePoster
         title={title}
+        cover={cover}
         path={path}
         date={date}
         minutes={minutes}

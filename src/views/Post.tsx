@@ -222,6 +222,7 @@ export default function Post() {
           date={post.date}
           minutes={post.minutes}
           tags={post.tags}
+          cover={post.cover}
         />
 
         {related.length > 0 && (

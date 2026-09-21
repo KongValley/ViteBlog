@@ -51,6 +51,12 @@
 :where(.share-poster-actions) {
   display: flex;
   gap: 10px;
+  /* 带封面的分享图很高,面板要滚动;把按钮钉在面板底部,不用滚到底才能点 */
+  position: sticky;
+  bottom: -16px;
+  margin: 0 -16px -16px;
+  padding: 12px 16px 16px;
+  background: var(--surface, #fff);
 }
 
 :where(.share-poster-download),

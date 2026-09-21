@@ -11,10 +11,14 @@ type Props = {
   date: string;
   minutes: number;
   tags: string[];
+  /** 封面图(可选):有就铺在标题上方,像公众号分享卡;跨域取不到时自动退回无封面版 */
+  cover?: string;
 };
 
 const WIDTH = 800;
-const HEIGHT = 1120;
+const BASE_HEIGHT = 1120;
+/** 有封面时封面图占的高度(整幅通栏) */
+const COVER_HEIGHT = 380;
 const PADDING = 56;
 
 // 画海报用的一套颜色:直接读当前主题的 CSS 变量,深浅色自动跟随
@@ -111,12 +115,15 @@ export default function SharePoster({
   date,
   minutes,
   tags,
+  cover,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'drawing' | 'ready' | 'failed'>(
     'idle',
   );
   const [dataUrl, setDataUrl] = useState('');
+  // 封面图跨域拿不到时(OSS 没开 CORS),退回无封面版并在面板上说明
+  const [coverDropped, setCoverDropped] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const url = `${location.origin}${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
@@ -126,7 +133,26 @@ export default function SharePoster({
     const canvas = canvasRef.current;
     if (!canvas) return;
     setStatus('drawing');
-    try {
+    setCoverDropped(false);
+
+    // 封面图:跨域图必须带 crossOrigin 拉,否则画进 canvas 会把画布标脏、导出直接抛异常。
+    // OSS 没开 CORS 时这里会失败,那就退回无封面版(并标记出来在面板上说明)。
+    const loadCover = async (): Promise<HTMLImageElement | null> => {
+      if (!cover) return null;
+      try {
+        const image = new Image();
+        image.crossOrigin = 'anonymous';
+        image.src = cover;
+        await image.decode();
+        return image;
+      } catch {
+        return null;
+      }
+    };
+
+    const paint = async (
+      coverImage: HTMLImageElement | null,
+    ): Promise<string> => {
       // 动态 import 是刻意的:二维码库只有点「生成分享图」时才需要,别让它进主包
       const { default: QRCode } = await import('qrcode');
       await document.fonts.ready;
@@ -138,37 +164,71 @@ export default function SharePoster({
         errorCorrectionLevel: 'M',
       });
 
+      const coverHeight = coverImage ? COVER_HEIGHT : 0;
+      const height = BASE_HEIGHT + coverHeight;
       const palette = readPalette();
       const ratio = Math.min(2, window.devicePixelRatio || 1);
       canvas.width = WIDTH * ratio;
-      canvas.height = HEIGHT * ratio;
+      canvas.height = height * ratio;
       const ctx = canvas.getContext('2d');
       if (!ctx) throw new Error('canvas 2d 不可用');
       ctx.scale(ratio, ratio);
 
       // 底色 + 外框
       ctx.fillStyle = palette.bg;
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      ctx.fillRect(0, 0, WIDTH, height);
       ctx.strokeStyle = palette.line;
       ctx.lineWidth = 6;
-      ctx.strokeRect(3, 3, WIDTH - 6, HEIGHT - 6);
+      ctx.strokeRect(3, 3, WIDTH - 6, height - 6);
+
+      // 封面:通栏铺在顶部,按 object-fit: cover 的方式裁切,不变形
+      if (coverImage) {
+        const scale = Math.max(
+          WIDTH / coverImage.width,
+          coverHeight / coverImage.height,
+        );
+        const sourceWidth = WIDTH / scale;
+        const sourceHeight = coverHeight / scale;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, WIDTH, coverHeight);
+        ctx.clip();
+        ctx.drawImage(
+          coverImage,
+          (coverImage.width - sourceWidth) / 2,
+          (coverImage.height - sourceHeight) / 2,
+          sourceWidth,
+          sourceHeight,
+          0,
+          0,
+          WIDTH,
+          coverHeight,
+        );
+        ctx.restore();
+        ctx.strokeStyle = palette.line;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, coverHeight + 1.5);
+        ctx.lineTo(WIDTH, coverHeight + 1.5);
+        ctx.stroke();
+      }
 
       // 顶部:站点名 + 一条主色横杠
       ctx.fillStyle = palette.accent;
-      ctx.fillRect(PADDING, PADDING, 72, 8);
+      ctx.fillRect(PADDING, coverHeight + PADDING, 72, 8);
       ctx.fillStyle = palette.inkStrong;
       ctx.font = `700 30px ${palette.font}`;
       ctx.textBaseline = 'top';
-      ctx.fillText(site.name, PADDING + 88, PADDING - 10);
+      ctx.fillText(site.name, PADDING + 88, coverHeight + PADDING - 10);
       ctx.fillStyle = palette.muted;
       ctx.font = `400 18px ${palette.fontCode}`;
-      ctx.fillText(site.tagline, PADDING + 88, PADDING + 26);
+      ctx.fillText(site.tagline, PADDING + 88, coverHeight + PADDING + 26);
 
       // 标题
       ctx.fillStyle = palette.inkStrong;
       ctx.font = `700 46px ${palette.font}`;
       const lines = wrapText(ctx, title, WIDTH - PADDING * 2, 4);
-      let cursorY = PADDING + 96;
+      let cursorY = coverHeight + PADDING + 96;
       for (const line of lines) {
         ctx.fillText(line, PADDING, cursorY);
         cursorY += 62;
@@ -201,7 +261,7 @@ export default function SharePoster({
       }
 
       // 二维码卡片
-      const cardTop = HEIGHT - PADDING - 92 - qrSize - 56;
+      const cardTop = height - PADDING - 92 - qrSize - 56;
       ctx.fillStyle = palette.surface;
       roundRect(ctx, PADDING, cardTop, WIDTH - PADDING * 2, qrSize + 56, 8);
       ctx.fill();
@@ -236,15 +296,31 @@ export default function SharePoster({
       ctx.fillText(
         `© ${site.since} ${site.author} · ${site.tagline}`,
         PADDING,
-        HEIGHT - PADDING - 20,
+        height - PADDING - 20,
       );
 
-      setDataUrl(canvas.toDataURL('image/png'));
+      return canvas.toDataURL('image/png');
+    };
+
+    try {
+      const coverImage = await loadCover();
+      // 有封面却拿不到(多半是图床没给 CORS)时,面板上说明一句,免得用户以为封面被吃了
+      if (cover && !coverImage) setCoverDropped(true);
+      let output: string;
+      try {
+        output = await paint(coverImage);
+      } catch (error) {
+        // 封面虽然解码成功、但画布被标脏(toDataURL 抛 SecurityError)时,退回无封面版
+        if (!coverImage) throw error;
+        output = await paint(null);
+        setCoverDropped(true);
+      }
+      setDataUrl(output);
       setStatus('ready');
     } catch {
       setStatus('failed');
     }
-  }, [title, url, date, minutes, tags]);
+  }, [title, url, date, minutes, tags, cover]);
 
   // 打开面板时再画,关掉时把画布清空,省内存
   useEffect(() => {
@@ -285,6 +361,12 @@ export default function SharePoster({
         >
           <div className="share-poster-panel">
             <p className="share-poster-title">分享图(长按或下载后发出去)</p>
+            {coverDropped && (
+              <p className="share-poster-hint">
+                封面图跨域取不到,已生成无封面版本(给图床开一条 CORS
+                规则即可带上封面)。
+              </p>
+            )}
             {status === 'failed' ? (
               <p className="share-poster-hint">
                 生成失败,可能是浏览器不允许 canvas
