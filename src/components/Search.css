@@ -42,11 +42,16 @@
 }
 
 :where(.search-box-icon) {
+  display: inline-flex;
   flex: none;
+  align-items: center;
   color: var(--muted, #8a8a8a);
-  font-family: var(--font-code, monospace);
-  font-size: 16px;
-  line-height: 1;
+}
+
+/* 图标跟着输入框的字号走(16px 文字配 20px 图标),不依赖任何字体的符号 */
+:where(.search-box-icon svg) {
+  width: 20px;
+  height: 20px;
 }
 
 :where(.search-input) {
@@ -76,8 +81,8 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 24px; /* 点击类控件给到 24px,手指点得到 */
+  height: 24px;
   padding: 0;
   border: 0;
   border-radius: 50%;

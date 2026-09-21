@@ -320,7 +320,20 @@ export default function Search() {
 
       <div className="search-box">
         <span className="search-box-icon" aria-hidden="true">
-          ⌕
+          {/* 放大镜用内联 SVG,不用 ⌕ 这类字符:那个字形依赖字体,
+              Fira Code 里没有,浏览器回退出来的符号只有 9px 宽,在 46px 高的输入框里显得很小 */}
+          <svg
+            viewBox="0 0 20 20"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
+            <circle cx="8.5" cy="8.5" r="5.5" />
+            <path d="M12.8 12.8 17 17" />
+          </svg>
         </span>
         <input
           ref={inputRef}

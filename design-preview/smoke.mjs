@@ -213,6 +213,21 @@ const PAGES = [
     ],
   },
   {
+    // 搜索页:顺带端到端验一次索引(用只出现在正文里的词)与放大镜图标尺寸
+    name: 'search',
+    path: `${BASE}search?q=${encodeURIComponent('指数平滑异同')}`,
+    check: `JSON.stringify({
+      hits: document.querySelectorAll('.search-hit-mark').length,
+      icon: (() => { const svg = document.querySelector('.search-box-icon svg'); return svg ? Math.round(svg.getBoundingClientRect().width) : 0; })(),
+      value: document.querySelector('.search-input')?.value ?? '',
+    })`,
+    assert: (data) => [
+      [data.value.length > 0, `搜索框带上了 ?q=(实际 "${data.value}")`],
+      [data.hits > 0, `正文里的词能搜到命中(实际 ${data.hits} 处高亮)`],
+      [data.icon >= 18, `放大镜图标够大(实际 ${data.icon}px;回归过:字体回退的 ⌕ 只有 9px)`],
+    ],
+  },
+  {
     name: 'tags',
     path: `${BASE}tags`,
     check: `JSON.stringify({ links: document.querySelectorAll('a[href]').length, text: document.body.innerText.length, title: document.title })`,
