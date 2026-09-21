@@ -28,7 +28,10 @@
   left: var(--music-inset, 16px);
   bottom: var(--music-inset, 16px);
   z-index: 55; /* 低于返回顶部按钮(60),高于正文 */
-  max-width: calc(100vw - var(--music-inset, 16px) * 2);
+  /* 右侧给右下角的「回到顶部」按钮留出一条列(按钮 50-54px + 间距),
+     不然窄屏上两个贴边小控件会叠在一起 —— 挂件自然宽度(约 386px)比这条
+     上限窄的时候,这条规则不生效,桌面端不受影响 */
+  max-width: calc(100vw - var(--music-inset, 16px) * 2 - 68px);
 }
 
 .music-dock-body {
