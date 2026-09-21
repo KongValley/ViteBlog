@@ -102,6 +102,12 @@ if (!apiKey && !dryRun) {
   );
   process.exit(1);
 }
+if (baseUrl.includes('{') && !dryRun) {
+  console.error(
+    `DASHSCOPE_BASE_URL 里还留着占位符:\n  ${baseUrl}\n${BASE_HINT}`,
+  );
+  process.exit(1);
+}
 if (!baseUrl && !dryRun) {
   console.error(`缺少 DASHSCOPE_BASE_URL。\n${BASE_HINT}`);
   process.exit(1);
@@ -251,14 +257,20 @@ async function generate(prompt, seed) {
     watermark: false,
   };
 
-  const response = await fetch(`${baseUrl}/images/generations`, {
-    method: 'POST',
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  let response;
+  try {
+    response = await fetch(`${baseUrl}/images/generations`, {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${apiKey}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    // DNS / TLS 直接失败:多半是域名里还留着 {WorkspaceId} 之类的占位符
+    throw new Error(`请求发不出去(${error?.message ?? error})。\n${BASE_HINT}`);
+  }
 
   if (!response.ok) {
     const text = (await response.text()).slice(0, 300);
