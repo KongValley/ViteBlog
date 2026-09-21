@@ -59,34 +59,63 @@
   background: var(--surface, #fff);
 }
 
-:where(.share-poster-download),
-:where(.share-poster-close) {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid var(--line, #1a1a1a);
-  border-radius: 3px;
+/* 这两个按钮的文字样式必须自己说了算:主题里有一条全局的 a{color:var(--blue)},
+   而 :where() 的优先级是 0,挡不住元素选择器 —— 之前「下载图片」的字就变成了蓝色。
+   所以尺寸与文字用普通类选择器(优先级压过 a{}),只有圆角留给主题覆盖。 */
+.share-poster-download,
+.share-poster-close {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 2px solid var(--line, #1a1a1a);
   background: var(--surface, #fff);
-  color: var(--ink, #222);
+  color: var(--ink-strong, var(--ink, #222));
   font-family: var(--font-body, inherit);
   font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
   text-align: center;
   text-decoration: none;
+  text-shadow: none;
   cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-:where(.share-poster-download) {
-  background: var(--red, #e43b44);
+.share-poster-download {
   border-color: var(--red, #e43b44);
+  background: var(--red, #e43b44);
   color: #fff;
   font-weight: 700;
 }
 
-:where(.share-poster-download[aria-disabled="true"]) {
+/* 实心红按钮的悬停反过来:底色退成面板色,字和边框用红 —— 与主题里音乐挂件按钮同一套 */
+.share-poster-download:hover {
+  background: var(--surface, #fff);
+  color: var(--red, #e43b44);
+}
+
+.share-poster-close:hover {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+}
+
+.share-poster-download:focus-visible,
+.share-poster-close:focus-visible {
+  outline: 2px solid var(--red, #e43b44);
+  outline-offset: 2px;
+}
+
+.share-poster-download[aria-disabled="true"] {
   opacity: 0.5;
   pointer-events: none;
 }
 
-:where(.share-poster-close:hover) {
-  border-color: var(--red, #e43b44);
-  color: var(--red, #e43b44);
+/* 圆角交给主题定(像素风就是直角),所以留在 0 优先级的 :where() 里 */
+:where(.share-poster-download),
+:where(.share-poster-close) {
+  border-radius: 3px;
 }
