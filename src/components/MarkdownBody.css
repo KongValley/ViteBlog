@@ -5,19 +5,27 @@
    这样各主题的 style.css 写同选择器就一定能盖过这里。
    ============================================================ */
 
-/* ---------- 代码块:语言标签 + 复制按钮(工具条浮在代码块上方,不干扰主题原有的 pre 样式) ---------- */
+/* ---------- 代码块:语言标签 + 复制按钮(浮在代码框内部的右上角) ---------- */
 .code-block {
   position: relative;
 }
 
 .code-bar {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  margin: 0 0 4px;
+  gap: 8px;
+  padding: 1px 5px;
+  border: 1px solid color-mix(in srgb, var(--line, #1a1a1a) 40%, transparent);
+  border-radius: 3px;
+  /* 每个主题的代码底色变量名都不一样,所以用半透明底透出后面的背景色,换主题不用改这里 */
+  background: color-mix(in srgb, var(--surface, #fff) 74%, transparent);
   font-family: var(--font-code, ui-monospace, monospace);
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 1.5;
   color: var(--muted, #7a6f58);
 }
 
@@ -26,23 +34,23 @@
   letter-spacing: 0.06em;
 }
 
+/* 按钮不再自己画框 —— 外面那层已经是工具条,这里只留字 */
 .code-copy {
-  padding: 2px 8px;
-  border: 1px solid var(--line, #1a1a1a);
-  border-radius: 3px;
-  background: var(--surface, #fff);
+  padding: 1px 5px;
+  border: 0;
+  border-radius: 2px;
+  background: none;
   color: inherit;
   font: inherit;
   cursor: pointer;
 }
 
 .code-copy:hover {
-  border-color: var(--red, #e43b44);
+  background: color-mix(in srgb, var(--red, #e43b44) 16%, transparent);
   color: var(--red, #e43b44);
 }
 
 .code-copy[data-copied="true"] {
-  border-color: var(--green, #00a844);
   color: var(--green, #00a844);
 }
 
