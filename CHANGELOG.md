@@ -7,6 +7,8 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 
 ### 新增
 
+- **一条命令新建文章**:`npm run new -- "文章标题"`(进子目录用 `npm run new -- notes/my-post "标题"`),
+  自动生成带 frontmatter 与正文骨架的模板;同名文件已存在时拒绝并提示,不会覆盖。
 - **贴边音乐挂件**:固定在左下角,可收成一张封面方块贴边(状态记在 localStorage);支持单曲(`type: song`)与
   歌单(`type: playlist`,播放器多出列表按钮,默认收起),配置在 `site.yml` 的 `music` 段。
   取歌走 Meting 接口 + [APlayer](https://github.com/DIYgod/APlayer),播放器单独成 chunk,不影响首屏。

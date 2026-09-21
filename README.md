@@ -25,7 +25,16 @@ npm run format  # 仅用 Biome 格式化代码
 
 ## 如何写文章
 
-在 `src/posts/` 下新建一个 `.md` 文件即可,可以直接放进子目录。链接 slug 是相对 `src/posts/` 的路径(如 `notes/my-first-post.md` → `/post/notes/my-first-post`)。
+一条命令生成模板(文件名就是链接 slug,子目录用 `/` 分隔):
+
+```bash
+npm run new -- "我的新文章"                       # → src/posts/我的新文章.md
+npm run new -- notes/my-post "带标点的:文章标题"    # → src/posts/notes/my-post.md,标题单独指定
+```
+
+模板已经带好 frontmatter 和骨架,写完把 `tags` / `categories` / `excerpt` 换成真实内容即可;同名文件已存在时会拒绝并提示,不会覆盖。
+
+也可以直接手写:在 `src/posts/` 下新建一个 `.md` 文件即可,可以直接放进子目录。链接 slug 是相对 `src/posts/` 的路径(如 `notes/my-first-post.md` → `/post/notes/my-first-post`)。
 
 ```markdown
 ---
