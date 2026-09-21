@@ -12,7 +12,9 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
   并配了中英双语反向提示词(文字/水印/截图/模糊…);`--index N` 换 seed 重打、`--style` 追加风格、
   `--size auto` 交给模型定分辨率、`--extend` 开启提示词改写(默认关)。
   结果裁成 1200×630 落进 `public/images/covers/` 并回填 frontmatter。需要自己提供 `DASHSCOPE_API_KEY`,
-  业务空间专属域名或新加坡地域再加 `DASHSCOPE_BASE_URL`。
+  **必须**同时设 `DASHSCOPE_BASE_URL` 为业务空间专属域名 —— 实测 `dashscope.aliyuncs.com` 这类老域名上
+  没有 `/compatible-mode/v1/images/generations`(404),缺配置时会直接给出可照做的提示;
+  另外 key 支持放进 `.env.local`(已 gitignore),不用写进 shell 历史。
 
 
 - **全站换真实照片封面**:51 篇文章各配一张 Picsum(Unsplash 图源,免密钥、ID 稳定)的照片,

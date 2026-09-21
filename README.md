@@ -219,23 +219,24 @@ CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` 
 4. **AI 生成像素风封面** —— 用千问的图像生成模型按文章主题生成,风格与站点默认像素风一致:
 
 ```bash
-DASHSCOPE_API_KEY=sk-... npm run cover:ai -- <slug>      # 单篇打样
-DASHSCOPE_API_KEY=sk-... npm run cover:ai -- --all       # 全站批量(每篇一次请求,注意计费)
-npm run cover:ai -- --all --dry-run                      # 不需要 key:只打印将要发出的请求体
+# key 放 .env.local(已在 .gitignore 里,不进 shell 历史)或临时 export:
+#   DASHSCOPE_API_KEY=sk-...
+#   DASHSCOPE_BASE_URL=https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+
+npm run cover:ai -- <slug>      # 单篇打样
+npm run cover:ai -- --all       # 全站批量(每篇一次请求,注意计费)
+npm run cover:ai -- --all --dry-run   # 不需要 key:只打印将要发出的请求体
 ```
 
-   走的是阿里云百炼「千问-图像生成与编辑 3.0」的 **OpenAI 兼容**接口
-   (`https://dashscope.aliyuncs.com/compatible-mode/v1/images/generations`,默认模型 `qwen-image-3.0-pro`)。
-   官方建议迁到业务空间专属域名,照做只需多设一个环境变量:
+   **`DASHSCOPE_BASE_URL` 必须设**,而且要用**业务空间专属域名**(`{WorkspaceId}` 在百炼控制台「业务空间详情」里看;
+   新加坡地域把 `cn-beijing` 换成 `ap-southeast-1`)。实测 `dashscope.aliyuncs.com` 这类老域名上
+   **没有** `/compatible-mode/v1/images/generations` 这条路由(直接 404),只有专属域名有。
 
-```bash
-DASHSCOPE_BASE_URL=https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1 DASHSCOPE_API_KEY=sk-... npm run cover:ai -- --all
-```
-
-   提示词里固定带「8-bit 粗像素 / 深蓝底 + NES 红金青 / 不要文字」这套要求并配了中英双语反向提示词
-   (文字、水印、截图、模糊…),主题短语由标题与标签自动推出;`--index N` 换 seed 重打,
-   `--style "夜间城市电路板"` 追加风格,`--size auto` 交给模型自己定分辨率,`--extend` 开启提示词智能改写
-   (默认关闭,免得把风格要求改跑)。生成结果裁成 1200×630 存进 `public/images/covers/`,和上面几种来源走完全一样的管线。
+   默认模型 `qwen-image-3.0-pro`、`size 1600x840`;提示词里固定带「8-bit 粗像素 / 深蓝底 + NES 红金青 / 不要文字」这套要求,
+   并配了中英双语反向提示词(文字、水印、截图、模糊…),主题短语由标题与标签自动推出。
+   `--index N` 换 seed 重打、`--style "夜间城市电路板"` 追加风格、`--size auto` 交给模型定分辨率、
+   `--extend` 开启提示词智能改写(默认关闭,免得把风格要求改跑)。
+   生成结果裁成 1200×630 存进 `public/images/covers/`,和上面几种来源走完全一样的管线。
 
 三个来源都能用,但**一定要落在 `public/images/` 里**:
 

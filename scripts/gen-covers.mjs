@@ -1,13 +1,17 @@
 // 用图像生成模型给文章做**像素风封面**(风格与站点默认像素风一致,但每篇的图案按主题生成)。
 //
+//   DASHSCOPE_BASE_URL=https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1 \
 //   DASHSCOPE_API_KEY=sk-... npm run cover:ai -- <slug>          # 单篇打样
 //   DASHSCOPE_API_KEY=sk-... npm run cover:ai -- --all           # 全站批量(每篇一次请求,注意计费)
 //   npm run cover:ai -- --all --dry-run                          # 不需要 key:只打印将要发出的请求体
 //
-// 默认走阿里云百炼(模型 studio)的「千问-图像生成与编辑 3.0」OpenAI 兼容接口:
-//   POST https://dashscope.aliyuncs.com/compatible-mode/v1/images/generations
-//   (官方建议迁到业务空间专属域名 https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1,
-//    用 DASHSCOPE_BASE_URL 覆盖即可;新加坡用 dashscope-intl.aliyuncs.com)
+// 走阿里云百炼(模型 studio)的「千问-图像生成与编辑 3.0」OpenAI 兼容接口。
+//
+// ⚠ 必须把 DASHSCOPE_BASE_URL 设成**业务空间专属域名**,不能用老的 dashscope.aliyuncs.com:
+//   实测老域名上的 /compatible-mode/v1/images/generations 直接 404(那条路由只在专属域名上有),
+//   专属域名格式(华北2 北京;新加坡把 cn-beijing 换成 ap-southeast-1):
+//     https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+//   {WorkspaceId} 在百炼控制台「业务空间详情」里能看到。
 //
 // 可选参数:
 //   --model qwen-image-3.0-pro|qwen-image-3.0   默认 pro(质量优先),标准版更快更省
@@ -38,11 +42,28 @@ const WIDTH = 1200;
 const HEIGHT = 630;
 const CONCURRENCY = 2;
 
+// 支持把 key 放进 .env.local(已被 .gitignore 的 *.local 覆盖),免得写进 shell 历史
+for (const envFile of ['.env.local', '.env']) {
+  const path = join(ROOT, envFile);
+  if (!existsSync(path)) continue;
+  for (const line of readFileSync(path, 'utf8').split(/\r?\n/)) {
+    const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+    if (match && !process.env[match[1]]) {
+      process.env[match[1]] = match[2].replace(/^["']|["']$/g, '');
+    }
+  }
+}
+
 const apiKey = process.env.DASHSCOPE_API_KEY ?? '';
-const baseUrl = (
-  process.env.DASHSCOPE_BASE_URL ??
-  'https://dashscope.aliyuncs.com/compatible-mode/v1'
-).replace(/\/$/, '');
+const baseUrl = (process.env.DASHSCOPE_BASE_URL ?? '').replace(/\/$/, '');
+
+/** 老域名上没有图像接口(实测 404),这里统一给一句能照着做的提示 */
+const BASE_HINT = [
+  '把 DASHSCOPE_BASE_URL 设成业务空间专属域名(WorkspaceId 在百炼控制台「业务空间详情」里看):',
+  '  https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1      # 华北2 北京',
+  '  https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1 # 新加坡',
+  '注意 dashscope.aliyuncs.com 这类老域名上没有 /compatible-mode/v1/images/generations(实测 404)。',
+].join('\n');
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
@@ -77,9 +98,12 @@ if (!slug && !all) {
 if (!apiKey && !dryRun) {
   console.error(
     '缺少 DASHSCOPE_API_KEY(阿里云百炼控制台「API-KEY 管理」里创建)。\n' +
-      '  业务空间专属域名或新加坡地域请同时设 DASHSCOPE_BASE_URL。\n' +
       '  只想看请求体可以用 --dry-run,不需要 key。',
   );
+  process.exit(1);
+}
+if (!baseUrl && !dryRun) {
+  console.error(`缺少 DASHSCOPE_BASE_URL。\n${BASE_HINT}`);
   process.exit(1);
 }
 
@@ -238,7 +262,11 @@ async function generate(prompt, seed) {
 
   if (!response.ok) {
     const text = (await response.text()).slice(0, 300);
-    throw new Error(`接口返回 HTTP ${response.status}:${text}`);
+    const hint =
+      response.status === 404 || text.includes('Workspace endpoint is invalid')
+        ? `\n${BASE_HINT}`
+        : '';
+    throw new Error(`接口返回 HTTP ${response.status}:${text}${hint}`);
   }
   const payload = await response.json();
   const url = payload.data?.[0]?.url;
