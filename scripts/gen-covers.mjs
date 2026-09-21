@@ -55,7 +55,31 @@ for (const envFile of ['.env.local', '.env']) {
 }
 
 const apiKey = process.env.DASHSCOPE_API_KEY ?? '';
-const baseUrl = (process.env.DASHSCOPE_BASE_URL ?? '').replace(/\/$/, '');
+const rawBase = process.env.DASHSCOPE_BASE_URL ?? '';
+/** 地域:只在填了「裸 WorkspaceId」时用来拼域名,默认华北2(北京) */
+const region = process.env.DASHSCOPE_REGION ?? 'cn-beijing';
+
+/**
+ * 把用户填的地址整理成能用的 base URL —— 实际填法五花八门,这里都认:
+ *   ws-b0nearudao5g3xw7                          只给 WorkspaceId → 补全成专属域名
+ *   ws-xxx.cn-beijing.maas.aliyuncs.com          给了域名 → 补 https:// 与 /compatible-mode/v1
+ *   https://ws-xxx.../compatible-mode/v1         标准形式 → 原样
+ *   https://my-relay.example.com/v1              自定义中转 → 原样(不动它的路径)
+ */
+function normalizeBase(raw) {
+  const value = raw.trim().replace(/\/+$/, '');
+  if (!value) return '';
+  if (/^[a-z0-9-]+$/i.test(value)) {
+    return `https://${value}.${region}.maas.aliyuncs.com/compatible-mode/v1`;
+  }
+  const withScheme = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  if (!withScheme.includes('aliyuncs.com')) return withScheme;
+  return /\/compatible-mode\/v\d+$/.test(withScheme)
+    ? withScheme
+    : `${withScheme}/compatible-mode/v1`;
+}
+
+const baseUrl = normalizeBase(rawBase);
 
 /** 老域名上没有图像接口(实测 404),这里统一给一句能照着做的提示 */
 const BASE_HINT = [
@@ -373,6 +397,9 @@ async function one(file) {
   }
 }
 
+if (rawBase && rawBase.trim() !== baseUrl) {
+  console.log(`接口地址已按你填的补全:${rawBase.trim()} → ${baseUrl}`);
+}
 console.log(
   `模型 ${model} / 尺寸 ${size} / 接口 ${baseUrl}${dryRun ? '(dry-run)' : ''}`,
 );

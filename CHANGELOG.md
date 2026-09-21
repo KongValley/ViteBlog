@@ -104,6 +104,12 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 
 ### 修复
 
+- `npm run cover:ai` 的 `DASHSCOPE_BASE_URL` 现在**认各种填法**:只填 WorkspaceId(`ws-xxxx`)会自动补成
+  `https://ws-xxxx.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`(地域可用 `DASHSCOPE_REGION` 覆盖),
+  只填域名会补 `https://` 与 `/compatible-mode/v1`,自定义中转的地址原样不动 —— 之前必须一字不差地写全,
+  否则报「Failed to parse URL」。解析结果会在启动时打印一行,便于核对。
+
+
 - `npm run cover` 写进 frontmatter 的封面路径漏了部署 base(`/images/...` 而不是 `/ViteBlog/images/...`),
   文章页 `<img src>` 直接 404、分享图判定成「封面跨域取不到」;顺带给冒烟加了一条「文章头图真的加载出来了」的断言。
 
