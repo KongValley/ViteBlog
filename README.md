@@ -2,6 +2,8 @@
 
 基于 **React + Vite + TypeScript 7** 的个人博客,托管在 GitHub Pages 上,通过 GitHub Actions 自动构建部署。UI 为红白机像素风。
 
+改动记录见 [CHANGELOG.md](./CHANGELOG.md)。
+
 ## 本地开发
 
 ```bash
