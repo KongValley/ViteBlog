@@ -118,7 +118,11 @@ export default function Post() {
   usePageMeta({
     title: post?.title ?? '文章不存在',
     description: post?.excerpt || undefined,
-    image: post?.cover || `/og/${slug.replace(/\//g, '__')}.png`,
+    // 分享卡自带标题,比纯图案的封面更适合做链接预览,所以只有手填封面时才用封面
+    image:
+      post && post.coverExplicit
+        ? post.cover
+        : `/og/${slug.replace(/\//g, '__')}.png`,
     path: `/post/${slug}`,
   });
 

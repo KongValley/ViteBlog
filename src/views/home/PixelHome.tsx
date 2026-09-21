@@ -1,69 +1,13 @@
 import { Link } from 'react-router-dom';
-import { PixelIcon, type PixelIconName } from '../../components/PixelIcon';
+import { PixelIcon } from '../../components/PixelIcon';
 import PlayerCard from '../../components/PlayerCard';
 import { formatDate } from '../../data/format';
+import { getPostIcon } from '../../data/postIcons';
 import { posts } from '../../data/posts';
 import { site } from '../../data/site';
-import { stickerIcons } from '../../data/stickerIcons';
 import Pagination from './Pagination';
 import type { HomeData } from './shared';
 import TagFilter from './TagFilter';
-
-const postIcons: PixelIconName[] = [
-  'star',
-  'rocket',
-  'smile',
-  'wink',
-  'laugh',
-  'surprised',
-  'love',
-  'heart',
-  'ghost',
-  'gamepad',
-  'cat',
-  'mushroom',
-  'hero',
-  'wizard',
-  'ninja',
-  'knight',
-  'robot',
-  'slime',
-  'invader',
-  'fighter',
-  'sword',
-  'shield',
-  'potion',
-  'bomb',
-  'chest',
-  'key',
-  'gem',
-  'joystick',
-  'portal',
-  'trophy',
-  ...stickerIcons,
-];
-
-// 个别文章手动指定图标,覆盖哈希随机分配的结果
-const iconOverrides: Record<string, PixelIconName> = {
-  'typescript/typescript-webpack': 'shield',
-  'tool/自用代码提交格式': 'invader',
-  'tool/Hexo引入mermaid': 'robot',
-  'tool/Hexo外链播放器': 'cat',
-  'typescript/typescript入门': 'wizard',
-};
-
-function getPostIcon(slug: string): PixelIconName {
-  const override = iconOverrides[slug];
-  if (override) return override;
-
-  let hash = 0;
-
-  for (let index = 0; index < slug.length; index += 1) {
-    hash = (hash * 31 + slug.charCodeAt(index)) >>> 0;
-  }
-
-  return postIcons[hash % postIcons.length];
-}
 
 // 像素风首页:游戏机名片 + 卡片列表
 export default function PixelHome({

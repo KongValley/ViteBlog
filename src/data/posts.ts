@@ -12,8 +12,14 @@ export interface Post {
   tags: string[];
   categories: string[];
   excerpt: string;
-  /** 封面图(可选):卡片头图与文章页头图都用它 */
+  /**
+   * 封面图:卡片头图、文章页头图、分享图顶部都用它。
+   * frontmatter 没写 cover 时,这里兜底到构建期生成的 /covers/<slug>.png
+   * (scripts/build-covers.mjs,由 predev/prebuild 自动跑)。
+   */
   cover: string;
+  /** 封面是手填的还是自动生成的 —— og:image 只在手填时用封面,否则用带标题的分享卡 */
+  coverExplicit: boolean;
   /** 正文字数(中日韩按字、其余按词) */
   words: number;
   /** 估算阅读时长(分钟) */

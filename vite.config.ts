@@ -74,12 +74,17 @@ function siteConfig(): Plugin {
 }
 
 // 把 src/posts 下的文章元信息扫成虚拟模块:
-//   virtual:posts-index → [{ slug, title, date, tags, categories, excerpt, cover, words, minutes }]
+//   virtual:posts-index → [{ slug, title, date, tags, categories, excerpt, cover, coverExplicit, words, minutes }]
+// cover 是「实际要显示的封面」:frontmatter 写了就用写的,没写就兜底到构建期生成的
+// public/covers/<slug>.png(scripts/build-covers.mjs),于是每篇文章都有封面可用。
+// coverExplicit 记住这张封面是不是手填的 —— og:image 只在手填时用封面,否则用带标题的分享卡。
 // 只注入元信息,正文由 src/data/posts.ts 按需动态 import(?raw),这样首页不必
 // 把 51 篇文章的原文一起打包进来;新增/删除文章时目录也在监听范围内。
 function postsIndex(): Plugin {
   const dir = resolve(root, 'src', 'posts');
   const virtualId = '\0posts-index';
+  // 自动封面的路径要带 base(GitHub Pages 在子路径下),dev 与构建都得对
+  let base = '/';
 
   const walk = (path: string): string[] => {
     const entries = readdirSync(path, { withFileTypes: true });
@@ -95,14 +100,16 @@ function postsIndex(): Plugin {
       const raw = readFileSync(file, 'utf8');
       const { meta, content } = parseFrontmatter(raw);
       const words = countWords(content);
+      const slug = relative(dir, file).replace(/\\/g, '/').replace(/\.md$/, '');
       return {
-        slug: relative(dir, file).replace(/\\/g, '/').replace(/\.md$/, ''),
+        slug,
         title: meta.title ?? '未命名文章',
         date: meta.date ?? '',
         tags: meta.tags ?? [],
         categories: meta.categories ?? [],
         excerpt: meta.excerpt ?? '',
-        cover: meta.cover ?? '',
+        cover: meta.cover ?? `${base}covers/${slug.replace(/\//g, '__')}.png`,
+        coverExplicit: Boolean(meta.cover),
         words,
         // 阅读时长:至少 1 分钟,免得短笔记显示 0
         minutes: Math.max(1, Math.round(words / 400)),
@@ -118,6 +125,9 @@ function postsIndex(): Plugin {
 
   return {
     name: 'posts-index',
+    configResolved(config) {
+      base = config.base;
+    },
     resolveId(id) {
       if (id === 'virtual:posts-index') return virtualId;
     },

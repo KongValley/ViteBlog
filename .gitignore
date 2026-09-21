@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# 构建期生成的自动封面(scripts/build-covers.mjs,predev/prebuild 会自动重建)
+public/covers
+
 # design-preview 的本地验证产物(构建拷贝与截图,可随时重新生成)
 design-preview/out
 design-preview/shots
