@@ -1,6 +1,7 @@
 ---
 title: 股票 K 线趋势分析入门:看懂多空博弈的语言
 date: 2026-09-15
+cover: /ViteBlog/images/covers/k-line-trend-analysis.jpg
 tags:
   - 股票
   - 投资笔记

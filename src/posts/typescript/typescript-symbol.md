@@ -1,6 +1,7 @@
 ---
 title: 😗Symbol in TypeScript
 date: 2020-02-02 18:06:13
+cover: /ViteBlog/images/covers/typescript__typescript-symbol.jpg
 tags:
   - TypeScript Basic
 categories:

@@ -1,6 +1,7 @@
 ---
 title: Node.js 入门（二）：核心模块与异步编程
 date: 2026-09-18
+cover: /ViteBlog/images/covers/node-02-core-modules-async.jpg
 tags:
   - Node.js
   - 入门

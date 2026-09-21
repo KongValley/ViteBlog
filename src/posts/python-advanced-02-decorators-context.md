@@ -1,6 +1,7 @@
 ---
 title: Python 进阶（二）：装饰器与上下文管理器怎样管理横切逻辑
 date: 2026-09-17
+cover: /ViteBlog/images/covers/python-advanced-02-decorators-context.jpg
 tags:
   - Python
   - 进阶

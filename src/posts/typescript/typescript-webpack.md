@@ -1,6 +1,7 @@
 ---
 title: 🌈TypeScript + Webpack
 date: 2020-02-07 19:03:08
+cover: /ViteBlog/images/covers/typescript__typescript-webpack.jpg
 tags:
   - TypeScript Basic
 categories:

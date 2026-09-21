@@ -7,7 +7,7 @@ tags:
   - GitHub Page
 categories:
   - Build Blog
-cover: /ViteBlog/images/how-to-build-a-blog-site/Hexo-GitHub-1/wallhaven-g7qjr3.jpg
+cover: /ViteBlog/images/covers/how-to-build-a-blog-site__Hexo-GitHub-1.jpg
 ---
 注册Github帐号
 点击 [这里](https://github.com/)，直接 sign up 注册，填完 step1 里的信息之后，直接下一步下一步，等下你注册时用的邮箱会收到一封来自 Github 的验证邮件，验证完成后，点击导航条右边的 +

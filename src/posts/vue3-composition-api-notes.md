@@ -1,6 +1,7 @@
 ---
 title: Vue 3 组合式 API 入门笔记
 date: 2026-09-14
+cover: /ViteBlog/images/covers/vue3-composition-api-notes.jpg
 tags:
   - Vue
 categories:

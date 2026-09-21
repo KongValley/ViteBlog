@@ -1,6 +1,7 @@
 ---
 title: 🤙Hexo引入Mermaid
 date: 2020-01-08 22:22:21
+cover: /ViteBlog/images/covers/tool__Hexo引入mermaid.jpg
 updated: 2026-09-21
 tags:
   - Hexo

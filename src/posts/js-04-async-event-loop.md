@@ -1,6 +1,7 @@
 ---
 title: JavaScript 进阶（四）：异步编程与事件循环
 date: 2026-09-18 11:45:00
+cover: /ViteBlog/images/covers/js-04-async-event-loop.jpg
 tags:
   - JavaScript
   - 进阶

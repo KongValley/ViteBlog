@@ -1,6 +1,7 @@
 ---
 title: Python 入门（一）：从安装到第一个程序
 date: 2026-09-16
+cover: /ViteBlog/images/covers/python-getting-started.jpg
 tags:
   - Python
   - 入门

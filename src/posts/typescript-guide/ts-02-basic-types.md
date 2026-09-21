@@ -1,6 +1,7 @@
 ---
 title: TypeScript 入门（二）：基础类型与类型注解
 date: 2026-09-19 09:30:00
+cover: /ViteBlog/images/covers/typescript-guide__ts-02-basic-types.jpg
 tags:
   - TypeScript
   - 入门

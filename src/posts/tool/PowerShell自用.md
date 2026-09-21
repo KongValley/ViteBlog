@@ -1,6 +1,7 @@
 ---
 title: 🚀PowerShell自用
 date: 2020-01-17 15:34:36
+cover: /ViteBlog/images/covers/tool__PowerShell自用.jpg
 updated: 2026-09-21
 tags:
   - PowerShell

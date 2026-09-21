@@ -7,7 +7,7 @@ tags:
   - MACD指标
 categories:
   - 股市基础技能
-cover: /ViteBlog/images/shares-collection/macd-1/wallhaven-ex9gwo.png
+cover: /ViteBlog/images/covers/shares-collection__macd-1.jpg
 ---
 
 ## 什么是 MACD

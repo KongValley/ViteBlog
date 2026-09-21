@@ -1,6 +1,7 @@
 ---
 title: JavaScript 入门（一）：变量、类型与控制流
 date: 2026-09-18 09:30:00
+cover: /ViteBlog/images/covers/js-01-variables-types-control-flow.jpg
 tags:
   - JavaScript
   - 入门

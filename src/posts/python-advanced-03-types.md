@@ -1,6 +1,7 @@
 ---
 title: Python 进阶（三）：用 dataclass 和 Protocol 设计清晰的数据边界
 date: 2026-09-17
+cover: /ViteBlog/images/covers/python-advanced-03-types.jpg
 tags:
   - Python
   - 进阶

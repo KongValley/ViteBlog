@@ -1,6 +1,7 @@
 ---
 title: TypeScript 进阶（三）：接口与类型别名
 date: 2026-09-19 10:00:00
+cover: /ViteBlog/images/covers/typescript-guide__ts-03-interface-type-alias.jpg
 tags:
   - TypeScript
   - 进阶

@@ -1,6 +1,7 @@
 ---
 title: TypeScript 入门（一）：环境搭建与第一个 TS 程序
 date: 2026-09-19 09:00:00
+cover: /ViteBlog/images/covers/typescript-guide__ts-01-getting-started.jpg
 tags:
   - TypeScript
   - 入门

@@ -1,6 +1,7 @@
 ---
 title: 🦄TypeScript入门
 date: 2020-01-09 0:30:20
+cover: /ViteBlog/images/covers/typescript__typescript入门.jpg
 updated: 2026-09-21
 tags:
   - TypeScript Basic

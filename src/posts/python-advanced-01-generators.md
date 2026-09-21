@@ -1,6 +1,7 @@
 ---
 title: Python 进阶（一）：迭代器、生成器与惰性数据管道
 date: 2026-09-17
+cover: /ViteBlog/images/covers/python-advanced-01-generators.jpg
 tags:
   - Python
   - 进阶

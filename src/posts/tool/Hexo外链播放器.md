@@ -1,6 +1,7 @@
 ---
 title: 🎵 Hexo 外链播放器
 date: 2020-01-06 22:49:39
+cover: /ViteBlog/images/covers/tool__Hexo外链播放器.jpg
 updated: 2026-09-21
 tags:
   - Hexo

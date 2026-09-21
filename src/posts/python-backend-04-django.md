@@ -1,6 +1,7 @@
 ---
 title: Python 后端（四）：Django 全家桶入门
 date: 2026-09-18
+cover: /ViteBlog/images/covers/python-backend-04-django.jpg
 tags:
   - Python
   - 后端

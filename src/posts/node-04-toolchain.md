@@ -1,6 +1,7 @@
 ---
 title: Node.js 进阶（四）：工程化工具链
 date: 2026-09-18
+cover: /ViteBlog/images/covers/node-04-toolchain.jpg
 tags:
   - Node.js
   - 进阶

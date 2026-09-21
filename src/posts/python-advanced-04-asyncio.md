@@ -1,6 +1,7 @@
 ---
 title: Python 进阶（四）：用 asyncio 管理并发 I/O
 date: 2026-09-17
+cover: /ViteBlog/images/covers/python-advanced-04-asyncio.jpg
 tags:
   - Python
   - 进阶

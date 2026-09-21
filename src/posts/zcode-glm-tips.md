@@ -1,6 +1,7 @@
 ---
 title: 🤖 ZCode + GLM 开发手记（三）：用得顺手的小技巧
 date: 2026-09-17 20:00:00
+cover: /ViteBlog/images/covers/zcode-glm-tips.jpg
 tags:
   - ZCode
   - GLM

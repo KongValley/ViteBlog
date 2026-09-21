@@ -7,10 +7,12 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 
 ### 新增
 
-- **`npm run cover`**:给某篇文章找一张真实照片当封面 —— 走 Openverse 公开 API(免密钥),
-  默认只收 CC0 / 公有领域,下载后裁成 1200×630 落到 `public/images/covers/<slug>.jpg` 并写回 frontmatter;
-  支持 `--dry-run` / `--index N` / `--license`。图片落在 `public/images/` 才能吃到 webp 变体管线,
-  而且分享长图是同源取图(远程图会被跨域标脏)。实测给 `js-02-functions-scope-closures` 换上了一张 CC0 照片。
+- **全站换真实照片封面**:51 篇文章各配一张 Picsum(Unsplash 图源,免密钥、ID 稳定)的照片,
+  裁成 1200×630 存在 `public/images/covers/`,合计 5.1 MB;同一批里不重复使用同一张。
+- **`npm run cover`**:给文章找真实照片封面 —— 走 Lorem Picsum(Unsplash 免费照片,免密钥),先人工筛一批 ID 当图池,
+  再按 slug 哈希稳定分配(互不重复),裁成 1200×630 落到 `public/images/covers/` 并回填 frontmatter;
+  支持 `--all` / `--index N` / `--dry-run`。图片落在 `public/images/` 才能吃到 webp 变体管线,
+  而且分享长图是同源取图(远程图会被跨域标脏)。
 
 
 - **真·全文搜索**:构建期扫全部文章生成 `public/search-index.json`(51 篇,171 KB,正文与代码块都进索引),

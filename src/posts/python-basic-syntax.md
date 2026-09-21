@@ -1,6 +1,7 @@
 ---
 title: Python 入门（二）：变量、集合与流程控制
 date: 2026-09-16
+cover: /ViteBlog/images/covers/python-basic-syntax.jpg
 tags:
   - Python
   - 入门

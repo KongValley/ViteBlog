@@ -1,6 +1,7 @@
 ---
 title: 🌈TypeScript 基础类型
 date: 2020-01-17 16:46:56
+cover: /ViteBlog/images/covers/typescript__typescript基础类型.jpg
 tags:
   - TypeScript Basic
 categories:

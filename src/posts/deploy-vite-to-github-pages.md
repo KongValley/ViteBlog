@@ -1,6 +1,7 @@
 ---
 title: 手把手把 Vite 博客部署到 GitHub Pages
 date: 2026-09-15
+cover: /ViteBlog/images/covers/deploy-vite-to-github-pages.jpg
 tags:
   - Vite
   - GitHub

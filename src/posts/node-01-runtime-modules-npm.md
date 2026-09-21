@@ -1,6 +1,7 @@
 ---
 title: Node.js 入门（一）：运行时、模块系统与 npm
 date: 2026-09-18
+cover: /ViteBlog/images/covers/node-01-runtime-modules-npm.jpg
 tags:
   - Node.js
   - 入门

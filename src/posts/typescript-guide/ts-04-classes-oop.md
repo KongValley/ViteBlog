@@ -1,6 +1,7 @@
 ---
 title: TypeScript 进阶（四）：类与面向对象
 date: 2026-09-19 10:30:00
+cover: /ViteBlog/images/covers/typescript-guide__ts-04-classes-oop.jpg
 tags:
   - TypeScript
   - 进阶

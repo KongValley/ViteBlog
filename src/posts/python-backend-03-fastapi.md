@@ -1,6 +1,7 @@
 ---
 title: Python 后端（三）：FastAPI 与类型驱动开发
 date: 2026-09-18
+cover: /ViteBlog/images/covers/python-backend-03-fastapi.jpg
 tags:
   - Python
   - 后端

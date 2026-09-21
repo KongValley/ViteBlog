@@ -1,6 +1,7 @@
 ---
 title: Python 入门（三）：函数、异常、模块与虚拟环境
 date: 2026-09-16
+cover: /ViteBlog/images/covers/python-functions-and-environment.jpg
 tags:
   - Python
   - 入门

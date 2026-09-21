@@ -1,6 +1,7 @@
 ---
 title: Node.js 精通（五）：数据库、鉴权与部署上线
 date: 2026-09-18
+cover: /ViteBlog/images/covers/node-05-db-auth-deploy.jpg
 tags:
   - Node.js
   - 精通

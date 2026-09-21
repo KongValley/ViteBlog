@@ -1,6 +1,7 @@
 ---
 title: Python 后端（六）：工具链——uv、ruff 与 pytest
 date: 2026-09-18
+cover: /ViteBlog/images/covers/python-backend-06-toolchain.jpg
 tags:
   - Python
   - 后端

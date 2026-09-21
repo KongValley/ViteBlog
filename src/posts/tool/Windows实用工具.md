@@ -1,6 +1,7 @@
 ---
 title: 🔧Windows 实用工具
 date: 2020-01-17 10:59:08
+cover: /ViteBlog/images/covers/tool__Windows实用工具.jpg
 tags:
   - Windows
 categories:

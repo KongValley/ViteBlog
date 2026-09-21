@@ -1,6 +1,7 @@
 ---
 title: 🤖 ZCode + GLM 开发手记（一）：把 AI 编程代理请进终端
 date: 2026-09-17 21:00:00
+cover: /ViteBlog/images/covers/zcode-glm-getting-started.jpg
 tags:
   - ZCode
   - GLM

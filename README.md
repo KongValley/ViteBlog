@@ -212,9 +212,9 @@ CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` 
 文章的封面有三条路,按「省事 → 讲究」排:
 
 1. **不写 `cover`** —— 构建期自动生成一张 1200×630 的像素风封面(`scripts/build-covers.mjs`,图案取自该文在首页的图标);
-2. **`npm run cover -- <slug> "关键词"`** —— 从 [Openverse](https://openverse.org) 的公开 API 搜图(免密钥),
-   默认只收 **CC0 / 公有领域**,下载后裁成 1200×630 写进 `public/images/covers/`,并把 `cover:` 写进 frontmatter。
-   `--dry-run` 先看候选,`--index 2` 换一张,`--license cc0,pdm,by` 放宽到需要署名的图(那样请自行在正文注明作者与许可)。
+2. **`npm run cover -- <slug>`** —— 从 Lorem Picsum(即 Unsplash 的免费照片,免密钥、ID 稳定)里给这篇挑一张,
+   裁成 1200×630 写进 `public/images/covers/<slug>.jpg` 并回填 frontmatter;
+   `--index 1` 换一张,`--all` 给全站批量配(每篇一张、互不重复,当前 51 篇用的就是这批);
 3. **自己找图** —— 丢进 `public/images/`,在 frontmatter 写 `cover: <带部署 base 的路径>`(例如 `/ViteBlog/images/covers/xxx.jpg`)。
 
 三个来源都能用,但**一定要落在 `public/images/` 里**:
@@ -224,10 +224,14 @@ CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` 
 - 老文原来挂在阿里云 OSS 上的图已经用 `npm run import:images` 全部抓回本地。
 
 其它免费图源(都支持下载后自托管):[Unsplash](https://unsplash.com)(免费、不强制署名)、
-[Pexels](https://www.pexels.com) / [Pixabay](https://pixabay.com)(CC0 类似条款)、
+[Pexels](https://www.pexels.com) / [Pixabay](https://pixabay.com)(CC0 类似条款,有 API key 可以按关键词精准搜)、
+[Openverse](https://openverse.org)(免密钥,但 CC0 池子偏薄,技术类关键词常常搜不到合适的)、
 [Wikimedia Commons](https://commons.wikimedia.org)(多为 CC-BY-SA,需署名)、
-[unDraw](https://undraw.co) / [OpenPeeps](https://www.openpeeps.com)(开源插画风,技术文很搭),
-以及 [Wallhaven](https://wallhaven.cc)(你老文里那批 `wallhaven-*.jpg` 就是它)。
+[unDraw](https://undraw.co) / [OpenPeeps](https://www.openpeeps.com)(开源插画风),
+以及 [Wallhaven](https://wallhaven.cc)(老文里那批 `wallhaven-*.jpg` 就是它)。
+
+> 想按文章主题精准配图(比如 Python 篇配数据中心的照片),把 Pexels 的 API key 配上就能做到 ——
+> 现在的批量配图是按 slug 哈希从人工筛过的图池里分配,保证好看、不重复,但不保证「图与文相关」。
 
 ## 主题
 

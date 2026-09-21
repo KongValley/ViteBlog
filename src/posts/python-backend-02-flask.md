@@ -1,6 +1,7 @@
 ---
 title: Python 后端（二）：Flask 快速上手
 date: 2026-09-18
+cover: /ViteBlog/images/covers/python-backend-02-flask.jpg
 tags:
   - Python
   - 后端

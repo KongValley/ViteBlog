@@ -1,6 +1,7 @@
 ---
 title: 博客开张:为什么我选择 React + Vite 搭博客
 date: 2026-09-15
+cover: /ViteBlog/images/covers/hello-vite-blog.jpg
 tags:
   - 随笔
   - React

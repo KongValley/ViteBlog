@@ -1,6 +1,7 @@
 ---
 title: TypeScript 进阶（五）：泛型
 date: 2026-09-19 11:00:00
+cover: /ViteBlog/images/covers/typescript-guide__ts-05-generics.jpg
 tags:
   - TypeScript
   - 进阶

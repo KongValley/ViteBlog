@@ -1,6 +1,7 @@
 ---
 title: 🍟Hexo中使用markdown-it拓展
 date: 2020-01-10 19:27:49
+cover: /ViteBlog/images/covers/tool__Hexo中使用markdown-it拓展.jpg
 tags:
   - hexo
   - markdown-it

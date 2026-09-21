@@ -1,6 +1,7 @@
 ---
 title: TypeScript 精通（七）：工具类型与工程化配置
 date: 2026-09-19 12:00:00
+cover: /ViteBlog/images/covers/typescript-guide__ts-07-utility-types-engineering.jpg
 tags:
   - TypeScript
   - 精通

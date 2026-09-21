@@ -1,6 +1,7 @@
 ---
 title: TypeScript 精通（六）：高级类型与类型收窄
 date: 2026-09-19 11:30:00
+cover: /ViteBlog/images/covers/typescript-guide__ts-06-advanced-types.jpg
 tags:
   - TypeScript
   - 精通

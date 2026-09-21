@@ -1,6 +1,7 @@
 ---
 title: JavaScript 进阶（三）：对象、原型与 class
 date: 2026-09-18 11:00:00
+cover: /ViteBlog/images/covers/js-03-objects-prototypes-class.jpg
 tags:
   - JavaScript
   - 进阶

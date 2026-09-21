@@ -1,6 +1,7 @@
 ---
 title: JavaScript 精通（五）：ES6+ 特性、模块与工程化
 date: 2026-09-18 12:30:00
+cover: /ViteBlog/images/covers/js-05-es6-modules-roadmap.jpg
 tags:
   - JavaScript
   - ES6

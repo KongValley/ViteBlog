@@ -7,7 +7,7 @@ tags:
   - GitHub Page
 categories:
   - Build Blog
-cover: /ViteBlog/images/how-to-build-a-blog-site/Hexo-GitHub-2/wallhaven-28d8gm.jpg
+cover: /ViteBlog/images/covers/how-to-build-a-blog-site__Hexo-GitHub-2.jpg
 ---
 Hexo官网里面有都文档说明，首先打开 Git Bash，先定位到你要放博客的文件夹，建议不要那种需要管理员权限才能新建文件的文件夹，我自己是在 `D:\My-blog` 里
 

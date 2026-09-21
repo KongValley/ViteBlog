@@ -1,6 +1,7 @@
 ---
 title: Python 后端（五）：数据库、鉴权与部署上线
 date: 2026-09-18
+cover: /ViteBlog/images/covers/python-backend-05-db-auth-deploy.jpg
 tags:
   - Python
   - 后端

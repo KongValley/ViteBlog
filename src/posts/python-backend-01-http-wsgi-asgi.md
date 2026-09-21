@@ -1,6 +1,7 @@
 ---
 title: Python 后端（一）：HTTP、WSGI/ASGI 与框架选型
 date: 2026-09-18
+cover: /ViteBlog/images/covers/python-backend-01-http-wsgi-asgi.jpg
 tags:
   - Python
   - 后端

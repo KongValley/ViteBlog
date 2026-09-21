@@ -1,6 +1,7 @@
 ---
 title: Node.js 进阶（三）：Web 框架选型与实战
 date: 2026-09-18
+cover: /ViteBlog/images/covers/node-03-web-frameworks.jpg
 tags:
   - Node.js
   - 进阶

@@ -1,6 +1,7 @@
 ---
 title: 2026 年 AI 编程 Coding Plan 价格对比：8 款个人套餐怎么选
 date: 2026-09-17
+cover: /ViteBlog/images/covers/ai-coding-plan-price-guide-2026.jpg
 tags:
   - AI 编程
   - Coding Plan
