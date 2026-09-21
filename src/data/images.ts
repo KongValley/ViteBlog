@@ -47,13 +47,21 @@ const entries: ImageManifest = Object.fromEntries(
   ]),
 );
 
-// 正文里可能写成 /images/foo.jpg(或许还带查询串或 base),归一成清单的键
+// 正文里可能写成 /images/foo.jpg(或许还带查询串或 base),归一成清单的键。
+// 注意:marked 会把图片地址做一次 encodeURI,中文路径到这儿已经是 %E5%… 形式,
+// 而清单的键是磁盘上的原文件名 —— 不解码就会查不到,中文目录下的图永远升不成 webp。
 function lookup(src: string): ImageEntry | undefined {
   const path = src.split(/[?#]/)[0];
   const rel = path.startsWith(BASE)
     ? path.slice(BASE.length)
     : path.replace(/^\//, '');
-  return entries[`/${rel}`];
+  const key = `/${rel}`;
+  if (entries[key]) return entries[key];
+  try {
+    return entries[decodeURIComponent(key)];
+  } catch {
+    return undefined; // 不是合法的百分号编码,当普通路径处理
+  }
 }
 
 /** 这张本地图有没有可用的 webp 变体(远程图、清单外的图都返回 false) */

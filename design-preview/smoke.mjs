@@ -135,6 +135,21 @@ function connect(wsUrl) {
   return { ws, ready, send, waitEvent, events };
 }
 
+// 图片清单:只有生成了 webp 变体的图才应该升级成 <picture>;
+// 比最低档位(480)还窄的图本来就没有变体,断言时要把它们排除掉。
+const manifest = (() => {
+  try {
+    return JSON.parse(
+      readFileSync(join(ROOT, 'public', 'images', 'images.manifest.json'), 'utf8'),
+    );
+  } catch {
+    return {};
+  }
+})();
+const withVariants = Object.entries(manifest)
+  .filter(([, entry]) => Array.isArray(entry.variants) && entry.variants.length > 0)
+  .map(([key]) => key);
+
 /** 每个页面要满足的断言(在页面里跑,返回 JSON 字符串) */
 const PAGES = [
   {
@@ -169,6 +184,32 @@ const PAGES = [
       [!!data.coverAlt, '文章头图有 alt'],
       [data.share >= 4, `分享条四个按钮在(实际 ${data.share})`],
       [data.text > 500, `文章页有实际内容(正文 ${data.text} 字)`],
+    ],
+  },
+  {
+    name: 'post-images',
+    path: `${BASE}post/how-to-build-a-blog-site/Hexo-GitHub-1`,
+    check: `(() => {
+      const expected = new Set(${JSON.stringify(withVariants)});
+      const imgs = [...document.querySelectorAll('.markdown-body img')];
+      const upgradeable = imgs.filter((img) => {
+        const src = decodeURIComponent((img.getAttribute('src') ?? '').split(/[?#]/)[0]);
+        return expected.has(src.replace(${JSON.stringify(BASE)}, '/'));
+      });
+      return JSON.stringify({
+        images: imgs.length,
+        upgradeable: upgradeable.length,
+        upgraded: upgradeable.filter((img) => img.closest('picture')).length,
+        currentSrc: document.querySelector('.markdown-body img')?.currentSrc ?? '',
+      });
+    })()`,
+    assert: (data) => [
+      [data.images >= 3, `正文图片渲染出来了(实际 ${data.images} 张)`],
+      [data.upgradeable >= 3, `其中确实有带 webp 变体的图(实际 ${data.upgradeable} 张)`],
+      [
+        data.upgraded === data.upgradeable,
+        `有变体的图都升级成了 <picture>(实际 ${data.upgraded}/${data.upgradeable})—— 回归过:中文路径没解码,清单查不到,webp 一直没生效`,
+      ],
     ],
   },
   {
