@@ -103,11 +103,17 @@
   color: var(--red, #e43b44);
 }
 
-.share-poster-download:focus-visible,
-.share-poster-close:focus-visible {
-  outline: 2px solid var(--red, #e43b44);
-  outline-offset: 2px;
+/* 主题里 a:hover 是 (0,1,1)(比单个类高一级),会给链接补下划线,所以悬停态也要显式声明一遍。
+   同理把 :active / :visited 的文字表现锁住,免得别的主题从这些状态里渗进来。 */
+.share-poster-download:hover,
+.share-poster-close:hover,
+.share-poster-download:active,
+.share-poster-close:active {
+  text-decoration: none;
+  text-underline-offset: auto;
 }
+
+/* 键盘焦点样式交给主题(像素主题里有一条 :focus-visible 的虚线框),这里不另立一套 */
 
 .share-poster-download[aria-disabled="true"] {
   opacity: 0.5;
