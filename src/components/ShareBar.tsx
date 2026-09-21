@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { site } from '../data/site';
+import SharePoster from './SharePoster';
 import './ShareBar.css';
 
 type Props = {
@@ -7,6 +8,12 @@ type Props = {
   title: string;
   /** 相对站点 base 的路径,如 /post/xxx */
   path: string;
+  /** 文章日期,画在分享图上 */
+  date: string;
+  /** 阅读时长(分钟),画在分享图上 */
+  minutes: number;
+  /** 标签,画在分享图上 */
+  tags: string[];
 };
 
 // 把相对路径拼成可直接分享的绝对地址(与预渲染 HTML 里的 canonical 一致)
@@ -21,7 +28,7 @@ function absoluteUrl(path: string): string {
  * 额外给一个「系统分享」按钮。分享出去的是 SPA 路由地址,打开后由 GitHub Pages 的
  * /post/<slug>.html 预渲染文件返回正确的 title/description/OG 图。
  */
-export default function ShareBar({ title, path }: Props) {
+export default function ShareBar({ title, path, date, minutes, tags }: Props) {
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle');
   const [canNativeShare, setCanNativeShare] = useState(false);
   const url = absoluteUrl(path);
@@ -87,6 +94,13 @@ export default function ShareBar({ title, path }: Props) {
           系统分享
         </button>
       )}
+      <SharePoster
+        title={title}
+        path={path}
+        date={date}
+        minutes={minutes}
+        tags={tags}
+      />
       <span className="share-url" title={url}>
         {url.replace(/^https?:\/\//, '')}
       </span>

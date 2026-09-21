@@ -216,7 +216,13 @@ export default function Post() {
           <MarkdownBody html={html} onClick={handleContentClick} />
         )}
 
-        <ShareBar title={post.title} path={`/post/${slug}`} />
+        <ShareBar
+          title={post.title}
+          path={`/post/${slug}`}
+          date={post.date}
+          minutes={post.minutes}
+          tags={post.tags}
+        />
 
         {related.length > 0 && (
           <section className="post-related" aria-label="相关文章">

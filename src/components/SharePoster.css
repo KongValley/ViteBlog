@@ -1,0 +1,86 @@
+/* 分享长图:弹层与面板。配色走主题变量 + 兜底,主题可覆盖处用 :where()。
+   画布本身不显示(只用来导出 PNG),所以直接藏起来而不是移出 DOM —— 组件卸载时随之回收。 */
+
+:where(.share-poster-canvas) {
+  display: none;
+}
+
+:where(.share-poster-mask) {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(8, 8, 12, 0.86);
+}
+
+:where(.share-poster-panel) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: min(480px, 94vw);
+  max-height: 92vh;
+  padding: 16px;
+  overflow-y: auto;
+  border: 1px solid var(--line, #1a1a1a);
+  border-radius: 6px;
+  background: var(--surface, #fff);
+}
+
+:where(.share-poster-title) {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted, #7a6f58);
+}
+
+:where(.share-poster-hint) {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--muted, #7a6f58);
+}
+
+:where(.share-poster-image) {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line, #1a1a1a);
+}
+
+:where(.share-poster-actions) {
+  display: flex;
+  gap: 10px;
+}
+
+:where(.share-poster-download),
+:where(.share-poster-close) {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--line, #1a1a1a);
+  border-radius: 3px;
+  background: var(--surface, #fff);
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+:where(.share-poster-download) {
+  background: var(--red, #e43b44);
+  border-color: var(--red, #e43b44);
+  color: #fff;
+  font-weight: 700;
+}
+
+:where(.share-poster-download[aria-disabled="true"]) {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+:where(.share-poster-close:hover) {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+}
