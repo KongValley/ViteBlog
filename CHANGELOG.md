@@ -7,10 +7,12 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 
 ### 新增
 
-- **`npm run cover:ai`**:用图像生成模型(默认 `gpt-image-1`,兼容任何 OpenAI 风格接口)按文章主题生成**像素风封面**,
+- **`npm run cover:ai`**:用**千问-图像生成与编辑 3.0**(阿里云百炼,OpenAI 兼容接口)按文章主题生成**像素风封面**,
   提示词固定带「8-bit 粗像素 / 深蓝底 + NES 红金青 / 不要文字」,主题短语从标题与标签自动推出;
-  支持 `--all` / `<slug>` / `--dry-run` / `--model` / `--quality` / `--style` / `--index`,
-  结果裁成 1200×630 落进 `public/images/covers/` 并回填 frontmatter。需要自己提供 `OPENAI_API_KEY`(或中转地址)。
+  并配了中英双语反向提示词(文字/水印/截图/模糊…);`--index N` 换 seed 重打、`--style` 追加风格、
+  `--size auto` 交给模型定分辨率、`--extend` 开启提示词改写(默认关)。
+  结果裁成 1200×630 落进 `public/images/covers/` 并回填 frontmatter。需要自己提供 `DASHSCOPE_API_KEY`,
+  业务空间专属域名或新加坡地域再加 `DASHSCOPE_BASE_URL`。
 
 
 - **全站换真实照片封面**:51 篇文章各配一张 Picsum(Unsplash 图源,免密钥、ID 稳定)的照片,

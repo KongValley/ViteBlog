@@ -1,25 +1,24 @@
-// 用图像生成模型给文章做**像素风封面**(和站点默认的像素风一致,但每篇的图案按主题生成)。
+// 用图像生成模型给文章做**像素风封面**(风格与站点默认像素风一致,但每篇的图案按主题生成)。
 //
-//   OPENAI_API_KEY=sk-... node scripts/gen-covers.mjs --all          # 全站批量
-//   OPENAI_API_KEY=sk-... node scripts/gen-covers.mjs <slug>         # 单篇
-//   OPENAI_API_KEY=sk-... node scripts/gen-covers.mjs --all --dry-run # 只打印将要发出的提示词
+//   DASHSCOPE_API_KEY=sk-... npm run cover:ai -- <slug>          # 单篇打样
+//   DASHSCOPE_API_KEY=sk-... npm run cover:ai -- --all           # 全站批量(每篇一次请求,注意计费)
+//   npm run cover:ai -- --all --dry-run                          # 不需要 key:只打印将要发出的请求体
 //
-// 兼容任何 OpenAI 风格的接口:自建/中转就把 OPENAI_BASE_URL 指过去
-//   OPENAI_BASE_URL=https://your-relay.example.com/v1 OPENAI_API_KEY=... node scripts/gen-covers.mjs --all
+// 默认走阿里云百炼(模型 studio)的「千问-图像生成与编辑 3.0」OpenAI 兼容接口:
+//   POST https://dashscope.aliyuncs.com/compatible-mode/v1/images/generations
+//   (官方建议迁到业务空间专属域名 https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1,
+//    用 DASHSCOPE_BASE_URL 覆盖即可;新加坡用 dashscope-intl.aliyuncs.com)
 //
 // 可选参数:
-//   --model gpt-image-1|dall-e-3   默认 gpt-image-1
-//   --size  1536x1024              默认按模型挑(gpt-image-1 → 1536x1024;dall-e-3 → 1792x1024)
-//   --quality medium               默认 medium(gpt-image-1)/standard(dall-e-3)
-//   --style "额外风格补充"          追加到提示词尾部
-//   --index N                      同一篇多试几张(改随机种子,人工挑)
+//   --model qwen-image-3.0-pro|qwen-image-3.0   默认 pro(质量优先),标准版更快更省
+//   --size  1600x840                            默认按封面比例(1200×630)留一点裁切余量;也可 auto
+//   --index N                                   换一张:同一篇用不同 seed 重打
+//   --style "额外的风格补充"                      追加到提示词尾部
+//   --extend                                    开启提示词的智能改写(默认关闭,免得把风格要求改跑)
 //
-// 生成结果裁成 1200×630 存到 public/images/covers/<slug>.jpg 并回填 frontmatter 的 cover。
+// 生成结果下载后裁成 1200×630,存到 public/images/covers/<slug>.jpg 并回填 frontmatter 的 cover。
 // 之所以落在 public/images/:构建期的 webp 变体管线只认清单里的本地图,而且分享长图是同源取图
 // (远程图会被跨域标脏、导不出来)。
-//
-// 花钱提醒:gpt-image-1 按尺寸与质量计费(每张大致几美分到十几美分,以你自己的账单为准),
-// --all 会给每篇文章各发一次请求。建议先 `--dry-run` 看提示词,再挑一两篇试打样。
 
 import {
   existsSync,
@@ -39,9 +38,10 @@ const WIDTH = 1200;
 const HEIGHT = 630;
 const CONCURRENCY = 2;
 
-const apiKey = process.env.OPENAI_API_KEY ?? '';
+const apiKey = process.env.DASHSCOPE_API_KEY ?? '';
 const baseUrl = (
-  process.env.OPENAI_BASE_URL ?? 'https://api.openai.com/v1'
+  process.env.DASHSCOPE_BASE_URL ??
+  'https://dashscope.aliyuncs.com/compatible-mode/v1'
 ).replace(/\/$/, '');
 
 const args = process.argv.slice(2);
@@ -52,7 +52,7 @@ const option = (name, fallback) => {
 };
 
 const positional = [];
-for (const value of ['--model', '--size', '--quality', '--style', '--index']) {
+for (const value of ['--model', '--size', '--style', '--index']) {
   const at = args.indexOf(value);
   if (at >= 0) args.splice(at, 2);
 }
@@ -62,23 +62,23 @@ const [slug] = positional;
 const all = flag('all');
 const dryRun = flag('dry-run');
 
-const model = option('model', 'gpt-image-1');
-const size = option('size', model === 'dall-e-3' ? '1792x1024' : '1536x1024');
-const quality = option('quality', model === 'dall-e-3' ? 'standard' : 'medium');
-const extraStyle = option('style', '');
+const model = option('model', 'qwen-image-3.0-pro');
+const size = option('size', '1600x840');
+const style = option('style', '');
 const index = Number(option('index', '0')) || 0;
+const extend = flag('extend');
 
 if (!slug && !all) {
   console.error(
-    '用法:OPENAI_API_KEY=sk-... node scripts/gen-covers.mjs <slug>|--all [--dry-run] [--model …] [--quality …]',
+    '用法:DASHSCOPE_API_KEY=sk-... node scripts/gen-covers.mjs <slug>|--all [--dry-run] [--model …] [--size …] [--index N]',
   );
   process.exit(1);
 }
 if (!apiKey && !dryRun) {
   console.error(
-    '缺少 OPENAI_API_KEY。\n' +
-      '  自建/中转就同时设 OPENAI_BASE_URL(例如 https://your-relay/v1)。\n' +
-      '  只想看提示词可以用 --dry-run,不需要 key。',
+    '缺少 DASHSCOPE_API_KEY(阿里云百炼控制台「API-KEY 管理」里创建)。\n' +
+      '  业务空间专属域名或新加坡地域请同时设 DASHSCOPE_BASE_URL。\n' +
+      '  只想看请求体可以用 --dry-run,不需要 key。',
   );
   process.exit(1);
 }
@@ -92,7 +92,7 @@ const BASE = (() => {
   return value.endsWith('/') ? value : `${value}/`;
 })();
 
-/** 中文标签 → 英文主题词:提示词用英文更稳 */
+/** 中文标签 → 英文主题词:提示词里中英都给,模型两边都吃 */
 const TOPIC_MAP = {
   工具: 'developer tooling',
   入门: 'learning programming',
@@ -108,17 +108,16 @@ const TOPIC_MAP = {
   闭包: 'functions and scopes',
   类型: 'type systems',
   图标: 'icon design',
+  'AI 编程': 'AI coding assistant',
+  'Build Blog': 'blog building',
   技术指标: 'technical analysis charts',
   股市基础技能: 'stock market charts',
-  股票入门: 'stock trading basics',
   数据可视化: 'data visualization',
   网络: 'computer network',
   安全: 'cyber security',
   测试: 'software testing',
   重构: 'code refactoring',
   算法: 'algorithms',
-  'AI 编程': 'AI coding assistant',
-  'Build Blog': 'blog building',
 };
 
 function listPosts() {
@@ -137,7 +136,7 @@ function listPosts() {
 const slugOf = (file) =>
   relative(POSTS_DIR, file).replace(/\\/g, '/').replace(/\.md$/, '');
 
-/** 极简 frontmatter 读取:只取 title / tags / categories(不引运行时代码,免得脚本依赖 vite 虚拟模块) */
+/** 极简 frontmatter 读取(只取 title / tags / categories,不引运行时代码) */
 function readMeta(file) {
   const raw = readFileSync(file, 'utf8');
   const block = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -166,7 +165,7 @@ function readMeta(file) {
   return meta;
 }
 
-/** 文章 → 提示词里的主题短语(英文) */
+/** 文章 → 主题短语(英文词 + 中文原标题,便于中文模型理解) */
 function topicOf(postSlug, meta) {
   const words = postSlug
     .split('/')
@@ -176,7 +175,7 @@ function topicOf(postSlug, meta) {
     .filter(
       (word) =>
         /^[a-z]{3,}$/.test(word) &&
-        !['the', 'and', 'for', 'with', 'from', 'guide'].includes(word),
+        !['the', 'and', 'for', 'with', 'from', 'guide', 'notes'].includes(word),
     );
 
   const mapped = [...(meta.tags ?? []), ...(meta.categories ?? [])]
@@ -188,32 +187,45 @@ function topicOf(postSlug, meta) {
     .join(', ');
 }
 
-/** 统一的像素风模板 + 该文的主题;明确禁止文字,模型很爱往图上写字 */
+/** 固定的像素风模板 + 该文主题;明确禁止文字,模型很爱往图上写字 */
 function buildPrompt(postSlug, meta) {
   const topic = topicOf(postSlug, meta) || 'programming';
+  const title =
+    meta.title && /[\u4e00-\u9fff]/.test(meta.title)
+      ? `文章主题:${meta.title}。`
+      : '';
   return [
     'Retro pixel art cover illustration for a tech blog article, 8-bit / 16-bit game style.',
     'Chunky visible pixels, hard edges, no anti-aliasing, limited retro palette:',
     'deep navy background (#0f0e17), NES red (#e43d44), warm gold (#f8b800), cyan accents (#22d3ee).',
     'Simple bold centered composition with generous negative space, one clear focal subject,',
     'subtle dark texture blocks in the background, generous margins so nothing touches the edges.',
-    'NO text, no letters, no words, no numbers, no logos, no watermark, no signature, no UI screenshots.',
     `Article topic: ${topic}.`,
-    extraStyle,
+    title,
+    style,
   ]
     .filter(Boolean)
     .join(' ');
 }
 
-/** 调一次图像接口,返回图片二进制 */
-async function generate(prompt) {
-  const body = { model, prompt, size, n: 1 };
-  if (model === 'dall-e-3') {
-    body.quality = quality;
-    body.response_format = 'b64_json';
-  } else {
-    body.quality = quality;
-  }
+const NEGATIVE = [
+  '文字, 字母, 汉字, 数字, 水印, 签名, logo, 截图, 界面',
+  'text, letters, words, numbers, watermark, signature, logo, UI screenshot,',
+  'blurry, low quality, jpeg artifacts, photo, 3d render, gradient mesh, anti-aliased edges',
+].join(', ');
+
+/** 调一次百炼的 OpenAI 兼容接口,返回图片二进制 */
+async function generate(prompt, seed) {
+  const body = {
+    model,
+    prompt,
+    negative_prompt: NEGATIVE,
+    size,
+    n: 1,
+    seed, // 固定 seed,--index 就是换 seed 重打
+    prompt_extend: extend, // 默认关:提示词已经写得很具体,免得被改写着跑
+    watermark: false,
+  };
 
   const response = await fetch(`${baseUrl}/images/generations`, {
     method: 'POST',
@@ -229,14 +241,26 @@ async function generate(prompt) {
     throw new Error(`接口返回 HTTP ${response.status}:${text}`);
   }
   const payload = await response.json();
-  const item = payload.data?.[0];
-  if (item?.b64_json) return Buffer.from(item.b64_json, 'base64');
-  if (item?.url) {
-    const image = await fetch(item.url);
-    if (!image.ok) throw new Error(`下载生成结果失败:HTTP ${image.status}`);
-    return Buffer.from(await image.arrayBuffer());
+  const url = payload.data?.[0]?.url;
+  if (!url) {
+    throw new Error(
+      `接口没有返回图片地址:${JSON.stringify(payload).slice(0, 200)}`,
+    );
   }
-  throw new Error(`接口没有返回图片:${JSON.stringify(payload).slice(0, 200)}`);
+  // 百炼这边只给 URL(有效期 24 小时),必须马上下载
+  const image = await fetch(url);
+  if (!image.ok) throw new Error(`下载生成结果失败:HTTP ${image.status}`);
+  return Buffer.from(await image.arrayBuffer());
+}
+
+/** slug + index → 稳定的 seed(同一篇同一 index 结果稳定,不同 index 换一张) */
+function seedOf(postSlug, offset) {
+  let hash = 2166136261;
+  for (const char of postSlug) {
+    hash ^= char.codePointAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return Math.abs((hash + offset * 7919) % 2147483647);
 }
 
 /** 裁成 1200×630 封面 */
@@ -245,7 +269,7 @@ async function saveCover(postSlug, buffer) {
   const file = join(COVER_DIR, `${postSlug.replace(/\//g, '__')}.jpg`);
   const info = await sharp(buffer)
     .resize(WIDTH, HEIGHT, { fit: 'cover', position: 'centre' })
-    .jpeg({ quality: 86, mozjpeg: true })
+    .jpeg({ quality: 88, mozjpeg: true })
     .toFile(file);
   return { file, info };
 }
@@ -283,23 +307,35 @@ async function mapWithLimit(items, limit, worker) {
 
 async function one(file) {
   const postSlug = slugOf(file);
-  const prompt = buildPrompt(postSlug, readMeta(file));
-  if (dryRun) return { slug: postSlug, ok: true, prompt };
+  const meta = readMeta(file);
+  const prompt = buildPrompt(postSlug, meta);
+  const seed = seedOf(postSlug, index);
+  const request = {
+    url: `${baseUrl}/images/generations`,
+    model,
+    size,
+    seed,
+    prompt_extend: extend,
+    prompt,
+  };
+  if (dryRun) return { slug: postSlug, ok: true, request };
 
   try {
-    const buffer = await generate(prompt);
+    const buffer = await generate(prompt, seed);
     const { info } = await saveCover(postSlug, buffer);
     writeCoverField(
       file,
       `${BASE}images/covers/${postSlug.replace(/\//g, '__')}.jpg`,
     );
-    return { slug: postSlug, ok: true, bytes: info.size, prompt };
+    return { slug: postSlug, ok: true, bytes: info.size, request };
   } catch (error) {
-    return { slug: postSlug, ok: false, reason: error.message, prompt };
+    return { slug: postSlug, ok: false, reason: error.message, request };
   }
 }
 
-console.log(`模型 ${model} / 尺寸 ${size} / 质量 ${quality} / 接口 ${baseUrl}`);
+console.log(
+  `模型 ${model} / 尺寸 ${size} / 接口 ${baseUrl}${dryRun ? '(dry-run)' : ''}`,
+);
 
 // ---- 单篇 ----
 if (slug) {
@@ -311,7 +347,7 @@ if (slug) {
   const result = await one(file);
   if (dryRun) {
     console.log(
-      `\n提示词(${slug}#${index}):\n${result.prompt}\n\n--dry-run:没有调用接口`,
+      `\n请求体(${slug}#${index}):\n${JSON.stringify(result.request, null, 2)}`,
     );
     process.exit(0);
   }
@@ -327,16 +363,15 @@ if (slug) {
 
 // ---- 批量 ----
 const files = listPosts();
-console.log(
-  `批量:${files.length} 篇(并发 ${CONCURRENCY})${dryRun ? ',dry-run' : ''}\n`,
-);
+console.log(`批量:${files.length} 篇(并发 ${CONCURRENCY})\n`);
 const results = await mapWithLimit(files, CONCURRENCY, one);
 
 const ok = results.filter((r) => r.ok);
 const failed = results.filter((r) => !r.ok);
 if (dryRun) {
-  for (const item of ok)
-    console.log(`  ${item.slug}\n    ${item.prompt.slice(0, 150)}…\n`);
+  for (const item of ok) {
+    console.log(`  ${item.slug}\n    ${item.request.prompt.slice(0, 130)}…\n`);
+  }
 }
 for (const item of failed) console.log(`  ✗ ${item.slug}:${item.reason}`);
 
@@ -349,7 +384,7 @@ console.log(
 );
 if (!dryRun) {
   console.log(
-    '挑到不满意的可以重打:node scripts/gen-covers.mjs <slug> --style "换成夜间城市电路板"',
+    '不满意的单篇可以重打:<slug> --index 1 换 seed,或 --style "夜间城市电路板" 加要求',
   );
 }
 if (failed.length > 0) process.exitCode = 1;
