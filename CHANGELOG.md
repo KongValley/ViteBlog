@@ -7,6 +7,12 @@ ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面�
 
 ### 新增
 
+- **`npm run cover:ai`**:用图像生成模型(默认 `gpt-image-1`,兼容任何 OpenAI 风格接口)按文章主题生成**像素风封面**,
+  提示词固定带「8-bit 粗像素 / 深蓝底 + NES 红金青 / 不要文字」,主题短语从标题与标签自动推出;
+  支持 `--all` / `<slug>` / `--dry-run` / `--model` / `--quality` / `--style` / `--index`,
+  结果裁成 1200×630 落进 `public/images/covers/` 并回填 frontmatter。需要自己提供 `OPENAI_API_KEY`(或中转地址)。
+
+
 - **全站换真实照片封面**:51 篇文章各配一张 Picsum(Unsplash 图源,免密钥、ID 稳定)的照片,
   裁成 1200×630 存在 `public/images/covers/`,合计 5.1 MB;同一批里不重复使用同一张。
 - **`npm run cover`**:给文章找真实照片封面 —— 走 Lorem Picsum(Unsplash 免费照片,免密钥),先人工筛一批 ID 当图池,

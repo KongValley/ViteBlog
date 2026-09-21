@@ -27,7 +27,8 @@
     "check:themes": "node scripts/check-themes.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "smoke": "node design-preview/smoke.mjs",
-    "cover": "node scripts/fetch-cover.mjs"
+    "cover": "node scripts/fetch-cover.mjs",
+    "cover:ai": "node scripts/gen-covers.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

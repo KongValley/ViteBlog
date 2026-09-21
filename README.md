@@ -216,6 +216,18 @@ CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` 
    裁成 1200×630 写进 `public/images/covers/<slug>.jpg` 并回填 frontmatter;
    `--index 1` 换一张,`--all` 给全站批量配(每篇一张、互不重复,当前 51 篇用的就是这批);
 3. **自己找图** —— 丢进 `public/images/`,在 frontmatter 写 `cover: <带部署 base 的路径>`(例如 `/ViteBlog/images/covers/xxx.jpg`)。
+4. **AI 生成像素风封面** —— 用你自己的图像模型接口按文章主题生成,风格与站点默认像素风一致:
+
+```bash
+OPENAI_API_KEY=sk-... npm run cover:ai -- --all          # 全站批量(每篇一次请求,注意计费)
+OPENAI_API_KEY=sk-... npm run cover:ai -- <slug>         # 单篇打样
+npm run cover:ai -- --all --dry-run                      # 不需要 key:只打印将要发出的提示词
+```
+
+   兼容任何 OpenAI 风格的接口:`OPENAI_BASE_URL=https://你的中转/v1` + `OPENAI_API_KEY=...` 即可。
+   可选 `--model gpt-image-1|dall-e-3`、`--size`、`--quality`、`--style "额外风格补充"`、`--index N`(同篇多试几张)。
+   提示词里固定带「8-bit 像素、深蓝底 + NES 红/金/青、粗像素、不要文字」这套要求,主题短语由标题与标签自动推出;
+   生成结果裁成 1200×630 存进 `public/images/covers/`,和上面几种来源走完全一样的管线。
 
 三个来源都能用,但**一定要落在 `public/images/` 里**:
 
