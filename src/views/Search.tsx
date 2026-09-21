@@ -330,6 +330,7 @@ export default function Search() {
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
+            aria-hidden="true"
           >
             <circle cx="8.5" cy="8.5" r="5.5" />
             <path d="M12.8 12.8 17 17" />
