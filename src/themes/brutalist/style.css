@@ -1245,10 +1245,6 @@ a.tag:hover {
   color: var(--br-pink);
 }
 
-.footer-meta {
-  font-size: 13px;
-}
-
 .footer a {
   color: inherit;
   font-weight: 700;

@@ -1053,10 +1053,6 @@ button.tag:hover,
   animation: blink 1.2s linear infinite;
 }
 
-.footer-meta {
-  font-size: 14px;
-}
-
 /* ---------- 首页双栏:左游戏机名片 + 右内容 ---------- */
 .home-layout {
   display: grid;

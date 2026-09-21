@@ -116,13 +116,6 @@ export default function App() {
               © {site.since} {site.author} · POWERED BY REACT × VITE · HOSTED ON
               GITHUB PAGES <span className="heart">♥</span>
             </p>
-            <p className="footer-meta">
-              由{' '}
-              <a href={site.github} target="_blank" rel="noopener">
-                GitHub
-              </a>{' '}
-              Pages 强力驱动 · {site.tagline}
-            </p>
           </div>
         </footer>
       </div>

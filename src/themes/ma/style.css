@@ -1175,12 +1175,6 @@ a {
   color: var(--ma-shu);
 }
 
-.footer-meta {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: var(--ma-mut);
-}
-
 .footer a {
   border-bottom: 1px solid var(--ma-hair);
 }

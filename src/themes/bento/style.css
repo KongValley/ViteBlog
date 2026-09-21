@@ -1264,11 +1264,6 @@ a {
   color: var(--be-pink);
 }
 
-.footer-meta {
-  color: var(--be-mut);
-  font-size: 13px;
-}
-
 .footer a:hover {
   color: var(--be-ink);
 }

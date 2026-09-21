@@ -1190,10 +1190,6 @@ body::after {
   color: var(--tm-pink);
 }
 
-.footer-meta {
-  font-size: 12.5px;
-}
-
 .footer a {
   color: var(--tm-green-dim);
 }
