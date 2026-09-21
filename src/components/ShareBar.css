@@ -1,0 +1,47 @@
+/* 文章底部的分享条:配色走主题变量 + 兜底,主题可覆盖处用 :where()。 */
+
+:where(.share-bar) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 2.5em 0 0;
+  padding-top: 1em;
+  border-top: 1px solid var(--line, #ddd);
+}
+
+:where(.share-label) {
+  margin-right: 2px;
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--muted, #7a6f58);
+}
+
+:where(.share-btn) {
+  padding: 3px 12px;
+  border: 1px solid var(--line, #1a1a1a);
+  border-radius: 3px;
+  background: var(--surface, #fff);
+  color: var(--ink, #222);
+  font-family: var(--font-body, inherit);
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+:where(.share-btn:hover) {
+  border-color: var(--red, #e43b44);
+  color: var(--red, #e43b44);
+  text-decoration: none;
+}
+
+:where(.share-url) {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--font-code, ui-monospace, monospace);
+  font-size: 11.5px;
+  color: var(--muted, #7a6f58);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

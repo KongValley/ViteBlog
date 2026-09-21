@@ -8,6 +8,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import MarkdownBody from '../components/MarkdownBody';
 import MobileToc from '../components/MobileToc';
 import ReadingProgress from '../components/ReadingProgress';
+import ShareBar from '../components/ShareBar';
 import { formatDate } from '../data/format';
 import { renderMarkdown } from '../data/markdown';
 import { usePageMeta } from '../data/pageMeta';
@@ -214,6 +215,8 @@ export default function Post() {
         ) : (
           <MarkdownBody html={html} onClick={handleContentClick} />
         )}
+
+        <ShareBar title={post.title} path={`/post/${slug}`} />
 
         {related.length > 0 && (
           <section className="post-related" aria-label="相关文章">
