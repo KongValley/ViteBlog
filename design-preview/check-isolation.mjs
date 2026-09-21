@@ -4,6 +4,7 @@
 //   · 读 dist/(当前 site.yml 选中的主题,即线上默认主题)
 // 检查项:自身样式标记存在、其他主题标记不出现、
 //         中文字体块单独成文件且不进首屏阻塞加载
+//   · design-preview/out/ 不存在时第 1 段整段跳过(CI 就是这种情况)
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -68,13 +69,21 @@ const check = (ok, label) => {
 };
 
 // ---- 1. 各主题的独立构建 ----
-for (const theme of THEME_LIST) {
-  const dir = join(ROOT, 'design-preview', 'out', theme);
+// 这一段要 design-preview/out/<theme>/(本地 design-preview/build-all.mjs 的产物,已 gitignore)。
+// CI 里没有这些目录,那就整段跳过 —— 在线只需要第 2 段「当前 dist 不混入其它主题」。
+// 想跑全套:先 npm run build,再 node design-preview/build-all.mjs。
+const previewRoot = join(ROOT, 'design-preview', 'out');
+if (!existsSync(previewRoot)) {
+  console.log(
+    `\n[各主题独立构建] 跳过:${previewRoot} 不存在(本地跑 design-preview/build-all.mjs 后才有)`,
+  );
+}
+for (const theme of existsSync(previewRoot) ? THEME_LIST : []) {
+  const dir = join(previewRoot, theme);
   const info = readDirAssets(dir);
   console.log(`\n[${theme}]`);
   if (!info) {
-    console.log('   ✗ 缺少构建产物(先构建该主题并拷入 design-preview/out/)');
-    failed += 1;
+    console.log('   - 未构建该主题的预览,跳过');
     continue;
   }
 
