@@ -185,6 +185,54 @@
   background: var(--music-line, var(--line, #aaa));
 }
 
+/* 音量条:APlayer 只在 :hover 时把它弹出来(:hover 的规则没有任何触屏兜底),
+   手机上等于没有音量可调 —— 不能悬停的设备让它常显,手指也更好点。
+   选择器保留 APlayer 那套完整层级,不然优先级比它低,height 压不过去。 */
+@media (hover: none) {
+  .music-dock
+    .aplayer
+    .aplayer-info
+    .aplayer-controller
+    .aplayer-volume-wrap
+    .aplayer-volume-bar-wrap {
+    height: 40px;
+    width: 32px;
+    right: -7px;
+  }
+
+  .music-dock
+    .aplayer
+    .aplayer-info
+    .aplayer-controller
+    .aplayer-volume-wrap
+    .aplayer-volume-bar-wrap
+    .aplayer-volume-bar {
+    left: 12px;
+    width: 8px;
+  }
+}
+
+/* 点的这一下先展开音量条(触屏没有 hover,得有个办法把它叫出来) */
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-volume-wrap.volume-open
+  .aplayer-volume-bar-wrap,
+.music-dock
+  .aplayer
+  .aplayer-info
+  .aplayer-controller
+  .aplayer-volume-wrap
+  .aplayer-volume-bar-wrap.aplayer-volume-bar-wrap-active {
+  height: 40px;
+}
+
+/* 音量条自己处理指针拖动,别让浏览器把触摸当成滚动 */
+.music-dock .aplayer .aplayer-info .aplayer-controller .aplayer-volume-wrap {
+  touch-action: none;
+}
+
 /* 歌词区:APlayer 在上下各铺了一层渐隐遮罩,颜色写死成白色,这里换成播放器底色 */
 .music-dock .aplayer .aplayer-lrc p {
   color: var(--music-muted, var(--muted, #666));

@@ -18,6 +18,8 @@ type Props = {
   cover?: string;
   /** 摘录,放在标题下面 */
   excerpt?: string;
+  /** 文章小标题,摘录下面给一份内容概览 */
+  outline?: string[];
 };
 
 // 把相对路径拼成可直接分享的绝对地址(与预渲染 HTML 里的 canonical 一致)
@@ -40,6 +42,7 @@ export default function ShareBar({
   tags,
   cover,
   excerpt,
+  outline,
 }: Props) {
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle');
   const url = absoluteUrl(path);
@@ -97,6 +100,7 @@ export default function ShareBar({
         title={title}
         cover={cover}
         excerpt={excerpt}
+        outline={outline}
         path={path}
         date={date}
         minutes={minutes}

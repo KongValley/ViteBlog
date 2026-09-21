@@ -49,6 +49,82 @@ function metingUrl(music: MusicConfig): string {
 }
 
 /**
+ * 自己接管音量交互。
+ *
+ * APlayer 的音量条只在 :hover 时展开(CSS 里没有触屏兜底 → 手机上永远出不来),
+ * 取值又是拿累加 offsetTop 的结果去减 clientY —— 挂件是 fixed 定位,算出来的位置差几像素,
+ * 拖到底也降不到 0。所以这里用指针事件重做一遍:
+ *   点一下音量图标 → 先把音量条亮出来(触屏没有 hover,得有个办法叫它出来);
+ *   在音量条上按住拖动 → 用 getBoundingClientRect 换算音量,鼠标 / 手指 / 触控笔一致。
+ * 捕获阶段拦掉 APlayer 自己的 mousedown / touchstart,免得两套逻辑互相打架。
+ */
+function bindVolume(container: HTMLElement, player: APlayer): () => void {
+  const wrap = container.querySelector<HTMLElement>('.aplayer-volume-wrap');
+  const barWrap = container.querySelector<HTMLElement>(
+    '.aplayer-volume-bar-wrap',
+  );
+  const bar = container.querySelector<HTMLElement>('.aplayer-volume-bar');
+  if (!wrap || !barWrap || !bar) return () => {};
+
+  const apply = (clientY: number) => {
+    const rect = bar.getBoundingClientRect();
+    if (rect.height === 0) return;
+    const ratio = (rect.bottom - clientY) / rect.height;
+    player.volume(Math.min(1, Math.max(0, ratio)));
+  };
+
+  const inVolume = (target: EventTarget | null): Element | null =>
+    target instanceof Element ? target.closest('.aplayer-volume-wrap') : null;
+
+  const blockAPlayer = (event: Event) => {
+    if (inVolume(event.target)) event.stopPropagation();
+  };
+
+  const onPointerDown = (event: PointerEvent) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (!inVolume(event.target)) return;
+    // 点在图标上:只把音量条亮出来,别顺手改音量
+    if (!(event.target as Element).closest('.aplayer-volume-bar-wrap')) {
+      wrap.classList.add('volume-open');
+      return;
+    }
+
+    event.preventDefault();
+    wrap.classList.add('volume-open');
+    barWrap.classList.add('aplayer-volume-bar-wrap-active');
+    apply(event.clientY);
+
+    const onMove = (moveEvent: PointerEvent) => apply(moveEvent.clientY);
+    const stop = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', stop);
+      window.removeEventListener('pointercancel', stop);
+      barWrap.classList.remove('aplayer-volume-bar-wrap-active');
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', stop);
+    window.addEventListener('pointercancel', stop);
+  };
+
+  // 点别处把临时展开的音量条收回去
+  const onPointerElsewhere = (event: PointerEvent) => {
+    if (!inVolume(event.target)) wrap.classList.remove('volume-open');
+  };
+
+  container.addEventListener('mousedown', blockAPlayer, true);
+  container.addEventListener('touchstart', blockAPlayer, true);
+  container.addEventListener('pointerdown', onPointerDown);
+  document.addEventListener('pointerdown', onPointerElsewhere);
+
+  return () => {
+    container.removeEventListener('mousedown', blockAPlayer, true);
+    container.removeEventListener('touchstart', blockAPlayer, true);
+    container.removeEventListener('pointerdown', onPointerDown);
+    document.removeEventListener('pointerdown', onPointerElsewhere);
+  };
+}
+
+/**
  * 贴边音乐挂件:固定在左下角,可以收成一张封面方块贴在屏幕边缘。
  *
  * 数据来自 Meting API(和 MetingJS 用的是同一套接口,只是不走它的自定义元素):
@@ -69,6 +145,7 @@ export default function MusicDock() {
     if (!music || !container) return;
 
     let player: APlayer | null = null;
+    let unbindVolume: (() => void) | null = null;
     let disposed = false;
     const abort = new AbortController();
 
@@ -108,6 +185,7 @@ export default function MusicDock() {
           listMaxHeight: '180px',
           storageName: 'viteblog-music',
         });
+        unbindVolume = bindVolume(container, player);
         setStatus({ kind: 'ready' });
       } catch (error) {
         if (disposed) return;
@@ -122,6 +200,7 @@ export default function MusicDock() {
     return () => {
       disposed = true;
       abort.abort();
+      unbindVolume?.();
       player?.destroy();
     };
   }, []);

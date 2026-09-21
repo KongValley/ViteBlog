@@ -228,6 +228,7 @@ export default function Post() {
           tags={post.tags}
           cover={post.cover}
           excerpt={post.excerpt || excerptFromMarkdown(content)}
+          outline={toc.map((item) => item.text)}
         />
 
         {related.length > 0 && (

@@ -32,6 +32,8 @@ declare module 'aplayer' {
     constructor(options: APlayerOptions);
     play(): void;
     pause(): void;
+    /** 0~1;MusicDock 自己接管的音量拖动直接调它 */
+    volume(value: number): void;
     destroy(): void;
     on(event: string, handler: (...args: unknown[]) => void): void;
   }

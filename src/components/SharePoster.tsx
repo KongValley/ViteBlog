@@ -15,6 +15,8 @@ type Props = {
   cover?: string;
   /** 摘录(可选):标题下面引一段正文,像公众号的摘要 */
   excerpt?: string;
+  /** 文章小标题(可选):摘录下面给一份内容概览 */
+  outline?: string[];
 };
 
 const WIDTH = 800;
@@ -25,6 +27,11 @@ const COVER_HEIGHT = 380;
 const EXCERPT_SIZE = 22;
 const EXCERPT_LINE_HEIGHT = 34;
 const EXCERPT_MAX_LINES = 3;
+/** 概览:标题 + 几行小标题,每个小标题压成一行 */
+const OUTLINE_SIZE = 19;
+const OUTLINE_LINE_HEIGHT = 30;
+const OUTLINE_MAX_ITEMS = 4;
+const OUTLINE_LABEL_HEIGHT = 34;
 const PADDING = 56;
 
 // 画海报用的一套颜色:直接读当前主题的 CSS 变量,深浅色自动跟随
@@ -110,9 +117,9 @@ function wrapText(
   }
   if (current.trim() && lines.length < maxLines) lines.push(current.trimEnd());
 
-  // 超出最大行数时,最后一行省略号收尾
-  const rest = lines.length >= maxLines ? text : '';
-  if (rest && lines.length === maxLines) {
+  // 只有真的没放下(有内容被丢掉)才加省略号 —— 否则「一行就装下」的短文本也会被加上「…」
+  const used = lines.join('').replace(/\s+/g, '').length;
+  if (used < text.replace(/\s+/g, '').length && lines.length === maxLines) {
     let last = lines[maxLines - 1];
     while (ctx.measureText(`${last}…`).width > maxWidth && last.length > 1) {
       last = last.slice(0, -1);
@@ -152,6 +159,7 @@ export default function SharePoster({
   tags,
   cover,
   excerpt,
+  outline,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'drawing' | 'ready' | 'failed'>(
@@ -218,7 +226,21 @@ export default function SharePoster({
       const quoteHeight = quoteLines.length
         ? quoteLines.length * EXCERPT_LINE_HEIGHT + 18
         : 0;
-      const height = BASE_HEIGHT + coverHeight + quoteHeight;
+      // 概览同理:每行都要量出实际宽度,超宽的一行用省略号收
+      if (measure) measure.font = `400 ${OUTLINE_SIZE}px ${palette.font}`;
+      const outlineItems =
+        measure && outline && outline.length >= 2
+          ? outline
+              .slice(0, OUTLINE_MAX_ITEMS)
+              .map(
+                (item) =>
+                  wrapText(measure, item, WIDTH - PADDING * 2 - 22, 1)[0],
+              )
+          : [];
+      const outlineHeight = outlineItems.length
+        ? outlineItems.length * OUTLINE_LINE_HEIGHT + OUTLINE_LABEL_HEIGHT + 14
+        : 0;
+      const height = BASE_HEIGHT + coverHeight + quoteHeight + outlineHeight;
       const ratio = Math.min(2, window.devicePixelRatio || 1);
       canvas.width = WIDTH * ratio;
       canvas.height = height * ratio;
@@ -308,6 +330,25 @@ export default function SharePoster({
         cursorY = quoteTop + quoteLines.length * EXCERPT_LINE_HEIGHT;
       }
 
+      // 概览:标题 + 最多四行小标题
+      if (outlineItems.length > 0) {
+        cursorY += 12;
+        ctx.font = `700 ${OUTLINE_SIZE}px ${palette.font}`;
+        ctx.fillStyle = palette.accent;
+        ctx.fillText('概览', PADDING, cursorY);
+        cursorY += OUTLINE_LABEL_HEIGHT;
+        ctx.font = `400 ${OUTLINE_SIZE}px ${palette.font}`;
+        for (const item of outlineItems) {
+          ctx.fillStyle = palette.accent;
+          ctx.globalAlpha = 0.75;
+          ctx.fillRect(PADDING + 2, cursorY + 8, 8, 8);
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = palette.muted;
+          ctx.fillText(item, PADDING + 22, cursorY);
+          cursorY += OUTLINE_LINE_HEIGHT;
+        }
+      }
+
       // 元信息:日期 · 阅读时长
       cursorY += 6;
       ctx.fillStyle = palette.muted;
@@ -394,7 +435,7 @@ export default function SharePoster({
     } catch {
       setStatus('failed');
     }
-  }, [title, url, date, minutes, tags, cover, excerpt]);
+  }, [title, url, date, minutes, tags, cover, excerpt, outline]);
 
   // 打开面板时再画,关掉时把画布清空,省内存
   useEffect(() => {
