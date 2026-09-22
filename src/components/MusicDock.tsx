@@ -51,12 +51,15 @@ function metingUrl(music: MusicConfig): string {
 /**
  * 自己接管音量交互。
  *
- * APlayer 的音量条只在 :hover 时展开(CSS 里没有触屏兜底 → 手机上永远出不来),
- * 取值又是拿累加 offsetTop 的结果去减 clientY —— 挂件是 fixed 定位,算出来的位置差几像素,
- * 拖到底也降不到 0。所以这里用指针事件重做一遍:
- *   点一下音量图标 → 先把音量条亮出来(触屏没有 hover,得有个办法叫它出来);
+ * APlayer 的音量条只在 :hover 时展开,取值又是拿累加 offsetTop 的结果去减 clientY ——
+ * 挂件是 fixed 定位,算出来的位置差几像素,拖到底也降不到 0。所以这里用指针事件重做一遍:
+ *   点一下音量图标 → 先把音量条钉住(否则 :hover 一离开就收回);
  *   在音量条上按住拖动 → 用 getBoundingClientRect 换算音量,鼠标 / 手指 / 触控笔一致。
  * 捕获阶段拦掉 APlayer 自己的 mousedown / touchstart,免得两套逻辑互相打架。
+ *
+ * 注:触屏设备上整个音量控件已被 MusicDock.css 的 @media (hover: none) 隐藏(手机音量交给系统键),
+ * 这套交互因此只服务有 hover 的设备;apply() 里的 rect.height === 0 守卫也保证了
+ * 控件处于隐藏态时被误调用不会把音量算成 NaN。
  */
 function bindVolume(container: HTMLElement, player: APlayer): () => void {
   const wrap = container.querySelector<HTMLElement>('.aplayer-volume-wrap');
