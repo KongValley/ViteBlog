@@ -3,6 +3,14 @@
 ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面按日期倒序记录值得一提的变更。
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## 2026-09-23
+
+### 新增
+
+- **Go 入门到精通系列 7 篇**(`src/posts/go-guide/`):环境与工具链 → 变量与基础类型 → 函数/方法/结构体 →
+  接口与错误处理 → 并发(Goroutine/Channel/sync/context)→ 泛型与标准库(含一个完整 JSON API)→
+  测试/性能/工程化。每篇 5–9 千字,首尾互链;7 张封面走 `npm run cover:ai`(场景写进 `scripts/cover-scenes.json`)。
+
 ## 2026-09-21
 
 ### 新增
