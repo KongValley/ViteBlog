@@ -14,8 +14,7 @@ import { variantsFor } from './images';
 /** 卡片头图显示宽约 300–400px,文章头图满宽约 760px(≥1100px 才展开目录两栏,
  *  900–1100px 时文章满宽到 1040px);窄屏给更小的 sizes,让 480webp 真正被手机用上 */
 const CARD_SIZES = '(max-width: 500px) 90vw, (max-width: 700px) 400px, 400px';
-const COVER_SIZES =
-  '(max-width: 500px) 90vw, (max-width: 1100px) 90vw, 760px';
+const COVER_SIZES = '(max-width: 500px) 90vw, (max-width: 1100px) 90vw, 760px';
 
 type CoverAttrs = {
   src: string;
