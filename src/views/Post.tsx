@@ -69,6 +69,9 @@ function injectHeadingIds(html: string, ids: string[]): string {
   });
 }
 
+// 目录骨架的宽度(百分比):写死,免得每次渲染都变
+const TOC_SKELETON = [82, 64, 74, 58, 70, 52];
+
 export default function Post() {
   const slug = useParams()['*'] ?? '';
   const navigate = useNavigate();
@@ -168,32 +171,49 @@ export default function Post() {
     <article className="post">
       <ReadingProgress />
 
-      {toc.length > 0 && (
-        <aside className="toc-wrap" aria-label="文章目录">
+      {/* 正文还没到位时也要占住这一列:宽屏下 .post 是「目录 + 正文」两栏网格,
+          目录晚一步出现,整篇文章会先挤进窄窄的目录列、等正文到了再跳回来 */}
+      {(loading || toc.length > 0) && (
+        <aside className="toc-wrap" aria-label="文章目录" aria-busy={loading}>
           <div className="toc-rod" />
           <div className="toc-paper">
             <p className="toc-title">目 录</p>
-            <ul className="toc-list">
-              {toc.map((item) => (
-                <li
-                  key={item.id}
-                  className={item.level === 3 ? 'toc-h3' : undefined}
-                >
-                  <a
-                    href={`#${item.id}`}
-                    className={
-                      activeId === item.id ? 'toc-link toc-active' : 'toc-link'
-                    }
-                    onClick={(event) => {
-                      event.preventDefault();
-                      jumpTo(item.id);
-                    }}
+            {loading ? (
+              <ul className="toc-list toc-skeleton" aria-hidden="true">
+                {TOC_SKELETON.map((width) => (
+                  <li key={width}>
+                    <span
+                      className="toc-skeleton-bar"
+                      style={{ width: `${width}%` }}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="toc-list">
+                {toc.map((item) => (
+                  <li
+                    key={item.id}
+                    className={item.level === 3 ? 'toc-h3' : undefined}
                   >
-                    {item.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
+                    <a
+                      href={`#${item.id}`}
+                      className={
+                        activeId === item.id
+                          ? 'toc-link toc-active'
+                          : 'toc-link'
+                      }
+                      onClick={(event) => {
+                        event.preventDefault();
+                        jumpTo(item.id);
+                      }}
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div className="toc-rod toc-rod-bottom" />
         </aside>

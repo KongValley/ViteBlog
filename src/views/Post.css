@@ -63,6 +63,26 @@
   font-size: 14px;
 }
 
+/* 目录骨架:正文还没到的那一下,用几条灰条把目录列的高度撑住。
+   颜色取 currentColor,十套主题各自的目录配色都能自动适配 */
+.toc-skeleton-bar {
+  display: block;
+  height: 10px;
+  background: color-mix(in srgb, currentColor 22%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .toc-skeleton-bar {
+    animation: toc-skeleton-pulse 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes toc-skeleton-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
 :where(.post-related) {
   margin-top: 3em;
   padding-top: 1em;

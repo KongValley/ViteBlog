@@ -5,6 +5,8 @@ import Analytics from './components/Analytics';
 import BackToTop from './components/BackToTop';
 import EasterEggs from './components/EasterEggs';
 import KeyboardShortcuts from './components/KeyboardShortcuts';
+import { posts } from './data/posts';
+import { installLinkPrefetch, warmOnIdle } from './data/prefetch';
 import { site } from './data/site';
 import About from './views/About';
 import Home from './views/Home';
@@ -50,6 +52,16 @@ export default function App() {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  // 跳转意图预取:悬停/聚焦文章链接时先取那一篇(正文 chunk + 文章页 chunk),
+  // 空闲时再预热文章页 chunk 与首页最新的三篇 —— 点进去时不再先看到
+  // 「正文加载中…」和一段挤在目录列里的错版
+  useEffect(() => {
+    const stopPrefetch = installLinkPrefetch();
+    const onHome = window.location.pathname === import.meta.env.BASE_URL;
+    warmOnIdle(onHome ? posts.slice(0, 3).map((post) => post.slug) : []);
+    return stopPrefetch;
+  }, []);
 
   return (
     <>
