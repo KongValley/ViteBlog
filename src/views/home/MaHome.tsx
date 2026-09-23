@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { cardCoverProps } from '../../data/coverVariants';
 import { formatDateCompact } from '../../data/format';
 import { posts } from '../../data/posts';
 import { site } from '../../data/site';
@@ -104,7 +105,7 @@ export default function MaHome({
             {post.cover && (
               <img
                 className="post-card-cover"
-                src={post.cover}
+                {...cardCoverProps(post.cover)}
                 alt=""
                 loading="lazy"
                 decoding="async"

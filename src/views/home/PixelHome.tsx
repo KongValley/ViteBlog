@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { PixelIcon } from '../../components/PixelIcon';
 import PlayerCard from '../../components/PlayerCard';
+import { cardCoverProps } from '../../data/coverVariants';
 import { formatDate } from '../../data/format';
 import { getPostIcon } from '../../data/postIcons';
 import { posts } from '../../data/posts';
@@ -47,7 +48,7 @@ export default function PixelHome({
               {post.cover && (
                 <img
                   className="post-card-cover"
-                  src={post.cover}
+                  {...cardCoverProps(post.cover)}
                   alt=""
                   loading="lazy"
                   decoding="async"

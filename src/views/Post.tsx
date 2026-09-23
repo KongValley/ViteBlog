@@ -9,6 +9,7 @@ import MarkdownBody from '../components/MarkdownBody';
 import MobileToc from '../components/MobileToc';
 import ReadingProgress from '../components/ReadingProgress';
 import ShareBar from '../components/ShareBar';
+import { coverProps } from '../data/coverVariants';
 import { excerptFromMarkdown } from '../data/excerpt';
 import { formatDate } from '../data/format';
 import { renderMarkdown } from '../data/markdown';
@@ -223,19 +224,16 @@ export default function Post() {
 
       <div className="post-body">
         <header className="post-header">
-          {/* 自动封面固定 1200×630(scripts/lib/cards.mjs),宽度写成属性让浏览器
-              提前占好位子,省掉图片加载完的那一下抖动;手填封面(coverExplicit)
-              比例未知,只靠 Post.css 里的 aspect-ratio 兜底 */}
+          {/* 封面走 webp 变体(coverVariants.ts):自动封面/手填封面都从清单拿
+              width/height 提前占好位子,加载完不抖;没有变体的图退回原地址 */}
           {post.cover && (
             <img
               className="post-cover"
-              src={post.cover}
+              {...coverProps(post.cover)}
               alt={post.title}
               data-no-zoom="true"
               loading="eager"
               decoding="async"
-              width={post.coverExplicit ? undefined : 1200}
-              height={post.coverExplicit ? undefined : 630}
             />
           )}
           <h1 className="post-title">{post.title}</h1>
