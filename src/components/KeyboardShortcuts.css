@@ -114,7 +114,7 @@
   border-radius: 4px;
   background: var(--bg, #f6f6f6);
   color: var(--ink-strong, #111);
-  font-family: var(--font-code, ui-monospace, monospace);
+  font-family: var(--font-body, ui-monospace, monospace);
   font-size: 12px;
   line-height: 1.5;
   text-align: center;

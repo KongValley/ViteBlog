@@ -6,7 +6,7 @@
    (优先级 0),主题想改样式时写同选择器即可覆盖,不用跟打包顺序较劲。
 
    用到:--surface --ink --ink-strong --muted --line --bg --red --gold
-         --font-body --font-code --shadow
+         --font-body --shadow
    ============================================================ */
 
 :where(.search-page) {
@@ -142,7 +142,7 @@
 
 :where(.search-hot-count) {
   color: var(--muted, #8a8a8a);
-  font-family: var(--font-code, monospace);
+  font-family: var(--font-body, monospace);
   font-size: 11px;
 }
 
@@ -217,7 +217,7 @@
   gap: 6px;
   margin: 6px 0 0;
   color: var(--muted, #8a8a8a);
-  font-family: var(--font-code, monospace);
+  font-family: var(--font-body, monospace);
   font-size: 11px;
 }
 

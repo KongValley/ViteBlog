@@ -145,7 +145,7 @@
 
 .footnote-index {
   margin-right: 6px;
-  font-family: var(--font-code, monospace);
+  font-family: var(--font-body, monospace);
   opacity: 0.7;
 }
 

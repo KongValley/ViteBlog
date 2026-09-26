@@ -32,9 +32,13 @@ export default function MarkdownBody({ html, onClick }: Props) {
         '.code-copy',
       );
       if (!button) return;
-      const code = button
-        .closest('.code-block')
-        ?.querySelector('code')?.textContent;
+      // 行与行之间没有换行文本节点(见 markdown.ts 里 join('') 的说明),复制时自己按行拼回来
+      const block = button.closest('.code-block');
+      const code = block
+        ? [...block.querySelectorAll('.code-line')]
+            .map((line) => line.textContent ?? '')
+            .join('\n')
+        : '';
       if (!code) return;
       try {
         await navigator.clipboard.writeText(code);

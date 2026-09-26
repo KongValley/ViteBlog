@@ -15,7 +15,7 @@
      --stats-shadow  卡片投影(默认取 --shadow;主题没定义 --shadow 时不投影)
      --stats-radius  圆角(默认 10px,像素风/瑞士风会在全局压成 0)
      --stats-font    正文字体(默认 --font-body)
-     --stats-mono    数字与年份(默认 --font-code)
+     --stats-mono    数字与年份(默认 --font-body)
 
    这里的规则一律用 :where() 包住外层类名,把优先级压到 0 —— 主题写同选择器
    就一定能覆盖,不用跟打包顺序较劲(同 MusicDock.css 的做法)。
@@ -65,7 +65,7 @@
 
 :where(.site-stats) .site-stats-since {
   margin-left: auto;
-  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-family: var(--stats-mono, var(--font-body, ui-monospace, monospace));
   font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--stats-muted, var(--muted, #8a8a8a));
@@ -93,7 +93,7 @@
 }
 
 :where(.site-stats) .site-stats-num {
-  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-family: var(--stats-mono, var(--font-body, ui-monospace, monospace));
   font-size: 22px;
   font-weight: 700;
   line-height: 1.1;
@@ -116,7 +116,7 @@
 :where(.site-stats) .site-stats-label {
   flex: none;
   min-width: 2.6em;
-  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-family: var(--stats-mono, var(--font-body, ui-monospace, monospace));
   font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--stats-muted, var(--muted, #8a8a8a));
@@ -150,7 +150,7 @@
 }
 
 :where(.site-stats) .site-stats-count {
-  font-family: var(--stats-mono, var(--font-code, ui-monospace, monospace));
+  font-family: var(--stats-mono, var(--font-body, ui-monospace, monospace));
   font-size: 11px;
   color: var(--stats-muted, var(--muted, #8a8a8a));
 }

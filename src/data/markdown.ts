@@ -133,7 +133,9 @@ function renderCodeBlock(code: string, lang: string): string {
         : 'code-line';
       return `<span class="${classes}" data-line="${number}">${line || ' '}</span>`;
     })
-    .join('\n');
+    // 行之间不能夹换行文本节点:每行已经是 display:block 的块,
+    // 而 <pre> 是 white-space:pre —— 那个 "\n" 会再渲染出一个空行,行距直接翻倍
+    .join('');
 
   const label = language || 'text';
   return [

@@ -45,7 +45,6 @@ type Palette = {
   line: string;
   accent: string;
   font: string;
-  fontCode: string;
 };
 
 function readPalette(): Palette {
@@ -61,7 +60,6 @@ function readPalette(): Palette {
     line: pick('--line', '#1a1a1a'),
     accent: pick('--red', '#d82800'),
     font: pick('--font-body', 'system-ui, sans-serif'),
-    fontCode: pick('--font-code', 'ui-monospace, monospace'),
   };
 }
 
@@ -231,7 +229,7 @@ export default function SharePoster({
       ctx.textBaseline = 'top';
       ctx.fillText(site.name, PADDING + 88, coverHeight + PADDING - 10);
       ctx.fillStyle = palette.muted;
-      ctx.font = `400 18px ${palette.fontCode}`;
+      ctx.font = `400 18px ${palette.font}`;
       ctx.fillText(site.tagline, PADDING + 88, coverHeight + PADDING + 26);
 
       // 标题
@@ -288,7 +286,7 @@ export default function SharePoster({
       // 元信息:日期 · 阅读时长
       cursorY += 6;
       ctx.fillStyle = palette.muted;
-      ctx.font = `400 20px ${palette.fontCode}`;
+      ctx.font = `400 20px ${palette.font}`;
       ctx.fillText(
         `${formatDate(date)} · 约 ${minutes} 分钟`,
         PADDING,
@@ -330,7 +328,7 @@ export default function SharePoster({
       ctx.font = `700 28px ${palette.font}`;
       ctx.fillText('扫码阅读全文', infoX, cardTop + 76);
       ctx.fillStyle = palette.muted;
-      ctx.font = `400 17px ${palette.fontCode}`;
+      ctx.font = `400 17px ${palette.font}`;
       const urlLines = wrapText(
         ctx,
         url.replace(/^https?:\/\//, ''),

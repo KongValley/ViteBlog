@@ -18,7 +18,7 @@
   --nf-muted: var(--muted, currentColor);
   --nf-red: var(--red, #e43b44);
   --nf-shadow: var(--shadow, transparent);
-  --nf-font: var(--font-code, ui-monospace, Consolas, monospace);
+  --nf-font: var(--font-body, ui-monospace, Consolas, monospace);
 }
 
 /* 状态行:游戏机画面顶部那种 PLAYER 1 小字 */

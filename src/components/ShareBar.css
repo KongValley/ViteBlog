@@ -12,7 +12,8 @@
 
 :where(.share-label) {
   margin-right: 2px;
-  font-family: var(--font-code, ui-monospace, monospace);
+  /* 用正文字体:这是界面文案,不是代码 —— 走 --font-code 会在像素主题里跳出整套像素风 */
+  font-family: var(--font-body, inherit);
   font-size: 12px;
   letter-spacing: 0.12em;
   color: var(--muted, #7a6f58);
@@ -86,8 +87,10 @@
 :where(.share-url) {
   max-width: 100%;
   overflow: hidden;
-  font-family: var(--font-code, ui-monospace, monospace);
-  font-size: 11.5px;
+  /* 同上:地址是给人看的界面文字,跟正文/按钮统一用 --font-body(像素主题=像素字);
+     11.5px 对像素字体偏小,取 12px(其设计尺寸)更清晰 */
+  font-family: var(--font-body, ui-monospace, monospace);
+  font-size: 12px;
   color: var(--muted, #7a6f58);
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -4,7 +4,7 @@
 :where(.route-loading) {
   margin: 12vh 0;
   text-align: center;
-  font-family: var(--font-code, ui-monospace, monospace);
+  font-family: var(--font-body, ui-monospace, monospace);
   font-size: 14px;
   letter-spacing: 0.18em;
   color: var(--muted, #7a6f58);
@@ -33,7 +33,7 @@
 /* 不用 flex:行内排版才会跟着主题给页脚的 text-align 走(像素主题是居中,别的主题可能左对齐) */
 :where(.footer-links) {
   margin: 0 0 8px;
-  font-family: var(--font-code, ui-monospace, monospace);
+  font-family: var(--font-body, ui-monospace, monospace);
   font-size: 12.5px;
   letter-spacing: 0.04em;
   color: var(--muted, #7a6f58);
