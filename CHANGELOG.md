@@ -3,6 +3,31 @@
 ViteBlog 从 2026-09-15 开始搭建,一直持续部署(没有版本号),下面按日期倒序记录值得一提的变更。
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## 2026-09-26
+
+### 新增
+
+- **oh-my-pi 上手系列 4 篇**(`src/posts/omp-0*.md`):安装与首次会话 → 配置分层、模型角色与审批策略 →
+  AGENTS.md、技能与 MCP → 子代理并行与会话管理;按官方 docs 整理,系列内互链。
+
+### 更改
+
+- **`npm run cover:ai` 换引擎:千问-图像生成 3.0(阿里云百炼)→ 网关 `gpt-image-2.5-sunburst`**
+  (OpenAI 兼容网关 `https://puppyrouter.com/v1`,new-api 系;换别家网关用 `IMAGE_BASE_URL` 覆盖)。
+  **破坏性变更**:`DASHSCOPE_API_KEY` / `DASHSCOPE_BASE_URL`(`DASHSCOPE_REGION` 一并作废)改为
+  `IMAGE_API_KEY` / `IMAGE_BASE_URL`(BASE_URL 有默认值,通常只需填 KEY);模型没有 seed / negative_prompt /
+  prompt_extend:旧的 `--index` 换图玩法取消(重跑即换一张,传了会明确报错),禁字要求以 `Avoid: …` 段
+  并入提示词;`size` 默认 `1536x1024`(裁成 1200×630)、`--quality` 按网关文档透传;接口仍是
+  `POST /images/generations`(模型页「调用示例」里的 chat 模板是通用样板,实测出图走 images 路由,
+  回包为 `data[0].url|b64_json`);令牌分组里没有渠道的模型直接报错,不再白白退避重试。
+- **全站 62 篇封面统一用新模型重画**(并发 2 跑了约 17 分钟):旧的 Picsum 照片封面与上一代像素插画被
+  同名文件整体覆盖,webp 变体、分享卡与静态页随构建重建(62 张、合计 11 MB、全部 1200×630);
+  `public/covers` 那套构建期兜底封面只在文章没写 `cover` 时才用到,现在全站都写了显式封面,
+  兜底仅在缺失时由构建自动补齐。
+- **`npm run check:dist` 的封面断言改成逐篇校验**:以前只数 `public/covers` 的 png 张数,不看 frontmatter
+  写的 cover 文件是否真的存在;现在每篇都要能解析到封面(手填路径在 dist 里存在,或兜底 png 存在,外链跳过),
+  汇总行也随之改为「手填 X + 兜底 Y」。
+
 ## 2026-09-23
 
 ### 新增

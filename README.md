@@ -214,40 +214,38 @@ CI(deploy 之前)按顺序跑:`npm run lint` → `npm test` → `npm run check` 
 1. **不写 `cover`** —— 构建期自动生成一张 1200×630 的像素风封面(`scripts/build-covers.mjs`,图案取自该文在首页的图标);
 2. **`npm run cover -- <slug>`** —— 从 Lorem Picsum(即 Unsplash 的免费照片,免密钥、ID 稳定)里给这篇挑一张,
    裁成 1200×630 写进 `public/images/covers/<slug>.jpg` 并回填 frontmatter;
-   `--index 1` 换一张,`--all` 给全站批量配(每篇一张、互不重复,当前 51 篇用的就是这批);
+   `--index 1` 换一张,`--all` 给全站批量配(每篇一张、互不重复;全站封面现已统一用第 4 条的 AI 生成,
+   这条留作备选);
 3. **自己找图** —— 丢进 `public/images/`,在 frontmatter 写 `cover: <带部署 base 的路径>`(例如 `/ViteBlog/images/covers/xxx.jpg`)。
-4. **AI 生成像素风封面** —— 用千问的图像生成模型按文章主题生成,风格与站点默认像素风一致:
+4. **AI 生成像素风封面** —— 用图像生成模型按文章主题生成,风格与站点默认像素风一致。
+   默认走 OpenAI 兼容网关 `https://puppyrouter.com/v1`(new-api 系)的 `gpt-image-2.5-sunburst`,
+   请求 `POST {IMAGE_BASE_URL}/images/generations`(参数 prompt / size / n / response_format;
+   模型页「调用示例」里的 chat/completions 是通用模板 —— 实测真出图走 images 路由)。
+   key 放 `.env.local`(已在 .gitignore 里,不进 shell 历史)或临时 export:
 
 ```bash
-# key 放 .env.local(已在 .gitignore 里,不进 shell 历史)或临时 export:
-#   DASHSCOPE_API_KEY=sk-...
-#   DASHSCOPE_BASE_URL=https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+#   IMAGE_API_KEY=sk-...                      # 网关「令牌」页创建
+#   IMAGE_BASE_URL=https://puppyrouter.com/v1 # 可选:换别家 OpenAI 兼容网关时覆盖
 
 npm run cover:ai -- <slug>      # 单篇打样
 npm run cover:ai -- --all       # 全站批量(每篇一次请求,注意计费)
 npm run cover:ai -- --all --dry-run   # 不需要 key:只打印将要发出的请求体
 ```
 
-   **`DASHSCOPE_BASE_URL` 必须设**,填法随便(脚本会自己补全并打印结果):
-   只填 WorkspaceId(`ws-xxxxxxxx`)会自动补成 `https://ws-xxxxxxxx.cn-beijing.maas.aliyuncs.com/compatible-mode/v1`
-   (换地域加 `DASHSCOPE_REGION=ap-southeast-1`);只填域名会补 `https://` 与 `/compatible-mode/v1`;
-   自定义中转地址原样使用。实测 `dashscope.aliyuncs.com` 这类老域名上**没有**
-   `/compatible-mode/v1/images/generations` 这条路由(直接 404),只有业务空间专属域名有。
-
-   默认模型 `qwen-image-3.0-pro`、`size 1600x840`;提示词按**像素游戏场景**写:远景层 + 中景道具 + 地面层,
-   一两个小角色在场景里做事(横版游戏截图的构图),配色固定为深蓝底 + NES 红/金/青,并配中英双语反向提示词
-   (文字、水印、截图、菜单、HUD、模糊…)。
-
-   **`prompt_extend`(提示词智能改写)默认开启,别关**:实测关掉后模型会把提示词里的主题词原样画成标题字
-   (给 JavaScript 主题生成一张写着 "Jauscript" 的海报),开启后是干净的无字插画。需要精确控制提示词时用 `--no-extend`。
+   默认模型 `gpt-image-2.5-sunburst`(同网关还有 `gpt-image-2.5-flare` / `gpt-image-2`,用 `--model` 换)、
+   默认 `size 1536x1024`(裁成 1200×630;想换比例用 `--size`)。提示词按**像素游戏场景**写:
+   远景层 + 中景道具 + 地面层,一两个小角色在场景里做事(横版游戏截图的构图),
+   配色固定为深蓝底 + NES 红/金/青。这个模型没有 `negative_prompt`、也没有 seed:
+   禁字等要求以 `Avoid: …` 段写进提示词;换一张直接重跑(每次结果都不同,旧的 `--index` 已移除)。
+   令牌分组里没有该模型的渠道时,网关返回 `model_not_found` /「可用渠道不存在」,脚本直接报错、
+   不再退避重试;`--quality` 按网关文档透传,默认不发送。
 
    想更保险可以往 `scripts/cover-scenes.json` 里按 slug 写一句**纯视觉场景**(脚本优先用它当主题;
-   全站 51 篇已经写好了)。避开 "javascript / module / screen" 这类词、只写木头箱子、机器人、森林这些实物,
-   出图基本不会带字 —— 模型对技术名词的第一反应就是把它排成字。
+   老文章(51 篇)都已写好,没写到的用标签与标题兜底)。避开 "javascript / module / screen" 这类词、
+   只写木头箱子、机器人、森林这些实物,出图基本不会带字。
 
-   限速:账号按请求数限速,并发高会 429;脚本自带退避重试(4s→8s→…→90s),
-   `--concurrency 3 --delay 800` 是实测能跑通全站的节奏。`--index N` 换 seed 重打、
-   `--style "夜间城市电路板"` 追加风格、`--size auto` 交给模型定分辨率、`--model qwen-image-3.0` 换标准版。
+   限速:账号按请求数限速,并发高容易撞 429;脚本自带退避重试(4s→8s→…→90s),
+   先用默认的 1 并发、间隔 2s 跑;`--style "夜间城市电路板"` 追加风格。
    生成结果裁成 1200×630 存进 `public/images/covers/`,和上面几种来源走完全一样的管线
    (记得再跑一次 `npm run images` 生成 webp 变体)。
 

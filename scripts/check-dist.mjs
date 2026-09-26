@@ -97,19 +97,44 @@ const countFiles = (dir, suffix) => {
   if (!existsSync(dir)) return 0;
   return walk(dir, (file) => file.endsWith(suffix)).length;
 };
-const posts = walk(join(ROOT, 'src', 'posts'), (file) =>
+const postFiles = walk(join(ROOT, 'src', 'posts'), (file) =>
   file.endsWith('.md'),
-).length;
+);
+const posts = postFiles.length;
 const prerendered = countFiles(join(DIST, 'post'), '.html');
 if (prerendered !== posts) {
   fail(`预渲染文章 ${prerendered} 篇,与 src/posts 下的 ${posts} 篇不一致`);
 }
-for (const [label, dir] of [
-  ['自动封面', join(ROOT, 'public', 'covers')],
-  ['分享图', join(DIST, 'og')],
-]) {
-  const count = countFiles(dir, '.png');
-  if (count !== posts) fail(`${label} ${count} 张,与 ${posts} 篇文章不一致`);
+const ogCount = countFiles(join(DIST, 'og'), '.png');
+if (ogCount !== posts) {
+  fail(`分享图 ${ogCount} 张,与 ${posts} 篇文章不一致`);
+}
+
+// 封面:每篇都要真的取得到图 —— frontmatter 写了 cover 就查那张文件(外链跳过),
+// 没写就要求构建期的兜底封面 public/covers/<slug>.png 存在(全站都写了 cover 时该目录可以为空)
+for (const file of postFiles) {
+  const cover = readFileSync(file, 'utf8')
+    .match(/^cover:\s*(.+)$/m)?.[1]
+    .trim();
+  const label = relative(ROOT, file).replace(/\\/g, '/');
+  if (cover) {
+    if (/^https?:\/\//i.test(cover)) continue;
+    const local = join(
+      DIST,
+      cover.startsWith(BASE)
+        ? cover.slice(BASE.length)
+        : cover.replace(/^\//, ''),
+    );
+    if (!existsSync(local)) fail(`${label} 的封面文件不存在:${cover}`);
+    continue;
+  }
+  const slug = relative(join(ROOT, 'src', 'posts'), file)
+    .replace(/\\/g, '/')
+    .replace(/\.md$/, '')
+    .replace(/\//g, '__');
+  if (!existsSync(join(ROOT, 'public', 'covers', `${slug}.png`))) {
+    fail(`${label} 既没写 cover,也没有兜底封面(先跑 build-covers)`);
+  }
 }
 
 // ---- 5. CSS 里 url() 引用的资源 ----
@@ -136,8 +161,11 @@ const distSize = walk(DIST, () => true).reduce(
   (sum, file) => sum + statSync(file).size,
   0,
 );
+const explicitCovers = postFiles.filter((file) =>
+  /^cover:\s*(.+)$/m.test(readFileSync(file, 'utf8')),
+).length;
 console.log(
-  `\ndist 体积 ${(distSize / 1024 / 1024).toFixed(1)} MB(文章 ${prerendered} 篇 / 封面 ${countFiles(join(ROOT, 'public', 'covers'), '.png')} 张)`,
+  `\ndist 体积 ${(distSize / 1024 / 1024).toFixed(1)} MB(文章 ${prerendered} 篇 / 封面 手填 ${explicitCovers} + 兜底 ${posts - explicitCovers})`,
 );
 console.log(
   problems === 0 ? '构建产物自检通过 ✅' : `构建产物自检失败 ${problems} 项 ❌`,

@@ -1,6 +1,7 @@
 ---
 title: 🤖 oh-my-pi 上手（三）：AGENTS.md、技能与 MCP
 date: 2026-09-26 20:00:00
+cover: /ViteBlog/images/covers/omp-03-context-skills-mcp.jpg
 tags:
   - oh-my-pi
   - AI 编程

@@ -1,6 +1,7 @@
 ---
 title: 🤖 oh-my-pi 上手（四）：子代理并行与会话管理
 date: 2026-09-26 19:30:00
+cover: /ViteBlog/images/covers/omp-04-subagents-sessions.jpg
 tags:
   - oh-my-pi
   - AI 编程

@@ -1,6 +1,7 @@
 ---
 title: 🤖 oh-my-pi 上手（一）：装好 omp，把终端变成编程代理
 date: 2026-09-26 21:00:00
+cover: /ViteBlog/images/covers/omp-01-getting-started.jpg
 tags:
   - oh-my-pi
   - AI 编程

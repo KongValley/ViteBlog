@@ -1,6 +1,7 @@
 ---
 title: 🤖 oh-my-pi 上手（二）：配置分层、模型角色与审批策略
 date: 2026-09-26 20:30:00
+cover: /ViteBlog/images/covers/omp-02-config-models.jpg
 tags:
   - oh-my-pi
   - AI 编程

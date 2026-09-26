@@ -1,25 +1,28 @@
 // 用图像生成模型给文章做**像素风封面**(风格与站点默认像素风一致,但每篇的图案按主题生成)。
 //
-//   DASHSCOPE_BASE_URL=https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1 \
-//   DASHSCOPE_API_KEY=sk-... npm run cover:ai -- <slug>          # 单篇打样
-//   DASHSCOPE_API_KEY=sk-... npm run cover:ai -- --all           # 全站批量(每篇一次请求,注意计费)
-//   npm run cover:ai -- --all --dry-run                          # 不需要 key:只打印将要发出的请求体
+//   IMAGE_API_KEY=sk-... npm run cover:ai -- <slug>          # 单篇打样
+//   IMAGE_API_KEY=sk-... npm run cover:ai -- --all           # 全站批量(每篇一次请求,注意计费)
+//   npm run cover:ai -- --all --dry-run                      # 不需要 key:只打印将要发出的请求体
 //
-// 走阿里云百炼(模型 studio)的「千问-图像生成与编辑 3.0」OpenAI 兼容接口。
+// 走 OpenAI 兼容的**图像生成**接口:POST {IMAGE_BASE_URL}/images/generations
+// (实测确认:模型页「调用示例」里的 chat/completions 只是通用模板 —— 真出图走 images 路由,
+//  回包形如 { data: [{ url|b64_json, width, height, revised_prompt }] }。)
+// 默认网关 https://puppyrouter.com/v1、默认模型 gpt-image-2.5-sunburst;
+// key 支持放进 .env.local(已在 .gitignore 里,不进 shell 历史):
 //
-// ⚠ 必须把 DASHSCOPE_BASE_URL 设成**业务空间专属域名**,不能用老的 dashscope.aliyuncs.com:
-//   实测老域名上的 /compatible-mode/v1/images/generations 直接 404(那条路由只在专属域名上有),
-//   专属域名格式(华北2 北京;新加坡把 cn-beijing 换成 ap-southeast-1):
-//     https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
-//   {WorkspaceId} 在百炼控制台「业务空间详情」里能看到。
+//   IMAGE_API_KEY=sk-...                      # 网关「令牌」页创建
+//   IMAGE_BASE_URL=https://puppyrouter.com/v1 # 可选:换别家 OpenAI 兼容网关时覆盖
 //
 // 可选参数:
-//   --model qwen-image-3.0-pro|qwen-image-3.0   默认 pro(质量优先),标准版更快更省
-//   --size  1600x840                            默认按封面比例(1200×630)留一点裁切余量;也可 auto
-//   --index N                                   换一张:同一篇用不同 seed 重打
-//   --style "额外的风格补充"                      追加到提示词尾部
-//   --no-extend                                 关闭提示词智能改写(默认开启:实测关闭后模型会把主题词画成标题字
-//                                               —— 例如给 JavaScript 主题生成 "Jauscript" 大标题;开启后是干净的无字插画)
+//   --model gpt-image-2.5-sunburst   默认;也可用 gpt-image-2.5-flare / gpt-image-2
+//   --size 1536x1024                 实测网关接受;裁成 1200×630 前留了裁切余量,也可 1024x1024
+//   --quality <预设>                  按网关文档透传,默认不发送
+//   --style "额外的风格补充"           追加到提示词尾部
+//   --concurrency N / --delay MS     批量的并发与请求间隔(默认 1 并发、每次间隔 2s)
+//
+// 和千问时代的差异:模型没有 seed / negative_prompt / prompt_extend 参数 ——
+// 「换一张」直接重跑(每次结果都不同),禁字等要求以 Avoid 段写在提示词里;
+// 旧的 --index(换 seed)已移除,传了会直接报错提醒。
 //
 // 生成结果下载后裁成 1200×630,存到 public/images/covers/<slug>.jpg 并回填 frontmatter 的 cover。
 // 之所以落在 public/images/:构建期的 webp 变体管线只认清单里的本地图,而且分享长图是同源取图
@@ -55,39 +58,24 @@ for (const envFile of ['.env.local', '.env']) {
   }
 }
 
-const apiKey = process.env.DASHSCOPE_API_KEY ?? '';
-const rawBase = process.env.DASHSCOPE_BASE_URL ?? '';
-/** 地域:只在填了「裸 WorkspaceId」时用来拼域名,默认华北2(北京) */
-const region = process.env.DASHSCOPE_REGION ?? 'cn-beijing';
+const apiKey = process.env.IMAGE_API_KEY ?? '';
+/** 网关地址:默认走 puppyrouter,换别家 OpenAI 兼容网关时用 IMAGE_BASE_URL 覆盖 */
+const DEFAULT_BASE_URL = 'https://puppyrouter.com/v1';
+const rawBase = process.env.IMAGE_BASE_URL || DEFAULT_BASE_URL;
 
-/**
- * 把用户填的地址整理成能用的 base URL —— 实际填法五花八门,这里都认:
- *   ws-b0nearudao5g3xw7                          只给 WorkspaceId → 补全成专属域名
- *   ws-xxx.cn-beijing.maas.aliyuncs.com          给了域名 → 补 https:// 与 /compatible-mode/v1
- *   https://ws-xxx.../compatible-mode/v1         标准形式 → 原样
- *   https://my-relay.example.com/v1              自定义中转 → 原样(不动它的路径)
- */
+/** 地址整理:补 https://、去掉结尾斜杠;完整 URL 原样用 */
 function normalizeBase(raw) {
   const value = raw.trim().replace(/\/+$/, '');
   if (!value) return '';
-  if (/^[a-z0-9-]+$/i.test(value)) {
-    return `https://${value}.${region}.maas.aliyuncs.com/compatible-mode/v1`;
-  }
-  const withScheme = /^https?:\/\//i.test(value) ? value : `https://${value}`;
-  if (!withScheme.includes('aliyuncs.com')) return withScheme;
-  return /\/compatible-mode\/v\d+$/.test(withScheme)
-    ? withScheme
-    : `${withScheme}/compatible-mode/v1`;
+  return /^https?:\/\//i.test(value) ? value : `https://${value}`;
 }
 
 const baseUrl = normalizeBase(rawBase);
 
-/** 老域名上没有图像接口(实测 404),这里统一给一句能照着做的提示 */
+/** 接口报 404 之类多半是地址/路径不对,统一给一句能照着做的提示 */
 const BASE_HINT = [
-  '把 DASHSCOPE_BASE_URL 设成业务空间专属域名(WorkspaceId 在百炼控制台「业务空间详情」里看):',
-  '  https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1      # 华北2 北京',
-  '  https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1 # 新加坡',
-  '注意 dashscope.aliyuncs.com 这类老域名上没有 /compatible-mode/v1/images/generations(实测 404)。',
+  `接口地址:${baseUrl}/images/generations`,
+  '默认 https://puppyrouter.com/v1;换别家网关把完整地址填进 .env.local 的 IMAGE_BASE_URL。',
 ].join('\n');
 
 const args = process.argv.slice(2);
@@ -105,6 +93,7 @@ const option = (name, fallback) => {
 const VALUE_OPTIONS = new Set([
   '--model',
   '--size',
+  '--quality',
   '--style',
   '--index',
   '--concurrency',
@@ -124,11 +113,19 @@ const [slug] = positional;
 const all = flag('all');
 const dryRun = flag('dry-run');
 
-const model = option('model', 'qwen-image-3.0-pro');
-const size = option('size', '1600x840');
+const model = option('model', 'gpt-image-2.5-sunburst');
+const size = option('size', '1536x1024');
+const quality = option('quality', '');
 const style = option('style', '');
-const index = Number(option('index', '0')) || 0;
-const extend = !flag('no-extend');
+
+// gpt-image 系列没有 seed:旧的 --index 换 seed 玩法失效。这里给一句明确提示,
+// 免得它的值被当成 slug 报出莫名其妙的错。
+if (flag('index')) {
+  console.error(
+    'gpt-image 不支持 seed,--index 已移除;想要新的一张直接重跑(每次结果都不同)。',
+  );
+  process.exit(1);
+}
 
 /** 请求节奏:默认串行 + 每次间隔 2s,免得撞上账号的限速(实测 2 并发很快 429) */
 const DELAY = Math.max(0, Number(option('delay', '2000')) || 2000);
@@ -142,25 +139,15 @@ async function pace() {
 
 if (!slug && !all) {
   console.error(
-    '用法:DASHSCOPE_API_KEY=sk-... node scripts/gen-covers.mjs <slug>|--all [--dry-run] [--model …] [--size …] [--index N]',
+    '用法:IMAGE_API_KEY=sk-... node scripts/gen-covers.mjs <slug>|--all [--dry-run] [--model …] [--size …] [--quality …]',
   );
   process.exit(1);
 }
 if (!apiKey && !dryRun) {
   console.error(
-    '缺少 DASHSCOPE_API_KEY(阿里云百炼控制台「API-KEY 管理」里创建)。\n' +
+    '缺少 IMAGE_API_KEY(网关「令牌」页创建后填进 .env.local 的 IMAGE_API_KEY)。\n' +
       '  只想看请求体可以用 --dry-run,不需要 key。',
   );
-  process.exit(1);
-}
-if (baseUrl.includes('{') && !dryRun) {
-  console.error(
-    `DASHSCOPE_BASE_URL 里还留着占位符:\n  ${baseUrl}\n${BASE_HINT}`,
-  );
-  process.exit(1);
-}
-if (!baseUrl && !dryRun) {
-  console.error(`缺少 DASHSCOPE_BASE_URL。\n${BASE_HINT}`);
   process.exit(1);
 }
 
@@ -298,29 +285,41 @@ function buildPrompt(postSlug, meta) {
     'ABSOLUTELY NO TEXT: no letters, no characters, no words, no numbers, no captions, no titles,',
     'no labels, no signage, no interface panels, no code blocks, no HUD, no health bars, no menus.',
     `Scene (depict it as a wordless pixel game scene): ${topic}.`,
+    `Avoid: ${AVOID}.`,
     style,
   ]
     .filter(Boolean)
     .join(' ');
 }
 
-const NEGATIVE = [
-  '文字, 字母, 汉字, 数字, 标题, 字幕, 招牌, 标签, 代码, 水印, 签名, logo, 截图, 界面, 对话框',
+/**
+ * 禁止项:这套接口没有 negative_prompt 参数,改以 "Avoid: …" 附在正向提示词末尾
+ * (千问时代的独立 negative_prompt 字段已随引擎一起去掉)。
+ */
+const AVOID = [
   'text, letters, words, numbers, glyphs, typography, title, caption, subtitle, signage,',
   'label, code block, terminal window, UI screenshot, interface panel, watermark, signature, logo,',
   'blurry, low quality, jpeg artifacts, photo, 3d render, gradient mesh, anti-aliased edges',
-].join(', ');
+].join(' ');
 
 /** 限速与临时故障等一会儿再试就好;参数错误(400/401 等)直接抛 */
 const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
 const MAX_RETRIES = 6;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** 调一次百炼的 OpenAI 兼容接口,返回图片二进制(含限速退避重试) */
-async function generate(prompt, seed) {
+/** 从图像接口回包里取图片:优先 b64_json,其次 url(网关默认按 response_format=url 回地址) */
+function pickImage(payload) {
+  const entry = payload.data?.[0];
+  if (entry?.b64_json) return { b64: entry.b64_json };
+  if (entry?.url) return { url: entry.url };
+  return null;
+}
+
+/** 调一次图像生成接口,返回图片二进制(含限速退避重试) */
+async function generate(prompt) {
   for (let attempt = 0; ; attempt += 1) {
     try {
-      return await generateOnce(prompt, seed);
+      return await generateOnce(prompt);
     } catch (error) {
       if (!error.retryable || attempt >= MAX_RETRIES) throw error;
       // 4s、8s、16s…最多 90s,加一点抖动避免同时重试
@@ -333,18 +332,17 @@ async function generate(prompt, seed) {
   }
 }
 
-async function generateOnce(prompt, seed) {
+async function generateOnce(prompt) {
   await pace();
   const body = {
     model,
     prompt,
-    negative_prompt: NEGATIVE,
     size,
     n: 1,
-    seed, // 固定 seed,--index 就是换 seed 重打
-    prompt_extend: extend, // 默认开:关掉后模型会把提示词里的主题词直接画成文字
-    watermark: false,
+    response_format: 'url',
   };
+  // 网关文档里的 quality 预设:默认不发,显式给了才带上
+  if (quality) body.quality = quality;
 
   let response;
   try {
@@ -357,7 +355,7 @@ async function generateOnce(prompt, seed) {
       body: JSON.stringify(body),
     });
   } catch (error) {
-    // DNS / TLS 直接失败:多半是域名里还留着 {WorkspaceId} 之类的占位符
+    // DNS / TLS 直接失败:多半是地址填错了
     const failure = new Error(
       `请求发不出去(${error?.message ?? error})。\n${BASE_HINT}`,
     );
@@ -367,41 +365,37 @@ async function generateOnce(prompt, seed) {
 
   if (!response.ok) {
     const text = (await response.text()).slice(0, 300);
-    const hint =
-      response.status === 404 || text.includes('Workspace endpoint is invalid')
-        ? `\n${BASE_HINT}`
-        : '';
+    const hint = response.status === 404 ? `\n${BASE_HINT}` : '';
+    // 分组里没有渠道 / 模型不存在:退避重试也白搭,直接失败并给出可照做的提示
+    const noChannel =
+      /no channel|channel[_ ]?(not[_ ]?found|failed)|可用渠道|model_not_found/i.test(
+        text,
+      );
+    const channelHint = noChannel
+      ? '\n提示:网关报告该模型在当前令牌分组下没有可用渠道 —— 换有权限的令牌/分组,或用 --model 换模型。'
+      : '';
     const failure = new Error(
-      `接口返回 HTTP ${response.status}:${text}${hint}`,
+      `接口返回 HTTP ${response.status}:${text}${hint}${channelHint}`,
     );
-    failure.retryable = RETRYABLE_STATUS.has(response.status);
+    failure.retryable = RETRYABLE_STATUS.has(response.status) && !noChannel;
     throw failure;
   }
   const payload = await response.json();
-  const url = payload.data?.[0]?.url;
-  if (!url) {
+  const picked = pickImage(payload);
+  if (!picked) {
     throw new Error(
-      `接口没有返回图片地址:${JSON.stringify(payload).slice(0, 200)}`,
+      `回包里没找到图片(markdown 图片 / URL / base64 都没有):${JSON.stringify(payload).slice(0, 300)}`,
     );
   }
-  // 百炼这边只给 URL(有效期 24 小时),必须马上下载
-  const image = await fetch(url);
+  if (picked.b64) return Buffer.from(picked.b64, 'base64');
+  // URL 一般是临时地址,拿到就马上下载
+  const image = await fetch(picked.url);
   if (!image.ok) {
     const failure = new Error(`下载生成结果失败:HTTP ${image.status}`);
     failure.retryable = RETRYABLE_STATUS.has(image.status);
     throw failure;
   }
   return Buffer.from(await image.arrayBuffer());
-}
-
-/** slug + index → 稳定的 seed(同一篇同一 index 结果稳定,不同 index 换一张) */
-function seedOf(postSlug, offset) {
-  let hash = 2166136261;
-  for (const char of postSlug) {
-    hash ^= char.codePointAt(0);
-    hash = Math.imul(hash, 16777619);
-  }
-  return Math.abs((hash + offset * 7919) % 2147483647);
 }
 
 /** 裁成 1200×630 封面 */
@@ -450,19 +444,18 @@ async function one(file) {
   const postSlug = slugOf(file);
   const meta = readMeta(file);
   const prompt = buildPrompt(postSlug, meta);
-  const seed = seedOf(postSlug, index);
   const request = {
     url: `${baseUrl}/images/generations`,
     model,
     size,
-    seed,
-    prompt_extend: extend,
+    response_format: 'url',
     prompt,
   };
+  if (quality) request.quality = quality;
   if (dryRun) return { slug: postSlug, ok: true, request };
 
   try {
-    const buffer = await generate(prompt, seed);
+    const buffer = await generate(prompt);
     const { info } = await saveCover(postSlug, buffer);
     writeCoverField(
       file,
@@ -482,59 +475,62 @@ console.log(
 );
 
 // ---- 单篇 ----
+// 生成之后不要用 process.exit:Windows 上 undici 的连接还挂在异步句柄里,
+// 会和 process.exit 互踩(Node/libuv 断言,退出码 9)。统一设 exitCode,让进程自然退出。
 if (slug) {
   const file = join(POSTS_DIR, `${slug}.md`);
   if (!existsSync(file)) {
     console.error(`找不到文章:src/posts/${slug}.md`);
-    process.exit(1);
+    process.exitCode = 1;
+  } else {
+    const result = await one(file);
+    if (dryRun) {
+      console.log(
+        `\n请求体(${slug}):\n${JSON.stringify(result.request, null, 2)}`,
+      );
+    } else if (!result.ok) {
+      console.error(`生成失败:${result.reason}`);
+      process.exitCode = 1;
+    } else {
+      console.log(
+        `\n封面已写入:public/images/covers/${slug.replace(/\//g, '__')}.jpg(${(result.bytes / 1024).toFixed(0)} KB)`,
+      );
+    }
   }
-  const result = await one(file);
+} else {
+  // ---- 批量 ----
+  const files = listPosts();
+  const jobs = Math.max(
+    1,
+    Number(option('concurrency', String(CONCURRENCY))) || CONCURRENCY,
+  );
+  console.log(
+    `批量:${files.length} 篇(并发 ${jobs},请求间隔 ${DELAY}ms;限速会自动退避重试)\n`,
+  );
+  const results = await mapWithLimit(files, jobs, one);
+
+  const ok = results.filter((r) => r.ok);
+  const failed = results.filter((r) => !r.ok);
   if (dryRun) {
+    for (const item of ok) {
+      console.log(
+        `  ${item.slug}\n    ${item.request.prompt.slice(0, 130)}…\n`,
+      );
+    }
+  }
+  for (const item of failed) console.log(`  ✗ ${item.slug}:${item.reason}`);
+
+  const total = ok.reduce((sum, item) => sum + (item.bytes ?? 0), 0);
+  console.log(
+    `\n完成:成功 ${ok.length} 篇,失败 ${failed.length} 篇` +
+      (dryRun
+        ? '(dry-run,未调用接口)'
+        : `,封面合计 ${(total / 1024 / 1024).toFixed(1)} MB`),
+  );
+  if (!dryRun) {
     console.log(
-      `\n请求体(${slug}#${index}):\n${JSON.stringify(result.request, null, 2)}`,
+      '不满意的单篇可以重打:<slug> 直接重跑换一张,或 --style "夜间城市电路板" 加要求',
     );
-    process.exit(0);
   }
-  if (!result.ok) {
-    console.error(`生成失败:${result.reason}`);
-    process.exit(1);
-  }
-  console.log(
-    `\n封面已写入:public/images/covers/${slug.replace(/\//g, '__')}.jpg(${(result.bytes / 1024).toFixed(0)} KB)`,
-  );
-  process.exit(0);
+  if (failed.length > 0) process.exitCode = 1;
 }
-
-// ---- 批量 ----
-const files = listPosts();
-const jobs = Math.max(
-  1,
-  Number(option('concurrency', String(CONCURRENCY))) || CONCURRENCY,
-);
-console.log(
-  `批量:${files.length} 篇(并发 ${jobs},请求间隔 ${DELAY}ms;限速会自动退避重试)\n`,
-);
-const results = await mapWithLimit(files, jobs, one);
-
-const ok = results.filter((r) => r.ok);
-const failed = results.filter((r) => !r.ok);
-if (dryRun) {
-  for (const item of ok) {
-    console.log(`  ${item.slug}\n    ${item.request.prompt.slice(0, 130)}…\n`);
-  }
-}
-for (const item of failed) console.log(`  ✗ ${item.slug}:${item.reason}`);
-
-const total = ok.reduce((sum, item) => sum + (item.bytes ?? 0), 0);
-console.log(
-  `\n完成:成功 ${ok.length} 篇,失败 ${failed.length} 篇` +
-    (dryRun
-      ? '(dry-run,未调用接口)'
-      : `,封面合计 ${(total / 1024 / 1024).toFixed(1)} MB`),
-);
-if (!dryRun) {
-  console.log(
-    '不满意的单篇可以重打:<slug> --index 1 换 seed,或 --style "夜间城市电路板" 加要求',
-  );
-}
-if (failed.length > 0) process.exitCode = 1;
